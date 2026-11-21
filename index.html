@@ -57,6 +57,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.10 | GPT-6 | 21.11.2026 | Подготовка PWA для GitHub Pages: обновлены метаданные установки, добавлены комплект иконок и манифест, настроен service worker для установки на iPhone и обновления приложения. Функциональность CNC не менялась.
  v142.9 | Claude Sonnet 5.5 | 21.11.2026 | Чистка без изменения вида: удалён мёртвый код анимации листов (gcFxOpen / gcFxClose после раннего return), gcGooSvgInit, gcFxRect, gcFxOrigin, слушатель gcLastTapEl, CSS .gc-goo и SVG-фильтр gcGooF; убраны перекрытые слои переменных :root (оставлен последний блок и четыре переменные --glass, --glass-strong, --ios-shadow, --ios-radius). Вид проверен попиксельно. Шторки открываются и закрываются, как раньше.
  v142.8 | Claude Sonnet 5.5 | 21.11.2026 | 3D-модель, мастер привязки: (1) сам запускается только у модели без какой-либо привязки и без отметки «пропущено», а не при каждом открытии неполной привязки; (2) в панели мастера кнопка «Пропустить всё» (отказ запоминается вместе с привязкой модели; «Отмена» тоже запоминает); (3) в «Обнуление модели» кнопка «Привязать заново» — сбрасывает привязку и запускает мастер. (4) ИСПРАВЛЕНО: модель из «Папки моделей» теряла привязку, сделанную после сохранения (при повторном открытии возвращался снимок на момент сохранения и мастер начинал заново); теперь запись папки обновляется вместе с привязкой. Ручной запуск «Пройти по шагам» работает как раньше.
  v142.7 | Claude Sonnet 5.5 | 21.11.2026 | (1) ИСПРАВЛЕНО: выравнивание стола — если ввести правую точку первой (ΔX < 0), угол теперь тот же, что при обычном порядке (раньше выдавало около 179°). (2) Haas: в выборе системы координат добавлены G154 P1–P99; в строке цикла W154.01–W154.99 (две цифры), в многоцелевом режиме перед циклом G154P5G0G90; Нужна проверка на станке: приём W154.01 макросом.
@@ -102,8 +103,10 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CNC">
 <meta name="theme-color" content="#111316">
+<meta name="description" content="CNC Helper — инструменты и справочник для работы на станках ЧПУ">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>CNC помощник</title>
 <script>
@@ -7694,7 +7697,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.9',APP_DATE='21.11.2026';
+var APP_VERSION='v142.10',APP_DATE='21.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
