@@ -8,7 +8,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  «CNC помощник» (CNC helper). Один офлайн HTML-файл (HTML+CSS+JS), без сборки.
  Пользователь — станочник ЧПУ (русский язык). Запуск: iPhone 13 Pro Max,
  Яндекс Браузер и значок на экране «Домой», хостинг GitHub Pages.
- Разделы: Обнуление (щуп, Renishaw/Hexagon), 3D Viewer (просмотр G-кода и
+ Разделы: Обнуление (щуп, Renishaw/Hexagon/Haas), 3D Viewer (просмотр G-кода и
  модели), Фрезерование (сверление, торцевание, отверстия), Редактор программы,
  Документы (чертежи, программы, модели), Справочник (допуски ЕСДП), График работы,
  Баги и заметки.
@@ -57,6 +57,15 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.9 | Claude Sonnet 5.5 | 21.11.2026 | Чистка без изменения вида: удалён мёртвый код анимации листов (gcFxOpen / gcFxClose после раннего return), gcGooSvgInit, gcFxRect, gcFxOrigin, слушатель gcLastTapEl, CSS .gc-goo и SVG-фильтр gcGooF; убраны перекрытые слои переменных :root (оставлен последний блок и четыре переменные --glass, --glass-strong, --ios-shadow, --ios-radius). Вид проверен попиксельно. Шторки открываются и закрываются, как раньше.
+ v142.8 | Claude Sonnet 5.5 | 21.11.2026 | 3D-модель, мастер привязки: (1) сам запускается только у модели без какой-либо привязки и без отметки «пропущено», а не при каждом открытии неполной привязки; (2) в панели мастера кнопка «Пропустить всё» (отказ запоминается вместе с привязкой модели; «Отмена» тоже запоминает); (3) в «Обнуление модели» кнопка «Привязать заново» — сбрасывает привязку и запускает мастер. (4) ИСПРАВЛЕНО: модель из «Папки моделей» теряла привязку, сделанную после сохранения (при повторном открытии возвращался снимок на момент сохранения и мастер начинал заново); теперь запись папки обновляется вместе с привязкой. Ручной запуск «Пройти по шагам» работает как раньше.
+ v142.7 | Claude Sonnet 5.5 | 21.11.2026 | (1) ИСПРАВЛЕНО: выравнивание стола — если ввести правую точку первой (ΔX < 0), угол теперь тот же, что при обычном порядке (раньше выдавало около 179°). (2) Haas: в выборе системы координат добавлены G154 P1–P99; в строке цикла W154.01–W154.99 (две цифры), в многоцелевом режиме перед циклом G154P5G0G90; Нужна проверка на станке: приём W154.01 макросом.
+ v142.6 | Claude Sonnet 5.5 | 21.11.2026 | (1) Щуп выбирается кнопками T20 / T28 / T30 / T50: T20 — Hexagon, T28 — Hexagon или Renishaw, T30 и T50 — Haas; T сам переключает станок, смена станка подбирает подходящий T; выбор запоминается. (2) Проверка при вводе у точек: красные поля и причина в карточке (Z подхода выше Z подачи, обязательные значения, размер, отпуск, подача > 0). (3) Для двух и более точек перед генерацией показывается напоминание проверить X, Y, Z со списком точек; вторым нажатием («Проверил — сгенерировать») программа создаётся.
+ v142.5 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое: проверка — Z подхода (G0) всегда выше Z опускания / начала подачи (G1 F) у каждой точки, иначе программа не генерируется и показывается сообщение с номером точки.
+ v142.4 | Claude Sonnet 5.5 | 21.11.2026 | (1) Haas G65 P9995 третьим станком (Hexagon → Renishaw → Haas), по образцу OBNUL.nc: A10 отверстие, A11 бобышка (E = −отпуск, H0 I0), A14 / A16 выступ X / Y (H = −отпуск), A15 / A17 паз X / Y, A20 плоскость (X → D, Y → E, Z → H, значение со знаком); W = 53 + номер G5x (G54 → W54.); сдвиги всегда нули. В одиночном и многоцелевом режиме. Нужна проверка на станке. (2) Шапка многоцелевого: поле H убрано (H = T), комментарий убран и добавляется автоматически «OBNULENIE <циклы>», блок «Высоты и подача» убран — Z подхода, Z опускания, F и безопасная Z только у точек (новая точка копирует предыдущую). (3) Убрана голубая плавающая кнопка «±» у всех числовых полей. (4) В подписях паза и выступа убраны «M4 A1» и т. п. Сделано на v142.3; циклы Haas из v143 (план) в этом файле написаны заново по образцу.
+ v142.3 | Claude Sonnet 5.5 | 21.11.2026 | ИСПРАВЛЕНО: у наружного диаметра и выступа (M5 / D-) перед циклом больше нет G1 вниз над деталью (щуп врезался в заготовку при подходе). Теперь G1 идёт на «Z начала цикла (над деталью)» (по умолчанию рабочая Z из шапки), вниз за край опускается сам цикл параметром отпуска. Внутренний диаметр, паз, X/Y торец по-прежнему опускаются на «Z опускания».
+ v142.2 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое обнуление, все операции и станки: подход по Z (G0), опускание на подаче G1 Z.. F.. (теперь со знаком + / − и отдельным полем, не зависит от параметра цикла), безопасная Z после цикла; у каждой точки своё, пусто = из шапки. Параметры цикла (отпуск за край / за деталь) вынесены отдельно; у наружного диаметра появилось поле отпуска. Циклы Haas ещё не добавлены (нет строк-образцов).
+ v142.1 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое обнуление: у каждой точки блок «Движение по точке» — Z подхода (выход на точку), опускание (рабочая Z у Z-касания, за край у остальных), подача F и безопасная Z после цикла. Пустое поле берёт значение из шапки; X/Y и цикл по-прежнему у каждой точки. Сделано на файле v142 (в нём нет циклов Haas G65 P9995 из плана v143 — перенести правку в v143).
  v142 | Claude Haiku 5.5 | 17.11.2026 | В «Выравнивании стола» убраны упоминания оси B и названия станка (в заголовке, подсказке и пункте меню).
  v141 | Claude Haiku 5.5 | 17.11.2026 | В «Выравнивании стола» общая кнопка «±» больше не появляется над полями (у полей свои кнопки + / −). В остальных числовых полях приложения она работает как раньше.
  v140 | Claude Haiku 5.5 | 17.11.2026 | «Выравнивание стола» перенесено с главного экрана в «Обнуление» (рядом с Renishaw / Hexagon), отдельным пунктом внизу. Знак каждого значения задаётся отдельной кнопкой + / − рядом с полем, в поле только цифры (на iPhone в цифровой клавиатуре нет минуса).
@@ -104,18 +113,6 @@ window.addEventListener('error',function(e){try{window.__bugErr.push(String(e.me
 window.addEventListener('unhandledrejection',function(e){try{var r=e.reason;window.__bugErr.push('Promise: '+String((r&&r.message)||r));if(window.__bugErr.length>5)window.__bugErr.shift();}catch(_){}});
 </script>
 <style>
-  :root {
-    --bg: #111111;
-    --card: #1e1e1e;
-    --border: #313131;
-    --accent: #4b90d0;
-    --accent-dark: #3b78b3;
-    --text: #e5e7eb;
-    --muted: #9ca3af;
-    --success: #22c55e;
-    --error: #ef4444;
-    --input: #141414;
-  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -260,20 +257,6 @@ window.addEventListener('unhandledrejection',function(e){try{var r=e.reason;wind
 .comment-panel textarea { width: 100%; min-height: 76px; resize: vertical; box-sizing: border-box; border-radius: 12px; padding: 12px; color: var(--text); background: var(--input); border: 1px solid var(--border); font: inherit; font-size: 16px; }
 
 /* iOS 26-inspired Liquid Glass redesign */
-:root {
-  color-scheme: dark;
-  --bg: #0c0c0c;
-  --card: rgba(42,42,42,.62);
-  --border: rgba(255,255,255,.13);
-  --accent: #4b90d0;
-  --accent-dark: #397ee8;
-  --text: #f5f7fc;
-  --muted: #aab4c7;
-  --success: #6ee7a0;
-  --error: #ff777f;
-  --input: rgba(20,20,20,.72);
-  --glass-shadow: 0 18px 45px rgba(0,0,0,.22);
-}
 html {
   min-height: 100%;
   background: #0c0c0c;
@@ -513,15 +496,6 @@ button:focus-visible {
   outline-offset: 3px;
 }
 @media (prefers-color-scheme: light) {
-  :root {
-    color-scheme: light;
-    --text: #252525;
-    --muted: #66738a;
-    --card: rgba(255,255,255,.68);
-    --border: rgba(36,55,85,.13);
-    --input: rgba(255,255,255,.72);
-    --glass-shadow: 0 16px 38px rgba(39,66,110,.12);
-  }
   body {
     background:
       radial-gradient(ellipse at 10% 0%, rgba(94,157,255,.22), transparent 42%),
@@ -611,20 +585,6 @@ select, input[type="text"], .ios-large-input, .ios-large-select, .mill-point-inp
 
 
 /* CNC помощник — строгая серо-графитовая тема */
-:root {
-  color-scheme: dark;
-  --bg: #111316;
-  --card: rgba(47,47,47,.88);
-  --border: rgba(190,198,207,.18);
-  --accent: #aeb6bf;
-  --accent-dark: #7f8994;
-  --text: #eef0f2;
-  --muted: #a5adb6;
-  --success: #8fbea0;
-  --error: #e58b8b;
-  --input: rgba(27,27,27,.94);
-  --glass-shadow: 0 14px 34px rgba(0,0,0,.24);
-}
 html { background:#111316; }
 body { background: radial-gradient(ellipse at 50% 0%, rgba(130,140,150,.13), transparent 48%), linear-gradient(160deg,#1a1a1a 0%,#101215 58%,#1c1c1c 100%); color:var(--text); }
 body::before { opacity:.08; }
@@ -653,7 +613,7 @@ select:focus,input:focus { border-color:#9aa4ae; box-shadow:0 0 0 3px rgba(160,1
 input[type="file"] { width:100%; color:var(--muted); padding:10px 0; }
 .viewer { width:100%; height:68vh; border:1px solid var(--border); border-radius:12px; background:#fff; }
 .viewer img { width:100%; height:100%; object-fit:contain; }
-@media (prefers-color-scheme: light) { :root { color-scheme:dark; --text:#eef0f2; --muted:#a5adb6; --border:rgba(190,198,207,.18); --input:rgba(27,27,27,.94); } body { background:linear-gradient(160deg,#1a1a1a,#101215 58%,#1c1c1c); color:var(--text); } .card,.point-card,.result-box,.menu-btn { background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); border-color:var(--border); color:var(--text); } .op-btn { color:var(--text); background:rgba(255,255,255,.055); } select,input[type="text"] { background:var(--input); color:var(--text); border-color:var(--border); } .btn-secondary { color:var(--text); } .section-title,label { color:#b5bdc5; } .back { color:#c5cbd1; } }
+@media (prefers-color-scheme: light) { body { background:linear-gradient(160deg,#1a1a1a,#101215 58%,#1c1c1c); color:var(--text); } .card,.point-card,.result-box,.menu-btn { background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); border-color:var(--border); color:var(--text); } .op-btn { color:var(--text); background:rgba(255,255,255,.055); } select,input[type="text"] { background:var(--input); color:var(--text); border-color:var(--border); } .btn-secondary { color:var(--text); } .section-title,label { color:#b5bdc5; } .back { color:#c5cbd1; } }
 
 
 /* Единый серо-металлический стиль иконок во всех разделах и вложенных режимах */
@@ -800,17 +760,6 @@ select:focus, input:focus, textarea:focus { border-color:#8fa6c6; box-shadow:0 0
    Visual layer only: calculation and CNC generation logic untouched.
    ========================================================= */
 :root {
-  color-scheme: dark;
-  --bg: #0e0e0e;
-  --card: rgba(36,36,36,.78);
-  --border: rgba(190, 211, 239, .14);
-  --accent: #69b9ff;
-  --accent-dark: #3f80bd;
-  --text: #f4f7fc;
-  --muted: #9aa9bd;
-  --success: #43d6a0;
-  --error: #ff6b75;
-  --input: rgba(18,18,18,.82);
   --glass: rgba(41,41,41,.68);
   --glass-strong: rgba(35, 49, 70, .88);
   --ios-shadow: 0 14px 36px rgba(0, 0, 0, .24);
@@ -1573,10 +1522,6 @@ button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .rc-num[data-edit]>:not(.rc-edit){display:none}
 .rc-edit{display:block;width:100%;min-width:0;height:38px;padding:0 4px;margin:0;border:0;border-bottom:1px solid var(--accent);border-radius:0;background:transparent;color:var(--text);font:inherit;text-align:center;outline:none;box-shadow:none;min-height:0}
 [data-rc]{display:none!important}
-/* ══ v135: «таблетка» из кнопки растекается в лист (gooey, свой код по описанию эффекта) ══ */
-.gc-goo{position:fixed;inset:0;z-index:2100;pointer-events:none;filter:url(#gcGooF)}
-.gc-goo i{position:fixed;left:0;top:0;display:block;will-change:transform,left,top,width,height}
-.gc-goo-b{width:30px;height:30px;border-radius:50%}
 /* v128: баги */
 .bug-fab{position:fixed;z-index:2100;top:calc(22px + env(safe-area-inset-top));right:14px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;padding:0;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
 .bug-fab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
@@ -1605,6 +1550,12 @@ body.gc-fs-on .bug-fab{display:none}
 .bug-item button{width:30px;height:30px;border-radius:50%;background:var(--card2);border:1px solid var(--line);color:var(--muted);padding:0;flex:none}
 .bug-empty{color:var(--muted);font-size:.85rem;text-align:center;padding:10px 0}
 .gc-toast{z-index:4000 !important}
+
+/* v142.1: движение по точке (многоцелевое обнуление) */
+.pt-motion{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.pt-motion-title{font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pt-motion-title span{font-weight:400;opacity:.8}
+.pt-motion .field label{font-size:.74rem}
 </style>
 </head>
 <body>
@@ -1912,11 +1863,11 @@ body.gc-fs-on .bug-fab{display:none}
 
   <div class="card">
     <div class="section-title">Инструмент</div>
-    <div class="grid2">
-      <div class="field"><label>Номер T</label><input type="text" id="t_num" value="28" inputmode="numeric"></div>
-      <div class="field"><label>H</label><input type="text" id="t_h" value="28" inputmode="numeric"></div>
+    <div class="field"><label>Щуп (T)</label>
+      <input type="hidden" id="t_num" value="28">
+      <div id="tChips" class="grid2" style="grid-template-columns:repeat(4,1fr);gap:8px"></div>
     </div>
-    <div class="field"><label>Комментарий</label><input type="text" id="t_comment" value="OBNULENIE"></div>
+    <div class="subtle-note" id="tNote">H всегда равен T. Комментарий OBNULENIE с названиями циклов добавляется автоматически.</div>
   </div>
 
   <div class="card">
@@ -1926,18 +1877,6 @@ body.gc-fs-on .bug-fab{display:none}
       <option value="G56">G56</option><option value="G57">G57</option>
       <option value="G58">G58</option><option value="G59">G59</option>
     </select>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Высоты и подача</div>
-    <div class="grid2">
-      <div class="field"><label>Безопасная Z</label><input type="text" id="a_safe" value="200" inputmode="decimal"></div>
-      <div class="field"><label>Подход Z</label><input type="text" id="a_app" value="50" inputmode="decimal"></div>
-    </div>
-    <div class="grid2">
-      <div class="field"><label>Рабочая Z</label><input type="text" id="a_work" value="5" inputmode="decimal"></div>
-      <div class="field"><label>Подача F</label><input type="text" id="a_feed" value="500" inputmode="decimal"></div>
-    </div>
   </div>
 
   <button class="btn" onclick="go('progPoints')">Далее — точки →</button>
@@ -1951,7 +1890,8 @@ body.gc-fs-on .bug-fab{display:none}
   <div id="pointsList"></div>
 
   <button class="btn btn-add" onclick="addPoint()">+ Добавить точку</button>
-  <button class="btn" onclick="genProgram()" style="margin-top:12px">Сгенерировать программу</button>
+  <div class="hint" id="tp_warn" style="white-space:pre-line;color:#e0b24a;margin-top:12px"></div>
+  <button class="btn" id="genBtn" onclick="genClick()" style="margin-top:12px">Сгенерировать программу</button>
   <div class="hint" id="tp_msg"></div>
 </div>
 
@@ -2411,6 +2351,7 @@ body.gc-fs-on .bug-fab{display:none}
       <div class="gc-zero-title">Обнуление модели</div>
       <div class="gc-wcs" id="gcZeroWcs"></div>
       <button type="button" class="gc-zero-more" style="margin:0 0 8px;background:rgba(58,132,197,.2);border-color:rgba(105,185,255,.35)" onclick="gcWizStart()">▶ Пройти по шагам</button>
+      <button type="button" class="gc-zero-more" id="gcRebindBtn" style="margin:0 0 8px" onclick="gcWizRebind()">↻ Привязать заново</button>
       <div class="gc-zero-grid gc-zero-grid1" id="gcZeroGridH" style="display:none"></div>
       <div class="gc-zero-grid gc-zero-grid1" id="gcZeroGridS">
         <button type="button" id="gcZeroBtnAx" onclick="gcModelZero('ax')">Центр (Y Z)</button>
@@ -2459,6 +2400,7 @@ body.gc-fs-on .bug-fab{display:none}
         <div class="gc-wiz-btns">
           <button type="button" onclick="gcWizBack()">‹ Назад</button>
           <button type="button" onclick="gcWizSkip()">Пропустить</button>
+          <button type="button" id="gcWizSkipAllBtn" onclick="gcWizSkipAll()">Пропустить всё</button>
           <button type="button" onclick="gcWizCancel()">Отмена</button>
         </div>
       </div>
@@ -2673,7 +2615,8 @@ var ICON_DM='<svg viewBox="0 0 64 64" fill="none" stroke-width="3" stroke-lineca
 function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 var currentOp = 'Z';
 var machine = 'hexagon';
-try { var _m = localStorage.getItem('cnc_machine'); if (_m === 'renishaw' || _m === 'hexagon') machine = _m; } catch (e) {}
+var _savedT = null; try { _savedT = localStorage.getItem('cnc_probe_t'); } catch (e) {}
+try { var _m = localStorage.getItem('cnc_machine'); if (_m === 'renishaw' || _m === 'hexagon' || _m === 'haas') machine = _m; } catch (e) {}
 var isNeg = { p: true };
 var points = [];
 var millPoints = [];
@@ -3271,6 +3214,7 @@ function go(id, fromPop) {
   closeHistorySheet();
   if(id==='home'){renderHistory();refreshEditorBtn();}
   if(id==='editor')loadEditor();
+  if(id==='progPoints'&&typeof renderPoints==='function')renderPoints();
   if(id==='schedule')shInit();
   if(!fromPop){
     try{
@@ -3301,17 +3245,60 @@ function startProgram() {
   go('progHeader');
 }
 
-function machineName() { return machine === 'renishaw' ? 'Renishaw' : 'Hexagon'; }
+function machineName() { return machine === 'renishaw' ? 'Renishaw' : (machine === 'haas' ? 'Haas' : 'Hexagon'); }
 function setMachine(m) {
   machine = m;
   try { localStorage.setItem('cnc_machine', m); } catch (e) {}
   refreshMachineUI();
 }
-function toggleMachine() { setMachine(machine === 'hexagon' ? 'renishaw' : 'hexagon'); }
+function toggleMachine() { setMachine(machine === 'hexagon' ? 'renishaw' : (machine === 'renishaw' ? 'haas' : 'hexagon')); }
+// Щупы: T20 — Hexagon; T28 — Hexagon или Renishaw; T30, T50 — Haas
+var PROBE_T = { '20': ['hexagon'], '28': ['hexagon', 'renishaw'], '30': ['haas'], '50': ['haas'] };
+function probeTSync() {
+  var el = document.getElementById('t_num'); if (!el) return;
+  if (_savedT) { el.value = _savedT; _savedT = null; }
+  if (!PROBE_T[el.value]) el.value = '28';
+  if (PROBE_T[el.value].indexOf(machine) < 0) el.value = (machine === 'haas') ? '30' : '28';   // под станок
+  var box = document.getElementById('tChips'); if (!box) return;
+  box.innerHTML = ['20', '28', '30', '50'].map(function (t) {
+    return '<button type="button" class="mode-choice' + (el.value === t ? ' active' : '') + '" style="min-height:48px;padding:8px 4px" onclick="probeTSelect(\'' + t + '\')">T' + t + '</button>';
+  }).join('');
+  var note = document.getElementById('tNote');
+  if (note) note.textContent = 'T20 — Hexagon · T28 — Hexagon или Renishaw · T30, T50 — Haas. H всегда равен T. Комментарий OBNULENIE с названиями циклов добавляется автоматически.';
+  try { localStorage.setItem('cnc_probe_t', el.value); } catch (e) {}
+}
+function probeTSelect(t) {
+  var el = document.getElementById('t_num'); if (!el) return;
+  el.value = t;
+  if (PROBE_T[t].indexOf(machine) < 0) setMachine(PROBE_T[t][0]);   // T сам переключает станок
+  probeTSync();
+}
+// Haas: к G54–G59 добавляются G154 P1–P99 (в строке цикла W154.01–W154.99); у других станков их нет
+function haasWcsSync() {
+  var h = machine === 'haas';
+  [['p_wcs', false], ['rc_wcs', false], ['t_wcs', true]].forEach(function (a) {
+    var sel = document.getElementById(a[0]); if (!sel) return;
+    var old = sel.value;
+    Array.prototype.slice.call(sel.querySelectorAll('optgroup[data-g154]')).forEach(function (g) { g.remove(); });
+    if (h) {
+      var g = document.createElement('optgroup'); g.label = 'G154 P1–P99'; g.setAttribute('data-g154', '1');
+      for (var i = 1; i <= 99; i++) {
+        var o = document.createElement('option');
+        o.value = a[1] ? 'G154P' + i : '154.' + ('0' + i).slice(-2);
+        o.textContent = 'G154 P' + i; g.appendChild(o);
+      }
+      sel.appendChild(g);
+    }
+    var has = Array.prototype.some.call(sel.options, function (o) { return o.value === old; });
+    sel.value = has ? old : sel.options[0].value;
+  });
+}
 function refreshMachineUI() {
+  haasWcsSync();
   document.querySelectorAll('.machine-name').forEach(function (el) { el.textContent = machineName(); });
   var cyclesTitle = document.getElementById('cycles_title');
   if (cyclesTitle) cyclesTitle.textContent = 'Циклы ' + machineName();
+  probeTSync();
 }
 function dot(n) { var s = String(Number(Number(n).toFixed(4))); return s.indexOf('.') < 0 ? s + '.' : s; }
 function parseNum(raw) {
@@ -3331,6 +3318,21 @@ function renLine(op, wNum, neg, d, depth) {
   if (op === 'M4Y') return 'G65P9901M4.A2.D' + dot(d) + s + ';';
   if (op === 'M5X') return 'G65P9901M5.A1.D' + dot(d) + 'W-' + dot(depth) + s + ';';
   if (op === 'M5Y') return 'G65P9901M5.A2.D' + dot(d) + 'W-' + dot(depth) + s + ';';
+  return '';
+}
+// Haas: G65 P9995 (образец OBNUL.nc). val — со знаком для плоскости Z/X/Y (направление касания),
+// положительный размер для остальных; depth — отпуск за край / опускание цикла (положительное число).
+function haasLine(op, wNum, val, depth) {
+  var p = 'G65 P9995 W' + (/^154\./.test(String(wNum)) ? String(wNum) : (53 + Number(wNum)) + '.') + ' ';
+  if (op === 'Z') return p + 'A20. H' + dot(val);
+  if (op === 'X') return p + 'A20. D' + dot(val);
+  if (op === 'Y') return p + 'A20. E' + dot(val);
+  if (op === 'D') return p + 'A10. D' + dot(val) + ' E0. H0.';
+  if (op === 'D-') return p + 'A11. D' + dot(val) + ' E' + dot(-Math.abs(depth)) + ' H0. I0.';
+  if (op === 'M5X') return p + 'A14. D' + dot(val) + ' E0. H' + dot(-Math.abs(depth));
+  if (op === 'M5Y') return p + 'A16. D' + dot(val) + ' H' + dot(-Math.abs(depth)) + ' E0.';
+  if (op === 'M4X') return p + 'A15. D' + dot(val) + ' E0.';
+  if (op === 'M4Y') return p + 'A17. D' + dot(val) + ' E0.';
   return '';
 }
 // Hexagon: G65 P9103 A91 (наружный диаметр: D- и отпуск Z-)
@@ -3385,7 +3387,7 @@ function generateRenCycleFromPage() {
   var wcs = document.getElementById('rc_wcs').value;
   var code = machine === 'renishaw'
     ? renLine(currentOp, wcs, false, Math.abs(n), edge)
-    : hexCycleLine(currentOp, wcs, Math.abs(n), edge);
+    : (machine === 'haas' ? haasLine(currentOp, wcs, Math.abs(n), edge) : hexCycleLine(currentOp, wcs, Math.abs(n), edge));
   var axis = currentOp.slice(-1);
   var kind = isBoss ? 'Выступ' : 'Паз';
   var title = machineName() + ': ' + kind + ' ' + axis + ' ' + Math.abs(n) + ' мм';
@@ -3420,7 +3422,7 @@ function configureProbeParams() {
   var val = document.getElementById('p_val');
   document.getElementById('p_val_field').style.display = zOnly ? 'none' : 'block';
   document.getElementById('p_z_note').style.display = zOnly ? 'block' : 'none';
-  document.getElementById('p_val_label').textContent = (diam || cycle) ? 'Размер паза / выступа, мм' : (dirOnly ? 'Направление касания' : 'Значение');
+  document.getElementById('p_val_label').textContent = (diam || cycle) ? 'Размер паза / выступа, мм' : (dirOnly ? 'Направление касания' : (machine === 'haas' ? 'Дистанция касания, мм (знак — направление)' : 'Значение'));
   val.placeholder = cycle ? 'Укажите размер паза / выступа' : (op === 'D' ? 'Укажите внутренний диаметр' : (op === 'D-' ? 'Укажите наружный диаметр' : 'Например, 10'));
   val.style.display = dirOnly ? 'none' : 'block';
   document.getElementById('p_sign').style.display = (diam || dirOnly || cycle) ? 'none' : 'flex';
@@ -3479,7 +3481,11 @@ function genProbe() {
     if (depth === null || depth <= 0) { fail('Укажите отпуск зонда за деталь', wIn); return; }
   }
   var text, title;
-  if (ren) {
+  if (machine === 'haas') {
+    text = haasLine(op, wcs, (diam || cycle) ? Math.abs(num) : num, depth);
+    var hs = op === 'D' ? 'Ø' + Math.abs(num) + ' внутр.' : (op === 'D-' ? 'Ø' + Math.abs(num) + ' наруж.' : (cycle ? ({M4X:'Паз X',M4Y:'Паз Y',M5X:'Выступ X',M5Y:'Выступ Y'}[op] + ' ' + Math.abs(num) + ' мм') : (op + ' ' + num)));
+    title = 'Haas: ' + hs;
+  } else if (ren) {
     text = renLine(op, wcs, isNeg.p, num === null ? null : Math.abs(num), depth);
     var short = op === 'D' ? 'Ø' + Math.abs(num) + ' внутр.' : (op === 'D-' ? 'Ø' + Math.abs(num) + ' наруж.' : (cycle ? ({M4X:'Паз X',M4Y:'Паз Y',M5X:'Выступ X',M5Y:'Выступ Y'}[op] + ' ' + Math.abs(num) + ' мм') : (op === 'Z' ? 'Z' : op + (isNeg.p ? '−' : '+'))));
     title = 'Renishaw: ' + short;
@@ -3499,7 +3505,10 @@ function genProbe() {
 
 function addPoint() {
   var id = Date.now() + Math.random();
-  points.push({ id: id, op: 'Z', x: '0', y: '0', xNeg: false, yNeg: false, val: '10', valNeg: true, w: '10', edgeDepth: '10' });
+  var l = points.length ? points[points.length - 1] : null;   // новая точка берёт движение предыдущей
+  points.push({ id: id, op: 'Z', x: '0', y: '0', xNeg: false, yNeg: false, val: '10', valNeg: true, w: '10', edgeDepth: '10',
+    app: l ? l.app : '50', work: l ? l.work : '5', workNeg: l ? l.workNeg : false,
+    drop: l ? l.drop : '10', dropNeg: l ? l.dropNeg : true, feed: l ? l.feed : '500', safe: l ? l.safe : '200' });
   renderPoints();
 }
 
@@ -3523,6 +3532,55 @@ function setPointOp(id, op) {
 function updatePoint(id, field, value) {
   var pt = points.find(p => p.id === id);
   if (pt) pt[field] = value;
+  ptCheckLive();
+  progUnconfirm();
+}
+// Проверка при вводе: красные поля и строка с причиной в карточке точки
+function ptCheckLive() {
+  var host = document.getElementById('pointsList'); if (!host) return;
+  host.querySelectorAll('input.error').forEach(function (e) { e.classList.remove('error'); });
+  host.querySelectorAll('.pt-err').forEach(function (e) { e.remove(); });
+  points.forEach(function (pt) {
+    var card = host.querySelector('[data-card="' + pt.id + '"]'); if (!card) return;
+    var bad = {}, msg = '';
+    function mark(f, m) { bad[f] = 1; if (!msg) msg = m; }
+    var diam = (pt.op === 'D' || pt.op === 'D-'), cycle = /^M[45][XY]$/.test(pt.op);
+    var ext = (pt.op === 'D-' || /^M5[XY]$/.test(pt.op)), startF = (pt.op === 'Z' || ext) ? 'work' : 'drop';
+    var v = parseNum(pt.val);
+    if ((diam || cycle) && (v === null || v <= 0)) mark('val', diam ? 'Укажите диаметр' : 'Укажите размер');
+    if (pt.op === 'Z' && machine !== 'renishaw' && v !== null && !pt.valNeg) mark('val', 'Для Z нужно отрицательное значение (кнопка −)');
+    if (ext) { var d = parseNum(/^M5[XY]$/.test(pt.op) ? pt.edgeDepth : pt.w); if (d === null || d <= 0) mark(/^M5[XY]$/.test(pt.op) ? 'edgeDepth' : 'w', 'Укажите отпуск зонда'); }
+    var a = parseNum(pt.app), z = parseNum(pt[startF]), f = parseNum(pt.feed), sf = parseNum(pt.safe);
+    if (a === null) mark('app', 'Укажите Z подхода');
+    if (z === null) mark(startF, 'Укажите Z ' + (ext ? 'начала цикла' : (pt.op === 'Z' ? 'начала подачи' : 'опускания')));
+    if (f === null || f <= 0) mark('feed', 'Подача должна быть больше 0');
+    if (sf === null) mark('safe', 'Укажите безопасную Z');
+    if (a !== null && z !== null) {
+      var zs = Math.abs(z) * ((startF === 'work' ? pt.workNeg : pt.dropNeg) ? -1 : 1);
+      if (!(a > zs)) { mark('app', 'Z подхода (' + dot(a) + ') должна быть выше Z подачи (' + dot(zs) + ')'); mark(startF, ''); }
+    }
+    Object.keys(bad).forEach(function (k) { var i = card.querySelector('input[data-f="' + k + '"]'); if (i) i.classList.add('error'); });
+    if (msg) { var h = document.createElement('div'); h.className = 'hint error pt-err'; h.textContent = msg; card.appendChild(h); }
+  });
+}
+// Перед генерацией двух и более точек — напоминание проверить X, Y, Z
+var progChecked = false;
+function progUnconfirm() {
+  progChecked = false;
+  var b = document.getElementById('genBtn'); if (b) b.textContent = 'Сгенерировать программу';
+  var w = document.getElementById('tp_warn'); if (w) w.textContent = '';
+}
+function genClick() {
+  if (points.length < 2 || progChecked) { progChecked = false; genProgram(); progUnconfirm(); return; }
+  var rows = points.map(function (pt, i) {
+    var ext = (pt.op === 'D-' || /^M5[XY]$/.test(pt.op)), zf = (pt.op === 'Z' || ext) ? pt.work : pt.drop, zn = (pt.op === 'Z' || ext) ? pt.workNeg : pt.dropNeg;
+    return 'Точка ' + (i + 1) + ' (' + pt.op + '): X' + (pt.xNeg ? '-' : '') + pt.x + ' Y' + (pt.yNeg ? '-' : '') + pt.y + ' · подход Z' + pt.app + ' → Z' + (zn ? '-' : '') + zf + ' F' + pt.feed;
+  });
+  var w = document.getElementById('tp_warn');
+  w.textContent = 'Точек: ' + points.length + '. Проверьте X, Y и Z каждой точки перед генерацией:\n' + rows.join('\n');
+  progChecked = true;
+  document.getElementById('genBtn').textContent = 'Проверил — сгенерировать';
+  document.getElementById('tp_msg').textContent = '';
 }
 
 function togglePointSign(id, field) {
@@ -3551,24 +3609,42 @@ function renderPoints() {
     var sg = pt.valNeg ? '−' : '+';
     var block;
     if (diam) {
-      block = `<div class="field"><label>Диаметр, мм</label><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="${pt.op === 'D' ? 'Укажите внутренний диаметр' : 'Укажите наружный диаметр'}" oninput="updatePoint(${pt.id},'val',this.value)"></div>`;
+      block = `<div class="field"><label>Диаметр, мм</label><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="${pt.op === 'D' ? 'Укажите внутренний диаметр' : 'Укажите наружный диаметр'}" oninput="updatePoint(${pt.id},'val',this.value)" data-pt="${pt.id}" data-f="val"></div>`;
     } else if (ren && pt.op === 'Z') {
       block = '<p class="subtle-note" style="margin-bottom:6px">Z: касание сверху вниз (A-3). Значение и опуск за край не требуются.</p>';
     } else if (ren && (pt.op === 'X' || pt.op === 'Y')) {
       block = `<div class="field"><label>Направление касания</label><div class="grid2"><button type="button" class="mode-choice ${pt.valNeg ? '' : 'active'}" onclick="setPointDirection(${pt.id},false)">+${pt.op}</button><button type="button" class="mode-choice ${pt.valNeg ? 'active' : ''}" onclick="setPointDirection(${pt.id},true)">−${pt.op}</button></div></div>`;
     } else if (cycle) {
-      block = `<p class="subtle-note" style="margin-bottom:6px">${pt.op==='M4X'?'Паз по X: M4 A1':pt.op==='M4Y'?'Паз по Y: M4 A2':pt.op==='M5X'?'Выступ по X: M5 A1':'Выступ по Y: M5 A2'}. Укажите размер паза или выступа.</p><div class="field"><label>Размер паза / выступа, мм</label><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="Например, 100" oninput="updatePoint(${pt.id},'val',this.value)"></div>`;
+      block = `<p class="subtle-note" style="margin-bottom:6px">${pt.op==='M4X'?'Паз по X':pt.op==='M4Y'?'Паз по Y':pt.op==='M5X'?'Выступ по X':'Выступ по Y'}. Укажите размер.</p><div class="field"><label>Размер паза / выступа, мм</label><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="Например, 100" oninput="updatePoint(${pt.id},'val',this.value)" data-pt="${pt.id}" data-f="val"></div>`;
     } else if (ren) {
-      block = `<div class="field"><label>Диаметр, мм</label><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="Укажите диаметр" oninput="updatePoint(${pt.id},'val',this.value)"></div>`;
+      block = `<div class="field"><label>Диаметр, мм</label><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="Укажите диаметр" oninput="updatePoint(${pt.id},'val',this.value)" data-pt="${pt.id}" data-f="val"></div>`;
     } else {
-      block = `<div class="field"><label>Значение зонда</label><div class="row"><button class="sign-btn" onclick="togglePointSign(${pt.id},'valNeg')">${sg}</button><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="Например, 10" oninput="updatePoint(${pt.id},'val',this.value)"></div></div>`;
+      block = `<div class="field"><label>Значение зонда</label><div class="row"><button class="sign-btn" onclick="togglePointSign(${pt.id},'valNeg')">${sg}</button><input type="text" value="${esc(pt.val)}" inputmode="decimal" placeholder="Например, 10" oninput="updatePoint(${pt.id},'val',this.value)" data-pt="${pt.id}" data-f="val"></div></div>`;
     }
-    if (pt.op !== 'Z') {
-      if (!pt.edgeDepth) pt.edgeDepth = '10';
-      block += `<div class="field"><label>${boss ? 'Отпуск зонда за край, мм' : 'Глубина опускания за край, мм'}</label><input type="text" value="${esc(pt.edgeDepth)}" inputmode="decimal" placeholder="10" oninput="updatePoint(${pt.id},'edgeDepth',this.value)"></div>`;
+    if (!pt.edgeDepth) pt.edgeDepth = '10';
+    if (pt.drop === undefined) { pt.drop = '10'; pt.dropNeg = true; pt.workNeg = false; }
+    // параметр цикла: отпуск зонда за край / за деталь (только выступ и наружный диаметр)
+    if (boss) {
+      block += `<div class="field"><label>Отпуск зонда за край, мм</label><input type="text" value="${esc(pt.edgeDepth)}" inputmode="decimal" placeholder="10" oninput="updatePoint(${pt.id},'edgeDepth',this.value)" data-pt="${pt.id}" data-f="edgeDepth"></div>`;
+    } else if (pt.op === 'D-') {
+      block += `<div class="field"><label>Отпуск зонда за деталь, мм</label><input type="text" value="${esc(pt.w)}" inputmode="decimal" placeholder="10" oninput="updatePoint(${pt.id},'w',this.value)" data-pt="${pt.id}" data-f="w"></div>`;
     }
+    var ext = boss || pt.op === 'D-';   // наружные: опускание делает сам цикл, щуп стоит над деталью
+    var isZ = pt.op === 'Z' || ext;
+    var dField = isZ ? 'work' : 'drop', dNegField = isZ ? 'workNeg' : 'dropNeg';
+    var dNeg = isZ ? pt.workNeg : pt.dropNeg;
+    var depthLabel = ext ? 'Z начала цикла (над деталью)' : (pt.op === 'Z' ? 'Z касания: старт подачи' : 'Z опускания на подаче');
+    var depthField = `<div class="field"><label>${depthLabel}</label><div class="row"><button class="sign-btn" onclick="togglePointSign(${pt.id},'${dNegField}')">${dNeg ? '−' : '+'}</button><input type="text" value="${esc(pt[dField])}" inputmode="decimal" oninput="updatePoint(${pt.id},'${dField}',this.value)" data-pt="${pt.id}" data-f="${dField}"></div></div>`;
+    if (ext) block += '<p class="subtle-note" style="margin:6px 0 0">Наружный контур: щуп стоит над деталью, вниз за край опускается сам цикл (отпуск выше). Z начала цикла должна быть выше верха детали.</p>';
+    block += `<div class="pt-motion"><div class="pt-motion-title">Движение по точке</div><div class="grid2">
+      <div class="field"><label>Z подхода (быстро)</label><input type="text" value="${esc(pt.app)}" inputmode="decimal" oninput="updatePoint(${pt.id},'app',this.value)" data-pt="${pt.id}" data-f="app"></div>
+      ${depthField}
+      <div class="field"><label>Подача опускания F</label><input type="text" value="${esc(pt.feed)}" inputmode="decimal" oninput="updatePoint(${pt.id},'feed',this.value)" data-pt="${pt.id}" data-f="feed"></div>
+      <div class="field"><label>Безопасная Z после цикла</label><input type="text" value="${esc(pt.safe)}" inputmode="decimal" oninput="updatePoint(${pt.id},'safe',this.value)" data-pt="${pt.id}" data-f="safe"></div>
+    </div></div>`;
     var card = document.createElement('div');
     card.className = 'point-card';
+    card.setAttribute('data-card', pt.id);
     card.innerHTML = `
       <div class="ptitle">Точка ${idx + 1}</div>
       ${points.length > 1 ? '<button class="del" onclick="removePoint(' + pt.id + ')">✕</button>' : ''}
@@ -3585,14 +3661,14 @@ function renderPoints() {
           <label>X</label>
           <div class="row">
             <button class="sign-btn" onclick="togglePointSign(${pt.id},'xNeg')">${pt.xNeg?'−':'+'}</button>
-            <input type="text" value="${esc(pt.x)}" inputmode="decimal" oninput="updatePoint(${pt.id},'x',this.value)">
+            <input type="text" value="${esc(pt.x)}" inputmode="decimal" oninput="updatePoint(${pt.id},'x',this.value)" data-pt="${pt.id}" data-f="x">
           </div>
         </div>
         <div class="field">
           <label>Y</label>
           <div class="row">
             <button class="sign-btn" onclick="togglePointSign(${pt.id},'yNeg')">${pt.yNeg?'−':'+'}</button>
-            <input type="text" value="${esc(pt.y)}" inputmode="decimal" oninput="updatePoint(${pt.id},'y',this.value)">
+            <input type="text" value="${esc(pt.y)}" inputmode="decimal" oninput="updatePoint(${pt.id},'y',this.value)" data-pt="${pt.id}" data-f="y">
           </div>
         </div>
       </div>
@@ -3600,6 +3676,8 @@ function renderPoints() {
     `;
     list.appendChild(card);
   });
+  ptCheckLive();
+  progUnconfirm();
 }
 
 function genProgram() {
@@ -3610,34 +3688,34 @@ function genProgram() {
 
   if (points.length === 0) return fail('Добавьте хотя бы одну точку');
 
-  var ren = machine === 'renishaw';
-  var t = document.getElementById('t_num').value.trim() || '28';
-  var h = document.getElementById('t_h').value.trim() || t;
-  var comment = document.getElementById('t_comment').value.trim() || 'PROBE';
+  var ren = machine === 'renishaw', haas = machine === 'haas';
+  var t = document.getElementById('t_num').value.trim() || '28';   // H всегда равен T
   var wcs = document.getElementById('t_wcs').value;
-  var safeN = parseNum(document.getElementById('a_safe').value.trim() || '200');
-  var appN = parseNum(document.getElementById('a_app').value.trim() || '50');
-  var workN = parseNum(document.getElementById('a_work').value.trim() || '5');
-  var feedN = parseNum(document.getElementById('a_feed').value.trim() || '500');
-  if ([safeN, appN, workN, feedN].some(function (v) { return v === null; })) return fail('Проверьте безопасную Z, подход, рабочую Z и подачу');
-  if (feedN <= 0) return fail('Подача должна быть больше 0');
-  var safe = dot(safeN), app = dot(appN), work = dot(workN), feed = dot(feedN);
   var wNum = {'G54':'1','G55':'2','G56':'3','G57':'4','G58':'5','G59':'6'}[wcs] || '1';
+  var m154 = /^G154P(\d+)$/.exec(wcs); if (m154) wNum = '154.' + ('0' + m154[1]).slice(-2);   // Haas: G154 P1–P99 → W154.01–W154.99
   var zeroNames = { 'Z':'ZERO Z PLOSKOST', 'X':'ZERO X TOREC', 'Y':'ZERO Y TOREC', 'D':'ZERO VNUTRENNIJ DIAMETR', 'D-':'ZERO NARUZHNIJ DIAMETR', M4X:'PAZ X', M4Y:'PAZ Y', M5X:'VYSTUP X', M5Y:'VYSTUP Y' };
+  var shortNames = { 'Z':'Z', 'X':'X', 'Y':'Y', 'D':'D VNUTR', 'D-':'D NARUZH', M4X:'PAZ X', M4Y:'PAZ Y', M5X:'VYSTUP X', M5Y:'VYSTUP Y' };
+  var nm = [];
+  points.forEach(function (q) { var k = shortNames[q.op]; if (nm.indexOf(k) < 0) nm.push(k); });
+  var comment = 'OBNULENIE';   // добавляем названия целиком, пока влезает в 60 знаков
+  for (var ci = 0; ci < nm.length; ci++) { var cand = comment + (ci ? ', ' : ' ') + nm[ci]; if (cand.length > 60) { comment += ' ...'; break; } comment = cand; }
+
+  var firstSafe = parseNum(points[0].safe);
+  if (firstSafe === null) return fail('Точка 1: укажите безопасную Z');
 
   var lines = [];
   lines.push('T' + t + 'M06;');
   lines.push('(' + comment + ');');
   lines.push('');
   lines.push(wcs + 'G0G90;');
-  lines.push('G43Z' + safe + 'H' + h + ';');
+  lines.push('G43Z' + dot(firstSafe) + 'H' + t + ';');
 
   for (var idx = 0; idx < points.length; idx++) {
     var pt = points[idx];
     var n = 'Точка ' + (idx + 1) + ': ';
     var diam = (pt.op === 'D' || pt.op === 'D-');
     var cycle = /^M[45][XY]$/.test(pt.op);
-    var drop = false;
+    var ext = (pt.op === 'D-' || /^M5[XY]$/.test(pt.op));   // наружные: опускание делает цикл
     var xRaw = (pt.x + '').trim().replace(',', '.');
     var yRaw = (pt.y + '').trim().replace(',', '.');
     var vRaw = (pt.val + '').trim().replace(',', '.');
@@ -3650,32 +3728,34 @@ function genProgram() {
     if (pt.valNeg) val = -val;
 
     if ((diam || cycle) && (vRaw === '' || !(Math.abs(Number(vRaw)) > 0))) return fail(n + (cycle ? 'укажите размер паза / выступа' : 'укажите диаметр'));
-    var edgeDepth = null;
-    if (pt.op !== 'Z') {
-      edgeDepth = parseNum(pt.edgeDepth);
-      if (edgeDepth === null || edgeDepth <= 0) return fail(n + 'укажите глубину опускания за край');
-    }
     var depth = null;
-    if (pt.op === 'D-' || /^M5[XY]$/.test(pt.op)) {
+    if (ext) {
       depth = parseNum(/^M5[XY]$/.test(pt.op) ? pt.edgeDepth : pt.w);
-      if (depth === null || depth <= 0) return fail(n + 'укажите отпуск зонда за деталь');
+      if (depth === null || depth <= 0) return fail(n + 'укажите отпуск зонда за деталь / край');
     }
     if (!ren && pt.op === 'Z' && val >= 0) return fail(n + 'для Z нужно отрицательное значение');
 
+    // движение: у каждой точки своё
+    var vApp = parseNum(pt.app); if (vApp === null) return fail(n + 'укажите Z подхода');
+    var vFeed = parseNum(pt.feed); if (vFeed === null || vFeed <= 0) return fail(n + 'подача должна быть больше 0');
+    var vSafe = parseNum(pt.safe); if (vSafe === null) return fail(n + 'укажите безопасную Z');
+    var startZ = (pt.op === 'Z' || ext) ? pt.work : pt.drop;
+    var startNeg = (pt.op === 'Z' || ext) ? pt.workNeg : pt.dropNeg;
+    var vZ = parseNum(startZ); if (vZ === null) return fail(n + (ext ? 'укажите Z начала цикла' : 'укажите Z опускания'));
+    vZ = Math.abs(vZ); if (startNeg) vZ = -vZ;
+    if (!(vApp > vZ)) return fail(n + 'Z подхода (' + dot(vApp) + ') должна быть выше ' + ((pt.op === 'Z' || ext) ? 'Z начала подачи' : 'Z опускания') + ' (' + dot(vZ) + ')');
+
     var probe;
-    if (ren) probe = renLine(pt.op, wNum, pt.valNeg, Math.abs(val), depth);
+    if (haas) probe = haasLine(pt.op, wNum, (diam || cycle) ? Math.abs(val) : val, depth) + ';';
+    else if (ren) probe = renLine(pt.op, wNum, pt.valNeg, Math.abs(val), depth);
     else if (cycle) probe = hexCycleLine(pt.op, wNum, Math.abs(val), depth);
     else probe = 'G65P9103A91W' + wNum + hexTokens(pt.op, val, depth).join('') + ';';
 
     lines.push('X' + dot(x) + 'Y' + dot(y) + ';');
-    lines.push('Z' + app + ';');
-    if (pt.op === 'Z') {
-      lines.push('G1Z' + work + 'F' + feed + ';');
-    } else {
-      lines.push('G1Z-' + dot(edgeDepth) + 'F' + feed + ';');
-    }
+    lines.push('Z' + dot(vApp) + ';');
+    lines.push('G1Z' + dot(vZ) + 'F' + dot(vFeed) + ';');
     lines.push(probe);
-    lines.push('G0Z' + safe + ';');
+    lines.push('G0Z' + dot(vSafe) + ';');
     lines.push('(' + zeroNames[pt.op] + ');');
   }
 
@@ -5571,10 +5651,22 @@ var gcModelTimer=0;
 function gcModelSaveParams(now){
   clearTimeout(gcModelTimer);
   var run=function(){
-    if(!gc.key)return;var st=gcLsGet('cncGcMdlP');
-    if(!gc.model)delete st[gc.key];
-    else st[gc.key]={off:gc.model.off,rz:gc.model.rz,zref:gc.model.zref,mode:gc.model.mode,al:gc.model.al||{},t:Date.now()};
-    gcLsSet('cncGcMdlP',st,12);
+    if(gc.key){
+      var st=gcLsGet('cncGcMdlP');
+      if(!gc.model)delete st[gc.key];
+      else st[gc.key]={off:gc.model.off,rz:gc.model.rz,zref:gc.model.zref,mode:gc.model.mode,al:gc.model.al||{},t:Date.now()};
+      gcLsSet('cncGcMdlP',st,12);
+    }
+    // модель из «Папки моделей»: запись папки обновляется вместе с привязкой (раньше хранила снимок на момент сохранения)
+    if(gc.libId&&gc.model){
+      try{
+        var ls=modelLibLoad(),i;
+        for(i=0;i<ls.length;i++)if(ls[i].id===gc.libId){
+          ls[i].off=gc.model.off||[0,0,0];ls[i].rz=gc.model.rz||0;ls[i].zref=gc.model.zref||'bottom';ls[i].mode=gc.model.mode||'solid';ls[i].al=gc.model.al||{};
+          modelLibSave(ls);break;
+        }
+      }catch(e){}
+    }
   };
   if(now)run();else gcModelTimer=setTimeout(run,300);
 }
@@ -5723,7 +5815,7 @@ function gcModelPick(inp){
       if(r.seg){if(!r.seg.length)throw new Error('dxfempty');}
       else if(!r.tri.length)throw new Error('empty');
       if(r.tri.length/9>600000)throw new Error('big');
-      gcModelBuild(f.name,r.tri,[0,0,0],0,'bottom','solid',r.seg||null,{});gc.pick=null;gc.pickMsg='';
+      gc.libId=null;gcModelBuild(f.name,r.tri,[0,0,0],0,'bottom','solid',r.seg||null,{});gc.pick=null;gc.pickMsg='';
       gcModelUi();gcModelSaveParams(true);gcModelSaveGeom();gcDraw();
       var ok='Модель загружена: '+f.name+(r.skipped?' · DXF пропущено: '+r.skipped:'');
       gcToast(ok,30000);
@@ -6151,80 +6243,21 @@ function rcMount(id){
   inp.style.display='none';
   target(false);layout();
 }
-function rcMountAll(){gcGooSvgInit();Object.keys(RC_CFG).forEach(rcMount);}
+function rcMountAll(){Object.keys(RC_CFG).forEach(rcMount);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',rcMountAll);else rcMountAll();
 
-// ══ v135: «таблетка» растекается в лист (gooey) ═══════════════════════
-// Свой код по описанию эффекта: из кнопки, на которую нажали, растекается капля и становится листом.
-// Слияние формы — SVG-фильтр goo; движение — Web Animations API. При «Уменьшении движения» анимации нет.
-function gcGooSvgInit(){
-  if(document.getElementById('gcGooF')||!document.body)return;
-  var s=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  s.setAttribute('width','0');s.setAttribute('height','0');s.setAttribute('aria-hidden','true');
-  s.style.position='absolute';
-  s.innerHTML='<defs><filter id="gcGooF" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="g"/><feComposite in="SourceGraphic" in2="g" operator="atop"/></filter></defs>';
-  document.body.appendChild(s);
-}
-var gcLastTapEl=null;
-document.addEventListener('click',function(e){gcLastTapEl=(e.target&&e.target.closest)?e.target.closest('button'):null;},true);
+// ══ Листы (шторки): открываются и закрываются сразу, без анимации (v136–v137) ══
 function gcFxCard(sheet){return sheet.querySelector('.gc-zero-card')||sheet.firstElementChild;}
-function gcFxRect(el){var r=el.getBoundingClientRect();return {l:r.left,t:r.top,w:r.width,h:r.height};}
-function gcFxOrigin(){
-  var r=(gcLastTapEl&&document.body.contains(gcLastTapEl))?gcFxRect(gcLastTapEl):null;
-  if(!r||r.w<4)r={l:window.innerWidth/2-60,t:window.innerHeight/2-20,w:120,h:40};
-  return r;
-}
 function gcFxOpen(sheet){
   if(!sheet)return;
   var card=gcFxCard(sheet);
-  sheet._fxOrigin=gcFxOrigin();
   sheet.style.display='flex';
-  /* v136: анимация открытия убрана, лист открывается сразу */
   if(card)card.style.opacity='';
-  return;
-  if(!card||rcStill()){if(card)card.style.opacity='';return;}
-  var org=sheet._fxOrigin,cr=gcFxRect(card),cs=getComputedStyle(card);
-  var rad=(parseFloat(cs.borderTopLeftRadius)||16)+'px',bg=cs.backgroundColor;
-  if(!bg||bg==='rgba(0, 0, 0, 0)')bg='#26282c';
-  var accent=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim()||'#4b90d0';
-  var ease='cubic-bezier(.3,.9,.4,1)';
-  card.style.opacity='0';
-  var wrap=document.createElement('div');wrap.className='gc-goo';
-  var a=document.createElement('i'),b=document.createElement('i');b.className='gc-goo-b';
-  wrap.appendChild(a);wrap.appendChild(b);document.body.appendChild(wrap);
-  var fin=false,done=function(){if(fin)return;fin=true;wrap.remove();card.style.transition='opacity 180ms ease';card.style.opacity='';setTimeout(function(){card.style.transition='';},200);};
-  a.animate([
-    {left:org.l+'px',top:org.t+'px',width:org.w+'px',height:org.h+'px',borderRadius:'999px',background:accent},
-    {left:cr.l+'px',top:cr.t+'px',width:cr.w+'px',height:cr.h+'px',borderRadius:rad,background:bg}
-  ],{duration:460,easing:ease,fill:'forwards'}).onfinish=done;
-  var ox=org.l+org.w/2-15,oy=org.t+org.h/2-15,tx=cr.l+cr.w/2-15,ty=cr.t+cr.h/2-15;
-  b.animate([
-    {transform:'translate('+ox+'px,'+oy+'px) scale(.7)',opacity:1,background:accent},
-    {transform:'translate('+tx+'px,'+ty+'px) scale(1)',opacity:0,background:bg}
-  ],{duration:440,delay:70,easing:ease,fill:'forwards'});
-  setTimeout(done,760);
 }
 function gcFxClose(sheet){
   if(!sheet||sheet.style.display==='none')return;
-  /* v137: анимация закрытия убрана */
   sheet.style.display='none';
   var c0=gcFxCard(sheet);if(c0)c0.style.opacity='';
-  return;
-  var card=gcFxCard(sheet),org=sheet._fxOrigin;
-  if(!card||!org||rcStill()){sheet.style.display='none';if(card)card.style.opacity='';return;}
-  var cr=gcFxRect(card),cs=getComputedStyle(card);
-  var rad=(parseFloat(cs.borderTopLeftRadius)||16)+'px',bg=cs.backgroundColor;
-  if(!bg||bg==='rgba(0, 0, 0, 0)')bg='#26282c';
-  var accent=(getComputedStyle(document.documentElement).getPropertyValue('--accent')||'').trim()||'#4b90d0';
-  card.style.opacity='0';
-  var wrap=document.createElement('div');wrap.className='gc-goo';
-  var a=document.createElement('i');wrap.appendChild(a);document.body.appendChild(wrap);
-  var fin=false,done=function(){if(fin)return;fin=true;wrap.remove();sheet.style.display='none';card.style.opacity='';};
-  a.animate([
-    {left:cr.l+'px',top:cr.t+'px',width:cr.w+'px',height:cr.h+'px',borderRadius:rad,background:bg},
-    {left:org.l+'px',top:org.t+'px',width:org.w+'px',height:org.h+'px',borderRadius:'999px',background:accent}
-  ],{duration:320,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).onfinish=done;
-  setTimeout(done,500);
 }
 function gcInit(){
   var c=document.getElementById('gcCanvas');if(!c||c.dataset.ready)return;c.dataset.ready='1';
@@ -7212,6 +7245,7 @@ function gcModelFromAppOpen(id){
   var ms=modelLibLoad(),p=null,i;
   for(i=0;i<ms.length;i++)if(ms[i].id===id){p=ms[i];break;}
   if(!p)return;
+  gc.libId=id;
   gcModelRestoreFrom('cncModelGeom_'+id,p);
   gcToast('Модель: '+(p.name||'')+' · привязка восстановлена',6000);
 }
@@ -7269,7 +7303,7 @@ function gcTblCalc(){
   if(!isFinite(x1)||!isFinite(z1)||!isFinite(x2)||!isFinite(z2)){res.innerHTML='<div class="gc-tbl-warn">Введите числа в поля X и Z</div>';svg.innerHTML='';return;}
   var dx=x2-x1,dz=z2-z1;
   if(Math.abs(dx)<10){res.innerHTML='<div class="gc-tbl-warn">Точки слишком близко по X (меньше 10 мм). Расставьте щуп дальше.</div>';svg.innerHTML='';return;}
-  var ang=Math.atan2(dz,dx)*180/Math.PI,fix=-ang;
+  var ang=Math.atan2(dx<0?-dz:dz,Math.abs(dx))*180/Math.PI,fix=-ang;
   var head;
   if(Math.abs(fix)<0.0005){head='<div class="gc-tbl-main">Стол уже параллелен оси X</div>';}
   else{var dir=(fix*GC_TBL_SIGN>=0)?'B+':'B−';head='<div class="gc-tbl-main">Поверни стол по '+dir+' на <b>'+Math.abs(fix).toFixed(4)+'°</b></div>';}
@@ -7338,7 +7372,10 @@ function gcOnModelOpened(){
   }catch(e){}
   if(!gc.fs){try{gcEnterFs();}catch(e){}}
   var al=(gc.model&&gc.model.al)||{},hh0=al.h||{};
-  var needWiz=gcAxis.ax==='Y'?!(hh0.y||hh0.x||hh0.z||hh0.d||hh0.c):(!al.ax||!al.end||!al.l1||!al.l2);
+  // Мастер сам запускается только у модели без какой-либо привязки и без отметки «пропущено»;
+  // частично привязанную или пропущенную модель не дёргаем — «Привязать заново» / «Пройти по шагам» запускают его вручную
+  var noBind=gcAxis.ax==='Y'?!(hh0.y||hh0.x||hh0.z||hh0.d||hh0.c||hh0.r):!(al.ax||al.end||al.l1||al.l2);
+  var needWiz=noBind&&!al.wizSkip;
   if(needWiz){
     try{gcWizStart();}catch(e){}
   }else{
@@ -7361,7 +7398,18 @@ function gcWizBack(){
     gc.pickMsg='';gcModelTx();gcModelSaveParams();}
   gcAlUi();gcDraw();
 }
-function gcWizCancel(){gc.wiz=false;gc.pick=null;gc.pickMsg='';gcAlUi();gcDraw();}
+function gcWizCancel(){gc.wiz=false;gc.pick=null;gc.pickMsg='';gcWizRemember();gcAlUi();gcDraw();}
+function gcWizRemember(){var m=gc.model;if(!m)return;m.al=m.al||{};m.al.wizSkip=true;try{gcModelSaveParams(true);}catch(e){}}
+function gcWizSkipAll(){
+  gc.wiz=false;gc.pick=null;gc.pickMsg='';gcWizRemember();
+  gcAlUi();gcDraw();
+  gcToast('Привязка пропущена. Её можно сделать в «Обнуление модели»',5000);
+}
+function gcWizRebind(){
+  if(!gc.model){gcToast('Сначала загрузите модель',4000);return;}
+  try{gcAlReset();}catch(e){}   // сбрасывает привязку и отметку «пропущено» (кроме систем координат)
+  gcWizStart();
+}
 function gcModelZero(step){
   gc.wiz=false;
   gcActZeroClose();
@@ -7497,6 +7545,7 @@ function gcMoreSaveModel(){
     off:m.off||[0,0,0],rz:m.rz||0,zref:m.zref||'bottom',mode:m.mode||'solid',al:m.al||{},
     key:gc.key||gcHash(String(gc.src||''))};
   try{
+    gc.libId=id;   // дальше привязка этой модели обновляет запись в папке
     // клонируем geom в отдельный ключ модели
     var list=modelLibLoad();
     list.unshift(rec);
@@ -7531,6 +7580,7 @@ function modelLibOpen(id){
   var list=modelLibLoad(),p=null,i;
   for(i=0;i<list.length;i++)if(list[i].id===id){p=list[i];break;}
   if(!p)return;
+  gc.libId=id;
   // открыть viewer (можно без программы)
   gc.back='home';
   if(gc.src==null)gc.src='';
@@ -7623,33 +7673,6 @@ function sendNC(id) {
   URL.revokeObjectURL(a.href);
 }
 </script>
-<button type="button" id="pmBtn" aria-label="Минус" style="display:none;position:fixed;z-index:99999;width:34px;height:30px;padding:0;border-radius:9px;border:1px solid rgba(105,185,255,.35);background:rgba(30,60,100,.95);color:#e8f4ff;font-size:1.05rem;font-weight:700;line-height:1">±</button>
-<script>
-// Кнопка «±» у числовых полей: на цифровой клавиатуре iPhone нет минуса
-(function(){
-  var btn=document.getElementById('pmBtn'),cur=null,tmr=null;
-  function isNum(el){return el&&el.tagName==='INPUT'&&el.getAttribute('inputmode')==='decimal'&&!el.readOnly&&!el.disabled&&!el.hasAttribute('data-nopm');}
-  function place(){
-    if(!cur||!document.body.contains(cur)){btn.style.display='none';return;}
-    var r=cur.getBoundingClientRect();
-    if(r.width<60||r.bottom<0||r.top>innerHeight){btn.style.display='none';return;}
-    btn.style.display='block';
-    btn.style.left=Math.round(r.right-38)+'px';btn.style.top=Math.round(r.top+(r.height-30)/2)+'px';
-  }
-  document.addEventListener('focusin',function(e){if(isNum(e.target)){clearTimeout(tmr);cur=e.target;cur.style.paddingRight='44px';place();}});
-  document.addEventListener('focusout',function(e){if(e.target===cur){tmr=setTimeout(function(){if(document.activeElement!==cur){cur.style.paddingRight='';cur=null;btn.style.display='none';}},250);}});
-  btn.addEventListener('pointerdown',function(e){e.preventDefault();});
-  btn.addEventListener('click',function(e){
-    e.preventDefault();if(!cur)return;
-    var v=String(cur.value||'').trim();
-    cur.value=v.charAt(0)==='-'?v.slice(1):'-'+v;
-    cur.dispatchEvent(new Event('input',{bubbles:true}));cur.dispatchEvent(new Event('change',{bubbles:true}));
-    try{cur.focus();}catch(x){}
-  });
-  window.addEventListener('scroll',place,true);window.addEventListener('resize',place);
-  if(window.visualViewport){visualViewport.addEventListener('resize',place);visualViewport.addEventListener('scroll',place);}
-})();
-</script>
 <script>try{gcModelBrUi();}catch(e){}</script>
 
 <button class="bug-fab" id="bugFab" type="button" onclick="bugOpen()" aria-label="Записать баг"><svg viewBox="0 0 24 24"><path d="M8.5 8.5h7v5.5a3.5 3.5 0 01-7 0z"/><path d="M12 8.5V6M9.5 5.5L11 7M14.5 5.5L13 7M4.5 12h4M15.5 12h4M5.5 18l3-2M18.5 18l-3-2M5.5 7l3 2M18.5 7l-3 2"/></svg><span class="bug-badge" id="bugBadge" style="display:none"></span></button>
@@ -7671,7 +7694,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142',APP_DATE='17.11.2026';
+var APP_VERSION='v142.9',APP_DATE='21.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
