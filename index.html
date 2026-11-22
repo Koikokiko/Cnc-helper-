@@ -57,6 +57,10 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.14 | Claude Sonnet 5.5 | 22.11.2026 | (1) «Отправить в NC» (везде): уходит только файл .nc, без текста-подписи; имя — номер программы из первой строки O… как в программе плюс счётчик: O00125(1).nc, O00125(2).nc (счётчик по имени в localStorage cncNcCnt_v1, растёт после успешной отправки, сброса нет); нет номера — окно ввода названия. Из окна редактора теперь уходит текст редактора (раньше уходил текст другого поля, без правок, в т.ч. без /M0). Если системное «Поделиться» файлы не принимает — файл скачивается. (2) Меню ⋯: «К подпрограмме (M98)» и «Назад из подпрограммы» скрыты, если в редакторе одна программа. (3) Тап мимо меню ⋯ закрывает его; «Расставить M0»: ✕ при изменённых галочках спрашивает «Закрыть без применения?». Окна «Все D» и «Расставить M0» полноэкранные, закрываются кнопкой ✕. Не проверено на iPhone.
+ v142.13 | Claude Sonnet 5.5 | 22.11.2026 | (1) «Просмотр всех D»: D после числа с точкой без пробела (Y-100.D28) больше не пропускается — перед D запрещены только буква, «_» и «#»; для T проверка прежняя, строгая. На O00125.NC было 12 строк, стало 14 (T1 FREZA D50 SPEED — D28, T29 FREZA D12D 250 — D33). (2) Меню ⋯ → «Расставить M0»: окно со списком T; M0/M00 перед сменой инструмента относится к следующему T; галочка = перед ним /M0 (остановки нет, инструмент меняется сам), стоит сама, если /M0 уже есть; тап по галочке T меняет все его смены, тап по названию раскрывает отдельные смены со строками; «Отметить все» / «Снять все»; «Применить» — одна правка с общей отменой. Номер N перед M0 убирается: «N12 M00» → «/M00». Меняются только строки, где M0 — единственный код (плюс N и комментарий); M0 среди других кодов и M0 после последнего T не трогаются, о них сказано в окне. Не проверено на iPhone.
+ v142.12 | Claude Sonnet 5.5 | 22.11.2026 | (1) Редактор: стрелки поиска по T подсвечивают найденную строку голубой полосой. (2) «Переписать номера строк» — N1, N2, N3… шаг 1 (GOTO / M97 P / M99 P переносятся). (3) Кнопка «пуск» в редакторе закреплена всегда: запускает только с T, выбранной стрелками, и после правок текста (T ищется заново по номеру и порядковому месту); нет выбора или конфликт — предупреждение «Выберите T стрелками», запуска нет; обычный ввод в поле поиска сбрасывает выбор. (4) Убраны проверки: G0 по XY ниже верха заготовки (rapidXY), поворот оси A на G0 ниже верха (rotLow), смена инструмента не выше верха (toolchange); остальные проверки остались. (5) «Просмотр всех D» в меню ⋯: окно со списком «T + комментарий — D…» (новая строка при смене T или новом комментарии перед D, одинаковые D не повторяются, строки G65 и комментарии пропускаются); тап по строке — переход к первой D этой строки с подсветкой; под поиском появляется ряд «D≡ ‹ D D ›» для возврата к списку и перехода к предыдущей / следующей D, просмотренные строки помечены точкой. Не проверено на iPhone.
+ v142.11 | Claude Sonnet 5.5 | 22.11.2026 | Сделано по списку багов B1–B6: B1 — в полном экране подписи на canvas (T/строка/X/Y/Z/A) сдвигаются вниз на safe-area, больше не прячутся под верхним баром; B2 — убрано предупреждение «Быстрый ход (G0) вниз … ниже верха заготовки» (rapidDown; остальные проверки как были); B3 — стрелки поиска по T в редакторе находят T после номера кадра N (N10T5, N10 T5), в меню ⋯ добавлены «Убрать номера строк» и «Переписать номера строк» (шаг 10, пропускают пустые строки, %, O-заголовок и комментарии; GOTO / M97 P / M99 P переносятся на новые номера; откат кнопкой ↺); B4 — viewport maximum-scale=1 + user-scalable=no, touch-action: manipulation у окна кода и редактора, блок gesturestart, поля поиска и замены в редакторе 16px, сброс счётчика двойного тапа; B5 — после поиска по T рядом со стрелками появляется малая кнопка с иконкой пуска: закрывает редактор и запускает воспроизведение с этой смены инструмента; B6 — вероятная причина: потерянный pointerup/pointercancel оставлял «призрачный» указатель в gc.pointers, и любое касание считалось щипком (только зум); теперь число касаний сверяется с touch-событиями, указатели сбрасываются при touchend/touchcancel, потере фокуса и сворачивании. Не проверено на iPhone: B4 и B6 (причина B6 — предположение). sw.js: CACHE_NAME cnc-helper-v142-11.
  v142.10 | GPT-6 | 21.11.2026 | Подготовка PWA для GitHub Pages: обновлены метаданные установки, добавлены комплект иконок и манифест, настроен service worker для установки на iPhone и обновления приложения. Функциональность CNC не менялась.
  v142.9 | Claude Sonnet 5.5 | 21.11.2026 | Чистка без изменения вида: удалён мёртвый код анимации листов (gcFxOpen / gcFxClose после раннего return), gcGooSvgInit, gcFxRect, gcFxOrigin, слушатель gcLastTapEl, CSS .gc-goo и SVG-фильтр gcGooF; убраны перекрытые слои переменных :root (оставлен последний блок и четыре переменные --glass, --glass-strong, --ios-shadow, --ios-radius). Вид проверен попиксельно. Шторки открываются и закрываются, как раньше.
  v142.8 | Claude Sonnet 5.5 | 21.11.2026 | 3D-модель, мастер привязки: (1) сам запускается только у модели без какой-либо привязки и без отметки «пропущено», а не при каждом открытии неполной привязки; (2) в панели мастера кнопка «Пропустить всё» (отказ запоминается вместе с привязкой модели; «Отмена» тоже запоминает); (3) в «Обнуление модели» кнопка «Привязать заново» — сбрасывает привязку и запускает мастер. (4) ИСПРАВЛЕНО: модель из «Папки моделей» теряла привязку, сделанную после сохранения (при повторном открытии возвращался снимок на момент сохранения и мастер начинал заново); теперь запись папки обновляется вместе с привязкой. Ручной запуск «Пройти по шагам» работает как раньше.
@@ -67,37 +71,13 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  v142.3 | Claude Sonnet 5.5 | 21.11.2026 | ИСПРАВЛЕНО: у наружного диаметра и выступа (M5 / D-) перед циклом больше нет G1 вниз над деталью (щуп врезался в заготовку при подходе). Теперь G1 идёт на «Z начала цикла (над деталью)» (по умолчанию рабочая Z из шапки), вниз за край опускается сам цикл параметром отпуска. Внутренний диаметр, паз, X/Y торец по-прежнему опускаются на «Z опускания».
  v142.2 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое обнуление, все операции и станки: подход по Z (G0), опускание на подаче G1 Z.. F.. (теперь со знаком + / − и отдельным полем, не зависит от параметра цикла), безопасная Z после цикла; у каждой точки своё, пусто = из шапки. Параметры цикла (отпуск за край / за деталь) вынесены отдельно; у наружного диаметра появилось поле отпуска. Циклы Haas ещё не добавлены (нет строк-образцов).
  v142.1 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое обнуление: у каждой точки блок «Движение по точке» — Z подхода (выход на точку), опускание (рабочая Z у Z-касания, за край у остальных), подача F и безопасная Z после цикла. Пустое поле берёт значение из шапки; X/Y и цикл по-прежнему у каждой точки. Сделано на файле v142 (в нём нет циклов Haas G65 P9995 из плана v143 — перенести правку в v143).
- v142 | Claude Haiku 5.5 | 17.11.2026 | В «Выравнивании стола» убраны упоминания оси B и названия станка (в заголовке, подсказке и пункте меню).
- v141 | Claude Haiku 5.5 | 17.11.2026 | В «Выравнивании стола» общая кнопка «±» больше не появляется над полями (у полей свои кнопки + / −). В остальных числовых полях приложения она работает как раньше.
- v140 | Claude Haiku 5.5 | 17.11.2026 | «Выравнивание стола» перенесено с главного экрана в «Обнуление» (рядом с Renishaw / Hexagon), отдельным пунктом внизу. Знак каждого значения задаётся отдельной кнопкой + / − рядом с полем, в поле только цифры (на iPhone в цифровой клавиатуре нет минуса).
- v139 | Claude Haiku 5.5 | 17.11.2026 | «Выравнивание стола» вынесено на главный экран отдельным пунктом (не зависит от модели и станка; лист открывается поверх любого экрана). Кнопка в листе «Обнуление» 3D Viewer убрана.
- v138 | Claude Haiku 5.5 | 17.11.2026 | Выравнивание стола (ось B, Haas №1): кнопка в «Обнуление» (только для станка с осью B); ввод координат станка X и Z двух точек (левый и правый край стола); результат: направление поворота B+ / B− и угол в градусах и минутах; схема наклона стола. Направление задаётся константой GC_TBL_SIGN (проверить на станке). Модель не поворачивается.
- v137 | Claude Haiku 5.5 | 17.11.2026 | Убрана анимация закрытия листов: все листы («Модель», «Из приложения», «Обнуление») открываются и закрываются сразу, без анимации. Счётчик на полях не менялся.
- v136 | Claude Haiku 5.5 | 17.11.2026 | Убрана анимация открытия листов («таблетка»): листы «Модель», «Из приложения» и «Обнуление» открываются сразу. Закрытие без изменений. Счётчик на полях не менялся.
- v135 | Claude Haiku 5.5 | 16.11.2026 | Счётчик «Rolling counter» (Bencho, MIT), перенесён на обычный JS: шаг кнопками, удержание, протяжка по числу, ввод с клавиатуры (тап по числу), дробные значения, знак и пробел-разделитель разрядов. Поля: смещения X/Y/Z, поворот, угол A, оси A, быстрое вращение. Листы «Файл → Модель», «Из приложения» и «Обнуление» открываются и закрываются как растекающаяся таблетка (SVG-фильтр goo, WAAPI, без зависимостей; при «Уменьшении движения» без анимации).
- v134 | Claude Haiku 5.5 | 16.11.2026 | Просмотр: моно-луч на кнопке «Пуск» (CSS, без зависимостей) — светится в покое, гаснет при воспроизведении; при «Уменьшении движения» луч статичный.
- v133 | Claude Sonnet 5.5 | 15.11.2026 | 3D Viewer: (1) подпрограммы M98 P… [L…] (P с числом повторов в старших разрядах тоже) и M99: блоки O… ищутся по всем файлам, вызовы раскрываются на месте в «листе выполнения» (вызов, тело, возврат), есть защита от рекурсии и предупреждения о ненайденных подпрограммах; (2) комплект из нескольких файлов: «Файл → С телефона» принимает несколько файлов, блок, на который есть M98, — подпрограмма, остальные — самостоятельные программы по порядку; «Файл → Комплект файлов» (порядок, добавить, убрать), комплект сохраняется в «Документах» одной записью; (3) редактор: вкладки по файлам, «К подпрограмме (M98)» и «Назад из подпрограммы» в меню ⋯; правка применяется к исходным файлам; (4) системы координат G54–G59, G54.1 P, G110–G129, G154 P: панель «СК» (Все / система), траектория выбранной системы ярче, у каждой системы своя привязка модели (в «Обнуление» — «Привязка для»), в режиме «Все» рисуются модели всех систем (новая система стартует с копии привязки текущей); (5) поле имени программы: прозрачное с тонкой линией, после применения остаётся название, комментарий (имя) вписывается в первый файл; ключ модели после переименования обновляется.
- v132.1 | Claude Sonnet 5.5 | 15.11.2026 | Исправление: блок «Поворотная ось» (выбор станка) был скрыт в программе с буквой B, пока выбран станок с осью A (Solex), и выбрать Haas №1 было нельзя. Теперь блок виден, если в программе есть A или B.
- v132 | Claude Sonnet 5.5 | 15.11.2026 | 3D Viewer: станок Haas №1 (ось B вокруг Y, B+ по часовой сверху, программа читает букву B). Новая привязка модели для обоих Haas по логике обнуления: X/Y/Z — плоскость (ноль на плоскости, кнопка ⇄ меняет сторону), Ø — отверстие (оси XZ/XY/YZ), разворот по плоскости X, «XZ от центра вращения». Solex №6 без изменений (старый мастер).
- v131 | Claude Sonnet 5.5 | 14.11.2026 | 3D Viewer: выбор станка Solex №6 (A вокруг X) / Haas №4 (A вокруг Y, центр X и Z, A+ по правилу правой руки). У каждого свои центр, скорость, направление. Solex без изменений.
- v130 | Grok 4.5 | 14.11.2026 | PWA: manifest.json, service worker, иконки, meta для standalone.
- v129 | Grok 4.5 | 14.11.2026 | B1–B7: при открытии модели выкл. будущие ходы + FS + мастер обнуления,
-      галочки на шагах, дефолт вращения 3200, фикс ложного тапа чипсов при скролле,
-      заголовок 3D Viewer по центру + мин. «Назад», фикс листа багов (safe-area),
-      сохранение программы/модели/привязки при выходе на главный.
- v128 | Claude Sonnet 5.5 | 14.11.2026 | Блок NOTES, версия на главном экране,
-      раздел «Баги и заметки» (круглая кнопка на всех экранах, авто-контекст,
-      копирование для ИИ).
- v127 | Claude Sonnet 5.5 | 14.11.2026 | Просмотрщик: модель остаётся при загрузке
-      программы; поворот 360 по всем осям; ширина блоков; подсветка строки T в
-      редакторе (голубая); убрана справка; долгое нажатие чипса 1 с; цвета по T
-      как в v119; скорость 1x синхронна; нижняя панель в полном экране только вручную.
+ v127–v142 | Claude Sonnet / Haiku / Grok | 14–17.11.2026 | (сжато) v127: просмотрщик не теряет модель, поворот 360, подсветка T в редакторе; v128: блок NOTES, версия на главном, раздел «Баги и заметки»; v129: B1–B7, мастер обнуления, фикс чипсов; v130: PWA (manifest, service worker); v131–v132.1: станки Solex №6 / Haas №4 / Haas №1, привязка модели по плоскости и отверстию; v133: подпрограммы M98/M99, комплекты файлов, системы G54–G59/G154, вкладки редактора; v134: луч на кнопке «Пуск»; v135: счётчик Rolling counter; v136–v137: листы без анимации; v138–v142: «Выравнивание стола» (позже без оси B и названия станка, в «Обнуление»).
  v126–v119 | Claude + пользователь | 12–14.11.2026 | Дизайн, просмотрщик, документы, обнуление.
 =====================================================================
 -->
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -112,6 +92,8 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
 <script>
 // Ловим ошибки страницы — они попадают в контекст багов
 window.__bugErr=[];
+// v142.11 (B4): страница всегда одного масштаба — жесты масштабирования iOS не пускаем (canvas работает на pointer-событиях и не затронут)
+['gesturestart','gesturechange','gestureend'].forEach(function(ev){document.addEventListener(ev,function(e){e.preventDefault();},{passive:false});});
 window.addEventListener('error',function(e){try{window.__bugErr.push(String(e.message||'error')+' (строка '+(e.lineno||0)+':'+(e.colno||0)+')');if(window.__bugErr.length>5)window.__bugErr.shift();}catch(_){}});
 window.addEventListener('unhandledrejection',function(e){try{var r=e.reason;window.__bugErr.push('Promise: '+String((r&&r.message)||r));if(window.__bugErr.length>5)window.__bugErr.shift();}catch(_){}});
 </script>
@@ -1196,13 +1178,13 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .gc-ed-actions button{min-width:40px;min-height:40px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.12);color:#7fb2de;font-size:.85rem;font-weight:650;padding:0 10px}
 .gc-ed-search{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(23,23,23,.95);flex-shrink:0}
 .gc-ed-search-row{display:flex;gap:6px;align-items:center}
-.gc-ed-search-row input{flex:1;min-height:40px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:15px}
+.gc-ed-search-row input{flex:1;min-height:40px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:16px}
 .gc-ed-search-row .fr-arrow{min-width:40px;min-height:40px}
 .gc-ed-found{font-size:.72rem;color:var(--muted);margin-top:6px;min-height:1.1em}
 .gc-ed-repl{display:none;margin-top:8px;gap:6px;flex-direction:column}
 .gc-ed-repl.on{display:flex}
 .gc-ed-repl .row{display:flex;gap:6px}
-.gc-ed-repl input{flex:1;min-height:38px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:14px}
+.gc-ed-repl input{flex:1;min-height:38px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:16px}
 .gc-ed-repl .btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .gc-ed-repl .btns button{min-height:40px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.14);color:#cfe0f0;font-weight:650;font-size:.85rem}
 .gc-ed-ta{flex:1;width:100%;border:0;resize:none;padding:12px 14px;font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;color:#e5f0ff;background:#121212;box-sizing:border-box}
@@ -1494,6 +1476,60 @@ button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .gc-wcs .lbl{flex:0 0 auto;align-self:center;font-size:.72rem;color:var(--muted);padding-right:2px}
 .gc-zero-wcs{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 8px}
 #gcodeView.gc-fs .gc-wcs{display:none!important}
+
+/* v142.11: B1 (отступ шапки полного экрана), B4 (без зума по двойному тапу), B5 (кнопка «пуск» с выбранной T) */
+html,body,#gcodeView,#gcCodeList,#gcToolName,.gc-ed-ov,.gc-ed-ov *{touch-action:manipulation}
+#gcodeView.gc-fs #gcCanvas{touch-action:none}
+.gc-ed-search-row .gc-ed-runt{display:flex;opacity:.5;min-width:46px;width:46px;min-height:46px;height:46px;align-items:center;justify-content:center;border-radius:14px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);padding:0}
+.gc-ed-search-row .gc-ed-runt.on{opacity:1}
+.gc-ed-search-row .gc-ed-runt svg{width:16px;height:16px;display:block}
+/* v142.12: список D */
+.gc-ed-drow{display:none;gap:6px;align-items:center;margin-top:6px}
+.gc-ed-drow.on{display:flex}
+.gc-ed-drow button{min-height:36px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:.85rem;font-weight:650}
+.gc-ed-drow .gc-ed-dinfo{flex:1;min-width:0;font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+.gc-ed-dlist{display:none;position:absolute;left:0;right:0;bottom:0;top:env(safe-area-inset-top);z-index:7;background:var(--bg);flex-direction:column}
+.gc-ed-dlist.on{display:flex}
+.gc-ed-dhead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--card)}
+.gc-ed-dhead b{font-size:1rem}
+.gc-ed-dhead button{min-width:40px;min-height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:1rem}
+.gc-ed-dbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 24px}
+.gc-ed-dbody button{display:block;width:100%;text-align:left;padding:12px;margin-bottom:6px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:.92rem;line-height:1.35;word-break:break-word}
+.gc-ed-dbody button.vis::before{content:"● ";color:var(--accent)}
+.gc-ed-dbody button.cur{border-color:var(--accent);background:var(--accent-soft)}
+.gc-ed-dempty{padding:20px 6px;color:var(--muted);text-align:center;font-size:.9rem}
+.gc-ed-m0tools{display:flex;gap:8px;padding:10px 12px 0}
+.gc-ed-m0tools button{flex:1;min-height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:.88rem;font-weight:650}
+.gc-ed-m0note{padding:8px 14px 0;font-size:.74rem;line-height:1.35;color:var(--muted)}
+.gc-ed-m0body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 12px}
+.gc-ed-m0g{margin-bottom:6px;border-radius:12px;border:1px solid var(--line);background:var(--card);overflow:hidden}
+.gc-ed-m0h,.gc-ed-m0i{display:flex;align-items:stretch}
+.gc-ed-m0box{flex:none;width:48px;min-height:46px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:0}
+.gc-ed-m0box span{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:var(--bg);line-height:1}
+.gc-ed-m0box.all span{background:var(--accent);border-color:var(--accent)}
+.gc-ed-m0box.all span::after{content:"✓"}
+.gc-ed-m0box.part span{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.gc-ed-m0box.part span::after{content:"–"}
+.gc-ed-m0t{flex:1;min-width:0;display:flex;align-items:center;gap:8px;text-align:left;padding:10px 12px 10px 0;border:0;background:transparent;color:var(--text);font-size:.92rem;line-height:1.3}
+.gc-ed-m0t b{flex:none}
+.gc-ed-m0t em{flex:1;min-width:0;font-style:normal;color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-ed-m0t i{flex:none;font-style:normal;color:var(--muted);font-size:.78rem}
+.gc-ed-m0g.dim{opacity:.55}
+.gc-ed-m0sub{display:none;border-top:1px solid var(--line)}
+.gc-ed-m0g.open .gc-ed-m0sub{display:block}
+.gc-ed-m0i{border-top:1px solid var(--line)}
+.gc-ed-m0i:first-child{border-top:0}
+.gc-ed-m0i .gc-ed-m0tx{flex:1;min-width:0;display:flex;align-items:center;padding:8px 12px 8px 0;font-size:.82rem;color:var(--muted);line-height:1.3}
+.nc-ask{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px}
+.nc-ask-box{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:18px;background:var(--card);border:1px solid var(--line);color:var(--text)}
+.nc-ask-box b{font-size:1.05rem}
+.nc-ask-box span{font-size:.82rem;color:var(--muted);line-height:1.35}
+.nc-ask-box input{min-height:46px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:16px}
+.nc-ask-btns{display:flex;gap:8px}
+.nc-ask-btns button{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:.95rem;font-weight:650}
+.nc-ask-btns #ncAskOk{background:var(--accent);border-color:var(--accent);color:#06121f}
+.gc-ed-m0foot{padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
+.gc-ed-m0foot button{width:100%;min-height:46px;border-radius:14px;border:0;background:var(--accent);color:#06121f;font-size:1rem;font-weight:700}
 
 /* v134: моно-луч на кнопке «Пуск» (только в покое; CSS без зависимостей) */
 @property --gc-beam-a{syntax:'<angle>';inherits:false;initial-value:0deg}
@@ -2532,7 +2568,7 @@ body.gc-fs-on .bug-fab{display:none}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
         </button>
       </div>
-      <div class="gc-code-list" id="gcCodeList" ondblclick="gcCodeExpand()" ontouchend="gcCodeDblTap(event)"><div class="gc-code-empty">Нет строк</div></div>
+      <div class="gc-code-list" id="gcCodeList" ondblclick="event.preventDefault();gcCodeExpand()" ontouchend="gcCodeDblTap(event)"><div class="gc-code-empty">Нет строк</div></div>
     </div>
     <div class="gc-tool-name" id="gcToolName" style="display:none" ondblclick="gcToolNameOpenEd()" ontouchend="gcToolNameTap(event)">
       <div class="gc-tool-name-t" id="gcToolNameT"></div>
@@ -2557,7 +2593,7 @@ body.gc-fs-on .bug-fab{display:none}
     <h2>Редактор</h2>
     <div class="gc-ed-actions">
       <button type="button" id="gcEdUndo" onclick="gcEdUndo()" title="Отменить" aria-label="Отменить">↺</button>
-      <button type="button" onclick="gcEdToggleMenu()" title="Ещё" aria-label="Ещё">⋯</button>
+      <button type="button" id="gcEdMoreBtn" onclick="gcEdToggleMenu()" title="Ещё" aria-label="Ещё">⋯</button>
     </div>
   </div>
   <div class="gc-ed-menu" id="gcEdMenu">
@@ -2565,16 +2601,27 @@ body.gc-fs-on .bug-fab{display:none}
     <button type="button" onclick="gcEdSendNC()">Отправить в NC</button>
     <button type="button" onclick="gcEdSave()">Сохранить</button>
     <button type="button" onclick="gcEdShowRepl()">Найти / Заменить</button>
-    <button type="button" onclick="gcEdGoSub()">К подпрограмме (M98)</button>
-    <button type="button" onclick="gcEdGoBack()">Назад из подпрограммы</button>
+    <button type="button" id="gcEdBtnSub" onclick="gcEdGoSub()">К подпрограмме (M98)</button>
+    <button type="button" id="gcEdBtnBack" onclick="gcEdGoBack()">Назад из подпрограммы</button>
+    <button type="button" onclick="gcEdStripN()">Убрать номера строк</button>
+    <button type="button" onclick="gcEdRenumberN()">Переписать номера строк</button>
+    <button type="button" onclick="gcEdDOpen()">Просмотр всех D</button>
+    <button type="button" onclick="gcEdM0Open()">Расставить M0</button>
   </div>
   <div class="gc-ed-search">
     <div class="gc-ed-search-row">
-      <input type="text" id="gcEdFind" placeholder="Поиск…" autocapitalize="characters" autocorrect="off" spellcheck="false" oninput="gcEdFindChanged()">
+      <input type="text" id="gcEdFind" placeholder="Поиск…" autocapitalize="characters" autocorrect="off" spellcheck="false" oninput="gcEdFindInput()">
       <button type="button" class="fr-arrow" onclick="gcEdStep(-1)" aria-label="Предыдущее">↑</button>
       <button type="button" class="fr-arrow" onclick="gcEdStep(1)" aria-label="Следующее">↓</button>
+      <button type="button" class="gc-ed-runt" id="gcEdRunT" onclick="gcEdRunFromT()" aria-label="Запустить с выбранной T" title="Запустить с выбранной T"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
     </div>
     <div class="gc-ed-found" id="gcEdFound"></div>
+    <div class="gc-ed-drow" id="gcEdDRow">
+      <button type="button" onclick="gcEdDOpen()" aria-label="Список всех D">D≡</button>
+      <button type="button" onclick="gcEdDStep(-1)" aria-label="Предыдущая D">‹ D</button>
+      <button type="button" onclick="gcEdDStep(1)" aria-label="Следующая D">D ›</button>
+      <span class="gc-ed-dinfo" id="gcEdDInfo"></span>
+    </div>
     <div class="gc-ed-repl" id="gcEdRepl">
       <div class="row"><input type="text" id="gcEdReplTo" placeholder="Заменить на…" autocapitalize="characters" autocorrect="off" spellcheck="false"></div>
       <div class="btns">
@@ -2582,6 +2629,20 @@ body.gc-fs-on .bug-fab{display:none}
         <button type="button" onclick="gcEdReplaceAll()">Заменить всё</button>
       </div>
     </div>
+  </div>
+  <div class="gc-ed-dlist" id="gcEdDList">
+    <div class="gc-ed-dhead"><b>Все D</b><button type="button" onclick="gcEdDClose()" aria-label="Закрыть">✕</button></div>
+    <div class="gc-ed-dbody" id="gcEdDBody"></div>
+  </div>
+  <div class="gc-ed-dlist" id="gcEdM0List">
+    <div class="gc-ed-dhead"><b>Расставить M0</b><button type="button" onclick="gcEdM0CloseBtn()" aria-label="Закрыть">✕</button></div>
+    <div class="gc-ed-m0tools">
+      <button type="button" onclick="gcEdM0All(true)">Отметить все</button>
+      <button type="button" onclick="gcEdM0All(false)">Снять все</button>
+    </div>
+    <div class="gc-ed-m0note" id="gcEdM0Note"></div>
+    <div class="gc-ed-m0body" id="gcEdM0Body"></div>
+    <div class="gc-ed-m0foot"><button type="button" id="gcEdM0Apply" onclick="gcEdM0Apply()">Применить</button></div>
   </div>
   <div class="gc-ed-tabs" id="gcEdTabs"></div>
   <div class="gc-ed-wrap">
@@ -6278,7 +6339,7 @@ function gcInit(){
   c.addEventListener('pointerdown',function(e){
     if(e.target && e.target.closest && e.target.closest('.gc-expand'))return;
     e.preventDefault();
-    gc.pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+    gc.pointers[e.pointerId]={x:e.clientX,y:e.clientY,t:Date.now()};
     try{c.setPointerCapture(e.pointerId);}catch(err){}
     var pts=gcPointers();
     gc.moved=false;
@@ -6297,7 +6358,7 @@ function gcInit(){
   c.addEventListener('pointermove',function(e){
     if(!gc.pointers[e.pointerId])return;
     e.preventDefault();
-    gc.pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+    gc.pointers[e.pointerId]={x:e.clientX,y:e.clientY,t:Date.now()};
     var pts=gcPointers();
     if(pts.length>=2){
       var d=gcPinchDist(pts[0],pts[1]);
@@ -6345,6 +6406,26 @@ function gcInit(){
   });
   c.addEventListener('pointercancel',endPtr);
   c.addEventListener('lostpointercapture',endPtr);
+  // v142.11 (B6): если iOS не прислал pointerup/pointercancel, в gc.pointers оставался «призрак» и любое касание считалось двумя пальцами (только зум).
+  // Источник правды — число реальных касаний из touch-событий.
+  var liveT=-1;
+  function gcPtrReset(){gc.pointers={};gc.pinchDist=0;gc.pinchMid=null;gc.drag=false;gc.mode='none';}
+  function gcPtrPrune(n){
+    var ids=Object.keys(gc.pointers);
+    if(n<=0){if(ids.length)gcPtrReset();return;}
+    if(ids.length<=n)return;
+    ids.sort(function(a,b){return (gc.pointers[a].t||0)-(gc.pointers[b].t||0);});
+    while(ids.length>n){delete gc.pointers[ids.shift()];}
+    gc.pinchDist=0;gc.pinchMid=null;
+    var left=gcPointers();
+    if(left.length===1){gc.drag=true;gc.mode='none';gc.px=left[0].x;gc.py=left[0].y;gc.sx=left[0].x;gc.sy=left[0].y;}
+  }
+  function onTouch(e){liveT=e.touches?e.touches.length:-1;if(liveT>=0)gcPtrPrune(liveT);}
+  document.addEventListener('touchstart',onTouch,{capture:true,passive:true});
+  document.addEventListener('touchend',onTouch,{capture:true,passive:true});
+  document.addEventListener('touchcancel',onTouch,{capture:true,passive:true});
+  ['pagehide','blur','orientationchange'].forEach(function(ev){window.addEventListener(ev,gcPtrReset);});
+  document.addEventListener('visibilitychange',function(){if(document.hidden)gcPtrReset();});
   c.addEventListener('wheel',function(e){
     e.preventDefault();
     // zoom to cursor-ish center: simple factor
@@ -6396,15 +6477,9 @@ function gcRunChecks(){
   var rot=false;for(var ri=0;ri<P.length;ri++){if(P[ri].a&&Math.abs(P[ri].a)>1e-6){rot=true;break;}}
   for(var i=1;i<P.length;i++){
     var a=P[i-1],b=P[i];
-    if(!rot&&b.rapid&&!b.cyc){
-      var dz=b.mz-a.mz,dxy=Math.hypot(b.mx-a.mx,b.my-a.my);
-      if(dz<-1e-6&&b.mz<zTop-1e-6)add('warn','rapidDown',b.line,i,'Быстрый ход (G0) вниз до Z'+f2(b.mz)+' — ниже верха заготовки (Z'+f2(zTop)+')');
-      else if(dxy>1e-6&&(a.mz<zTop-1e-6||b.mz<zTop-1e-6))add('warn','rapidXY',b.line,i,'Быстрое перемещение по XY ниже верха заготовки (Z'+f2(Math.min(a.mz,b.mz))+')');
-    }
+    // v142.12: проверки «G0 по XY ниже верха заготовки» (rapidXY) и «G0 вниз ниже верха» (rapidDown, v142.11) убраны по просьбе пользователя
     if(zBot!==null&&!b.rapid&&b.mz<zBot-1e-6&&Math.hypot(b.mx-a.mx,b.my-a.my,b.mz-a.mz)>1e-9)add('error','belowBottom',b.line,i,'Рабочий ход до Z'+f2(b.mz)+' — ниже низа заготовки (Z'+f2(zBot)+')');
-    if(!rot&&gcAxis.on&&gcAxis.ax!=='Y'&&b.rapid&&!b.cyc&&Math.abs(b.a-a.a)>1e-6&&Math.min(a.mz,b.mz)<zTop-1e-6)add('error','rotLow',b.line,i,'Поворот оси A ('+f2(a.a)+'° → '+f2(b.a)+'°) на быстром ходу при Z'+f2(Math.min(a.mz,b.mz))+' — ниже верха заготовки: возможен удар');
   }
-  (gc.toolChanges||[]).forEach(function(tc){if(!rot&&tc.z!==null&&tc.z<zTop+0.5)add('warn','toolchange',tc.line,tc.idx,'Смена инструмента при Z'+f2(tc.z)+': инструмент не отведён выше верха заготовки');});
   var rank={error:0,warn:1,info:2};
   issues.sort(function(x,y){return x.line-y.line||rank[x.sev]-rank[y.sev];});
   gc.issues=issues;
@@ -6599,6 +6674,14 @@ function gcStep(dir){
   gc.progress=gc.total>0?P[target].t/gc.total:0;gc.stepIdx=target;
   gc.last=0;gcPlayLabel();gcDraw();
 }
+// Высота верхней безопасной зоны (вырез / строка состояния) в px; считается один раз через пробный элемент.
+var gcSafeTopPx=null;
+function gcSafeTop(){
+  if(gcSafeTopPx!==null)return gcSafeTopPx;
+  var v=0;
+  try{var d=document.createElement('div');d.style.cssText='position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;padding-top:env(safe-area-inset-top)';document.body.appendChild(d);v=parseFloat(getComputedStyle(d).paddingTop)||0;document.body.removeChild(d);}catch(e){}
+  gcSafeTopPx=v;return v;
+}
 function gcDraw(){
   var cv=document.getElementById('gcCanvas');if(!cv)return;
   var rect=cv.getBoundingClientRect();if(!rect.width)return;
@@ -6720,27 +6803,28 @@ function gcDraw(){
   ctx.beginPath();ctx.arc(tp[0],tp[1],4.5,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();ctx.strokeStyle='#0b121b';ctx.lineWidth=1.2;ctx.stroke();
   }
   ctx.restore();
-  // Подписи.
-  if(gc.modelOnly){ctx.font='11px -apple-system, sans-serif';ctx.fillStyle='#d7e3f0';ctx.textAlign='left';ctx.fillText('Модель: '+((gc.model&&gc.model.name)||''),10,18);}
+  // Подписи. v142.11 (B1): в полном экране сдвиг вниз на safe-area, чтобы верхние строки не уходили под верхний бар.
+  var hy=gc.fs?gcSafeTop():0;
+  if(gc.modelOnly){ctx.font='11px -apple-system, sans-serif';ctx.fillStyle='#d7e3f0';ctx.textAlign='left';ctx.fillText('Модель: '+((gc.model&&gc.model.name)||''),10,18+hy);}
   else{
   var sparts=[];if(p0.tool){var tinf=gcToolInfoAt(p0.line,p0.tool);sparts.push('T'+p0.tool+(tinf?' · '+tinf.label:''));}if(p0.s>0)sparts.push('S'+Math.round(p0.s));sparts.push(p0.rapid?'быстрый ход':'F'+Math.round((p0.f||0)*10)/10);if(gcAxis.on&&p0.a!==undefined)sparts.push((gcAxis.letter||'A')+(Math.round(p0.a*10)/10)+'°');
-  ctx.font='11px -apple-system, sans-serif';ctx.fillStyle='#d7e3f0';ctx.fillText(sparts.join(' · '),10,18);
+  ctx.font='11px -apple-system, sans-serif';ctx.fillStyle='#d7e3f0';ctx.fillText(sparts.join(' · '),10,18+hy);
   ctx.fillStyle='#9fb2c8';var ltxt=(gc.lines[p0.line]||'');if(ltxt.length>46)ltxt=ltxt.slice(0,45)+'…';
-  ctx.fillText('Строка '+(p0.line+1)+': '+ltxt,10,34);
+  ctx.fillText('Строка '+(p0.line+1)+': '+ltxt,10,34+hy);
   if(gc.fs){
     var f2c=function(v){return (Math.round(v*100)/100).toFixed(2);};
     ctx.font='11px -apple-system, sans-serif';
     ctx.fillStyle='#9fb2c8';
-    ctx.fillText('X '+f2c(curM.x),10,52);
-    ctx.fillText('Y '+f2c(curM.y),10,68);
-    ctx.fillText('Z '+f2c(curM.z),10,84);
-    if(gcAxis.on)ctx.fillText((gcAxis.letter||'A')+' '+f2c(curM.a)+'°',10,100);
+    ctx.fillText('X '+f2c(curM.x),10,52+hy);
+    ctx.fillText('Y '+f2c(curM.y),10,68+hy);
+    ctx.fillText('Z '+f2c(curM.z),10,84+hy);
+    if(gcAxis.on)ctx.fillText((gcAxis.letter||'A')+' '+f2c(curM.a)+'°',10,100+hy);
   }
   }
   if(gc.toolFilter!=null){
     var names=gc.tools.filter(function(t){return gc.toolSet[String(t)];}).map(function(t){return 'T'+t;});
     ctx.font='bold 11px -apple-system, sans-serif';ctx.fillStyle='#7cc4ff';ctx.textAlign='right';
-    ctx.fillText('Только '+names.join(' + '),W-10,18);ctx.textAlign='left';
+    ctx.fillText('Только '+names.join(' + '),W-10,18+hy);ctx.textAlign='left';
   }
   gcUpdateToolChips(p0.tool);gcCodeSync();
   gcReadouts(p0,tNow,curM);
@@ -6780,7 +6864,7 @@ function gcReadouts(p,tNow,cur){
 var gcCodeLastTap=0,gcEdHist=[],gcEdFindIdx=-1,gcEdMatches=[];
 function gcCodeDblTap(e){
   var now=Date.now();
-  if(now-gcCodeLastTap<320){e.preventDefault();gcCodeExpand();}
+  if(now-gcCodeLastTap<320){e.preventDefault();gcCodeLastTap=0;gcCodeExpand();return;}   // v142.11 (B4): сброс, чтобы третий тап не считался двойным
   gcCodeLastTap=now;
 }
 // Список строк программы — «оконный»: в DOM только ~40 строк вокруг текущей (раньше рисовались все, это тормозило на программах в сотни тысяч строк).
@@ -6837,7 +6921,7 @@ function gcCodeExpand(){
   document.getElementById('gcEdMenu').classList.remove('on');
   document.getElementById('gcEdFind').value='';
   document.getElementById('gcEdFound').textContent='';
-  gcEdMatches=[];gcEdFindIdx=-1;
+  gcEdMatches=[];gcEdFindIdx=-1;gcEdRunBtn(false);gcEdDReset();
   var mk=document.getElementById('gcEdMark');if(mk)mk.style.display='none';gc._edMarkLn=null;
   var ov=document.getElementById('gcEdOv');
   ov.classList.add('on');ov.setAttribute('aria-hidden','false');document.body.classList.add('ed-open');
@@ -6863,7 +6947,7 @@ function gcEdTabShow(i){
   var fl=gc.files,ta=document.getElementById('gcEdTa');if(!fl||!fl[i]||!ta)return;
   fl[gc.edTab||0].text=ta.value;
   gc.edTab=i;ta.value=String(fl[i].text);ta.scrollTop=0;
-  gcEdHist=[];gcEdMatches=[];gcEdFindIdx=-1;
+  gcEdHist=[];gcEdMatches=[];gcEdFindIdx=-1;gcEdRunBtn(false);gcEdDReset();
   var mk=document.getElementById('gcEdMark');if(mk)mk.style.display='none';gc._edMarkLn=null;
   gcEdTabsRender();
 }
@@ -6895,6 +6979,7 @@ function gcEdGoBack(){
   var b=st.pop();if(b.tab!==(gc.edTab||0))gcEdTabShow(b.tab);gcEdShowLine(b.line);
 }
 function gcEdClose(){
+  gcEdDReset();
   var ta=document.getElementById('gcEdTa');
   var neu=ta.value;
   var fl=(gc.files&&gc.files.length)?gc.files:null,changed;
@@ -6928,8 +7013,18 @@ function gcEdUndo(){
   gcEdFindChanged();
 }
 function gcEdToggleMenu(){
+  // v142.14: «К подпрограмме» / «Назад из подпрограммы» только если в редакторе несколько программ
+  var multi=!!(gc.files&&gc.files.length>1),b1=document.getElementById('gcEdBtnSub'),b2=document.getElementById('gcEdBtnBack');
+  if(b1)b1.style.display=multi?'':'none';if(b2)b2.style.display=multi?'':'none';
   document.getElementById('gcEdMenu').classList.toggle('on');
 }
+// v142.14: тап мимо меню ⋯ закрывает его
+document.addEventListener('click',function(e){
+  var m=document.getElementById('gcEdMenu');
+  if(!m||!m.classList.contains('on'))return;
+  if(e.target.closest&&(e.target.closest('#gcEdMenu')||e.target.closest('#gcEdMoreBtn')))return;
+  m.classList.remove('on');
+},true);
 function gcEdShowRepl(){
   document.getElementById('gcEdMenu').classList.remove('on');
   document.getElementById('gcEdRepl').classList.add('on');
@@ -6951,8 +7046,8 @@ function gcEdSendNC(){
   // временно кладём в скрытое поле / используем существующий sendNC через editor_ta
   var prev=edGet();
   edSet(document.getElementById('gcEdTa').value);
-  try{sendNC('editor_ta');}catch(e){}
-  // не затираем основной редактор если отличался — sendNC читает по id; оставляем значение
+  // v142.14: отправляем текст из окна редактора (раньше уходил текст другого поля — без правок)
+  try{sendNCCode(document.getElementById('gcEdTa').value);}catch(e){}
 }
 function gcEdSave(){
   document.getElementById('gcEdMenu').classList.remove('on');
@@ -6969,6 +7064,256 @@ function gcEdSave(){
   progSave(list);progRender();
   document.getElementById('gcEdFound').textContent='✓ Сохранено: '+name;
 }
+
+// v142.12: кнопка «пуск» всегда на месте. Запускает только с T, выбранной стрелками (выбор держится и после правок текста:
+// T ищется заново по номеру и порядковому месту среди смен инструмента). Нет выбора или конфликт — предупреждение, запуска нет.
+function gcEdRunBtn(on){
+  var b=document.getElementById('gcEdRunT');if(b)b.classList.toggle('on',!!on);
+  if(!on)gc._edToolPick=null;
+}
+function gcEdWarn(msg){
+  var f=document.getElementById('gcEdFound');if(f)f.textContent=msg;
+  try{gcToast(msg);}catch(e){}
+}
+function gcEdRunFromT(){
+  var pk=gc._edToolPick,ta=document.getElementById('gcEdTa');
+  if(!pk){gcEdWarn('Выберите T стрелками ↑ ↓ — запуск только с выбранной T');return;}
+  var h=gcEdToolHits(ta.value).hits[pk.ord];
+  if(pk.tab!==(gc.edTab||0)||!h||h.t!==pk.t){gcEdRunBtn(false);gcEdWarn('Выбранная T изменилась — выберите T стрелками заново');return;}
+  var tab=pk.tab,line=h.line;
+  gcEdClose();   // применяет правки и пересчитывает траекторию, если текст менялся
+  var P=gc.pts;if(!P||!P.length)return;
+  var gl=line;
+  if(gc.lineOrig){   // подпрограммы / комплект файлов: ищем строку в «листе выполнения»
+    gl=-1;
+    for(var i=0;i<gc.lineOrig.length;i++){var o=gc.lineOrig[i];if(o&&o.f===tab&&o.n===line){gl=i;break;}}
+    if(gl<0){try{gcToast('Эта строка не входит в выполнение программы');}catch(e){}return;}
+  }
+  var idx=P.length-1,k;
+  for(k=0;k<P.length;k++){if(P[k].line>=gl){idx=k;break;}}
+  gc.playing=false;cancelAnimationFrame(gc.raf);
+  if(gc.toolFilter!=null){gc.toolFilter=null;gc.toolSet={};gcRebuildFilter();gcRenderToolChips();}
+  gc.progress=gc.total>0?Math.min(1,P[idx].t/gc.total):0;
+  gc.stepIdx=-1;gc.last=0;
+  if(gc.progress>=1){gcPlayLabel();gcDraw();return;}
+  gc.playing=true;gcPlayLabel();gcDraw();
+  gc.raf=requestAnimationFrame(gcLoop);
+}
+// v142.11 (B3): номера кадров N — убрать / переписать (шаг 10). Действие откатывается кнопкой ↺.
+var GC_N_RE=/^(\s*\/?)[ \t]*N[ \t]*\d+[ \t]*/i;
+function gcEdStripN(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var ta=document.getElementById('gcEdTa'),st=ta.scrollTop,n=0;
+  var out=ta.value.split('\n').map(function(l){var r=l.replace(GC_N_RE,function(m,a){n++;return a;});return r;});
+  if(!n){document.getElementById('gcEdFound').textContent='Номеров строк нет';return;}
+  gcEdPush();ta.value=out.join('\n');ta.scrollTop=st;
+  document.getElementById('gcEdFound').textContent='Убрано номеров строк: '+n;
+}
+function gcEdRenumberN(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var ta=document.getElementById('gcEdTa'),st=ta.scrollTop,lines=ta.value.split('\n'),map={},num=1,cnt=0,i;
+  var body=lines.map(function(l){
+    var pre='',rest=l,m=GC_N_RE.exec(l);
+    if(m){pre=m[1];rest=l.slice(m[0].length);var old=(/N[ \t]*(\d+)/i.exec(m[0])||[])[1];if(old!==undefined&&map[String(+old)]===undefined)map[String(+old)]=null;return {pre:pre,rest:rest,old:old};}
+    return {pre:/^\s*\/?/.exec(l)[0],rest:l.replace(/^\s*\/?\s*/,''),old:undefined};
+  });
+  var skip=function(t){t=t.trim();return !t||t.charAt(0)==='%'||/^O\d+/i.test(t)||/^:\d+/.test(t)||t.charAt(0)==='(';};   // пустые, %, O-заголовок, строки-комментарии
+  var res=body.map(function(b){
+    if(skip(b.rest)){return b.pre.replace(/\s+$/,'')+b.rest;}
+    var nn=num;num+=1;cnt++;
+    if(b.old!==undefined)map[String(+b.old)]=nn;
+    return b.pre.replace(/\s+$/,'')+'N'+nn+' '+b.rest;
+  });
+  if(!cnt){document.getElementById('gcEdFound').textContent='Нет строк для нумерации';return;}
+  // ссылки на номера кадров (GOTO, M97 P, M99 P) переносим на новые номера; комментарии не трогаем
+  var lost=0;
+  res=res.map(function(l){return l.replace(/(\([^)]*\))|\b(GOTO[ \t]*|M97[ \t]*P[ \t]*|M99[ \t]*P[ \t]*)(\d+)/gi,function(mm,c,kw,d){
+    if(c)return c;
+    var v=map[String(+d)];
+    if(v===undefined||v===null){lost++;return mm;}
+    return kw+v;
+  });});
+  gcEdPush();ta.value=res.join('\n');ta.scrollTop=st;
+  document.getElementById('gcEdFound').textContent='Номера строк переписаны: N1…N'+(num-1)+' (шаг 1)'+(lost?' · ссылок на неизвестные N: '+lost+' — проверьте GOTO / M97 P':'');
+}
+// v142.12: список всех D (коррекция на диаметр) по инструментам. Новая строка — при смене T или появлении нового комментария перед D; одинаковые D в строке не повторяются.
+// Строки с G65 (параметры макроса) пропускаются; D внутри комментариев не считается.
+var gcEdDVisited={};
+function gcEdScanD(txt){
+  var lines=txt.split('\n'),rows=[],curT=null,name='',last=null,i,m;
+  var re=/\(([^)]*)\)|;(.*)$|([TD])[ \t]*0*(\d+)(?!\d)/gi;
+  for(i=0;i<lines.length;i++){
+    var L=lines[i].replace(/^(\s*\/?\s*)(N\s*\d+)/i,function(m0,a,b){return a+b.replace(/./g,' ');});
+    if(/G0*65(?!\d)/i.test(L.replace(/\([^)]*\)/g,'')))continue;
+    re.lastIndex=0;
+    while((m=re.exec(L))){
+      if(m[1]!==undefined){name=m[1].replace(/\s+/g,' ').trim();continue;}
+      if(m[2]!==undefined){name=m[2].replace(/\s+/g,' ').trim();continue;}
+      var pc=m.index>0?L.charAt(m.index-1):'';
+      if(m[3].toUpperCase()==='T'){
+        if(/[A-Z0-9_.]/i.test(pc))continue;
+        curT='T'+(+m[4]);name='';continue;
+      }
+      if(/[A-Z_#]/i.test(pc))continue;   // v142.13: точка перед D разрешена (Y-100.D28); для T проверка строгая
+      var d='D'+(+m[4]),key=(curT||'T?')+'|'+name;
+      if(last&&last.key===key){if(last.ds.indexOf(d)<0)last.ds.push(d);}
+      else{last={key:key,t:curT,name:name,ds:[d],line:i};rows.push(last);}
+    }
+  }
+  return rows;
+}
+function gcEdDLabel(r){return (r.t||'T?')+(r.name?' '+r.name:'')+' — '+r.ds.join(', ');}
+function gcEdDReset(){
+  gc._edDIdx=-1;gcEdDVisited={};
+  var r=document.getElementById('gcEdDRow');if(r)r.classList.remove('on');
+  var l=document.getElementById('gcEdDList');if(l)l.classList.remove('on');
+}
+function gcEdDOpen(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var rows=gcEdScanD(document.getElementById('gcEdTa').value),body=document.getElementById('gcEdDBody');
+  if(!rows.length){body.innerHTML='<div class="gc-ed-dempty">D в программе не найдено</div>';}
+  else body.innerHTML=rows.map(function(r,i){
+    return '<button type="button" class="'+(gcEdDVisited[r.line]?'vis ':'')+(i===gc._edDIdx?'cur':'')+'" onclick="gcEdDGo('+i+')">'+esc(gcEdDLabel(r))+'</button>';
+  }).join('');
+  document.getElementById('gcEdDList').classList.add('on');
+}
+function gcEdDClose(){document.getElementById('gcEdDList').classList.remove('on');}
+// v142.13: «Расставить M0». M0/M00 перед сменой инструмента относится к СЛЕДУЮЩЕМУ T.
+// /M0 (слеш) = остановка пропускается, инструмент меняется сам. Галочка у T = перед ним /M0.
+// Меняются только строки, где M0 — единственный код (кроме N и комментария); M0 среди других кодов не трогаем.
+function gcEdScanM0(txt){
+  var lines=txt.split('\n'),info=[],i,m;
+  var re=/\(([^)]*)\)|;(.*)$|([TM])[ \t]*0*(\d+)(?!\d)/gi;
+  for(i=0;i<lines.length;i++){
+    var L=lines[i].replace(/^(\s*\/?\s*)(N\s*\d+)/i,function(m0,a,b){return a+b.replace(/./g,' ');});
+    var o={t:null,m6:false,m0:false,cm:''};info.push(o);
+    if(/G0*65(?!\d)/i.test(L.replace(/\([^)]*\)/g,'')))continue;
+    re.lastIndex=0;
+    while((m=re.exec(L))){
+      if(m[1]!==undefined){if(!o.cm)o.cm=m[1].replace(/\s+/g,' ').trim();continue;}
+      if(m[2]!==undefined){if(!o.cm)o.cm=m[2].replace(/\s+/g,' ').trim();continue;}
+      var pc=m.index>0?L.charAt(m.index-1):'';
+      if(m[3].toUpperCase()==='T'){if(!/[A-Z0-9_.]/i.test(pc))o.t=+m[4];}
+      else if(!/[A-Z0-9_.#]/i.test(pc)){var v=+m[4];if(v===6)o.m6=true;else if(v===0)o.m0=true;}
+    }
+  }
+  var useAll=!info.some(function(x){return x.t!==null&&x.m6;});
+  var changes=[],pend=[],skipped=0,k;
+  var reM=/^(\s*)(\/?)\s*(N\s*\d+)?\s*(\/?)\s*(M0{1,2})(?!\d)(.*)$/i;
+  for(i=0;i<lines.length;i++){
+    var x=info[i];
+    if(x.t!==null&&(x.m6||useAll)){
+      var nm='';for(k=i;k<lines.length&&k<i+12;k++){if(k>i&&info[k].t!==null&&(info[k].m6||useAll))break;if(info[k].cm){nm=info[k].cm;break;}}
+      changes.push({t:x.t,line:i,name:nm,m0:pend});pend=[];continue;
+    }
+    if(x.m0){
+      var ln=lines[i].replace(/\r$/,''),mm=reM.exec(ln);
+      if(mm&&mm[6].replace(/\([^)]*\)/g,'').replace(/;.*$/,'').trim()==='')pend.push({line:i,slash:!!(mm[2]||mm[4])});
+      else skipped++;
+    }
+  }
+  return {changes:changes,tail:pend.length,skipped:skipped};
+}
+function gcEdM0Line(line,skip){
+  var cr='';if(/\r$/.test(line)){cr='\r';line=line.slice(0,-1);}
+  var m=/^(\s*)(\/?)\s*(N\s*\d+)?\s*(\/?)\s*(M0{1,2})(?!\d)(.*)$/i.exec(line);
+  if(!m)return line+cr;
+  var has=!!(m[2]||m[4]);
+  if(skip){
+    if(has)return line+cr;   // слеш уже есть (в т.ч. «/N1M00») — не трогаем
+    return m[1]+'/'+m[5]+m[6]+cr;
+  }
+  if(!has)return line+cr;
+  return m[1]+(m[3]?m[3]+' ':'')+m[5]+m[6]+cr;
+}
+function gcEdM0Open(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var sc=gcEdScanM0(document.getElementById('gcEdTa').value),items=[],groups=[],gi={};
+  sc.changes.forEach(function(c){
+    if(!(c.t in gi)){gi[c.t]=groups.length;groups.push({t:c.t,name:c.name,items:[],none:0,open:false});}
+    var g=groups[gi[c.t]];
+    if(!g.name&&c.name)g.name=c.name;
+    if(!c.m0.length){g.none++;return;}
+    var it={g:gi[c.t],tline:c.line,m0:c.m0,skip:c.m0.every(function(q){return q.slash;})};it.orig=it.skip;
+    items.push(it);g.items.push(it);
+  });
+  gc._edM={groups:groups,items:items,tail:sc.tail,skipped:sc.skipped};
+  gcEdM0Render(0);
+  document.getElementById('gcEdM0List').classList.add('on');
+}
+function gcEdM0Close(){document.getElementById('gcEdM0List').classList.remove('on');}
+function gcEdM0CloseBtn(){
+  var S=gc._edM;
+  if(S&&S.items.some(function(x){return x.skip!==x.orig;})&&!confirm('Закрыть без применения? Отмеченные галочки не сохранятся.'))return;
+  gcEdM0Close();
+}
+function gcEdM0Render(keep){
+  var S=gc._edM,body=document.getElementById('gcEdM0Body'),h='';
+  var nTot=S.items.length,nSkip=S.items.filter(function(x){return x.skip;}).length;
+  var note='✓ = перед инструментом /M0: остановки нет, инструмент меняется сам. M0 стоит перед сменой и относится к следующему T.';
+  note+='<br>Смен с M0: '+nTot+', с галочкой: '+nSkip+'.';
+  if(S.skipped)note+='<br>M0 среди других кодов в строке (не трогаю): '+S.skipped+'.';
+  if(S.tail)note+='<br>M0 после последней смены T (не относится ни к одному T): '+S.tail+'.';
+  document.getElementById('gcEdM0Note').innerHTML=note;
+  if(!S.groups.length){body.innerHTML='<div class="gc-ed-dempty">Смен инструмента (T … M6) в программе не найдено</div>';}
+  else{
+    S.groups.forEach(function(g,gi){
+      var n=g.items.length,a=g.items.filter(function(x){return x.skip;}).length;
+      var st=!n?'':(a===n?'all':(a?'part':''));
+      var meta='×'+(n+g.none)+(g.none&&n?' · без M0: '+g.none:'')+(!n?' · без M0':'');
+      h+='<div class="gc-ed-m0g'+(n?'':' dim')+(g.open?' open':'')+'"><div class="gc-ed-m0h">';
+      h+=n?'<button type="button" class="gc-ed-m0box '+st+'" onclick="gcEdM0TogG('+gi+')" aria-label="Отметить все M0 этого T"><span></span></button>':'<div class="gc-ed-m0box"></div>';
+      h+='<button type="button" class="gc-ed-m0t" '+(n?'onclick="gcEdM0Exp('+gi+')"':'disabled')+'><b>T'+g.t+'</b><em>'+esc(g.name)+'</em><i>'+meta+(n?(g.open?' ▴':' ▾'):'')+'</i></button></div>';
+      if(n){
+        h+='<div class="gc-ed-m0sub">';
+        g.items.forEach(function(it){
+          var ii=S.items.indexOf(it);
+          h+='<div class="gc-ed-m0i"><button type="button" class="gc-ed-m0box '+(it.skip?'all':'')+'" onclick="gcEdM0TogI('+ii+')" aria-label="Пропуск M0 перед этой сменой"><span></span></button>';
+          h+='<div class="gc-ed-m0tx">Смена: строка '+(it.tline+1)+' · M0: строка '+it.m0.map(function(q){return q.line+1;}).join(', ')+'</div></div>';
+        });
+        h+='</div>';
+      }
+      h+='</div>';
+    });
+    body.innerHTML=h;
+  }
+  body.scrollTop=keep||0;
+}
+function gcEdM0Keep(){return document.getElementById('gcEdM0Body').scrollTop;}
+function gcEdM0Exp(gi){var k=gcEdM0Keep(),g=gc._edM.groups[gi];g.open=!g.open;gcEdM0Render(k);}
+function gcEdM0TogG(gi){var k=gcEdM0Keep(),g=gc._edM.groups[gi],all=g.items.every(function(x){return x.skip;});g.items.forEach(function(x){x.skip=!all;});gcEdM0Render(k);}
+function gcEdM0TogI(ii){var k=gcEdM0Keep(),it=gc._edM.items[ii];it.skip=!it.skip;gcEdM0Render(k);}
+function gcEdM0All(v){var k=gcEdM0Keep();gc._edM.items.forEach(function(x){x.skip=v;});gcEdM0Render(k);}
+function gcEdM0Apply(){
+  var S=gc._edM,ta=document.getElementById('gcEdTa'),lines=ta.value.split('\n'),n=0,st=ta.scrollTop;
+  S.items.forEach(function(it){it.m0.forEach(function(q){
+    var nl=gcEdM0Line(lines[q.line],it.skip);
+    if(nl!==lines[q.line]){lines[q.line]=nl;n++;}
+  });});
+  gcEdM0Close();
+  var f=document.getElementById('gcEdFound');
+  if(!n){f.textContent='M0: изменений нет';return;}
+  gcEdPush();ta.value=lines.join('\n');ta.scrollTop=st;
+  f.textContent='M0: изменено строк '+n+' (отмена — кнопка «Отменить»)';
+}
+function gcEdDGo(i){
+  var rows=gcEdScanD(document.getElementById('gcEdTa').value);
+  if(!rows.length){gcEdDClose();return;}
+  i=Math.max(0,Math.min(rows.length-1,i));
+  gc._edDIdx=i;gcEdDVisited[rows[i].line]=1;
+  gcEdDClose();
+  document.getElementById('gcEdDRow').classList.add('on');
+  document.getElementById('gcEdDInfo').textContent=(i+1)+' / '+rows.length+' · '+gcEdDLabel(rows[i]);
+  gcEdShowLine(rows[i].line);
+}
+function gcEdDStep(dir){
+  var rows=gcEdScanD(document.getElementById('gcEdTa').value);
+  if(!rows.length){gcEdDOpen();return;}
+  var cur=gc._edDIdx;
+  if(cur==null||cur<0)cur=dir>0?-1:0;
+  gcEdDGo((cur+dir+rows.length)%rows.length);
+}
+function gcEdFindInput(){gcEdRunBtn(false);gcEdFindChanged();}   // обычный поиск по тексту заменяет выбор T
 function gcEdFindChanged(){
   var q=document.getElementById('gcEdFind').value;
   var ta=document.getElementById('gcEdTa'),txt=ta.value;
@@ -6980,19 +7325,26 @@ function gcEdFindChanged(){
   if(gcEdMatches.length){gcEdFindIdx=0;gcEdSelectMatch();}
 }
 // Поле поиска пустое: стрелки прыгают по сменам инструмента (строки с T + число), вниз/вверх по программе.
-function gcEdToolStep(dir){
-  var ta=document.getElementById('gcEdTa'),txt=ta.value,lines=txt.split('\n'),starts=[],pos=0,i;
+function gcEdToolHits(txt){
+  var lines=txt.split('\n'),starts=[],pos=0,i,hits=[];
   for(i=0;i<lines.length;i++){starts.push(pos);pos+=lines[i].length+1;}
-  var caret=ta.selectionStart||0,cur=0;
-  for(i=0;i<starts.length;i++){if(starts[i]<=caret)cur=i;else break;}
-  var re=/(?:^|[^A-Z0-9_.])T\s*0*(\d+)(?!\d)/i,hits=[];
+  var re=/(?:^|[^A-Z0-9_.])T\s*0*(\d+)(?!\d)/i;
   for(i=0;i<lines.length;i++){
     var L=lines[i].replace(/\([^)]*\)/g,function(m){return m.replace(/./g,' ');}).replace(/;.*$/,'');
+    L=L.replace(/^(\s*\/?\s*)(N\s*\d+)/i,function(m0,a,b){return a+b.replace(/./g,' ');});   // номер кадра N не мешает искать T (N10T5, N10 T5)
     var m=re.exec(L);
     if(m)hits.push({line:i,pos:starts[i]+m.index+m[0].search(/T/i),len:m[0].length-m[0].search(/T/i),t:m[1]});
   }
+  return {lines:lines,starts:starts,hits:hits};
+}
+// Поле поиска пустое: стрелки прыгают по сменам инструмента (строки с T + число), вниз/вверх по программе.
+// v142.12: найденная строка подсвечивается полосой; выбор запоминается для кнопки «пуск» (номер T + порядковое место среди смен инструмента).
+function gcEdToolStep(dir){
+  var ta=document.getElementById('gcEdTa'),sc=gcEdToolHits(ta.value),starts=sc.starts,hits=sc.hits,i;
+  var caret=ta.selectionStart||0,cur=0;
+  for(i=0;i<starts.length;i++){if(starts[i]<=caret)cur=i;else break;}
   var f=document.getElementById('gcEdFound');
-  if(!hits.length){f.textContent='Смен инструмента не найдено';return;}
+  if(!hits.length){f.textContent='Смен инструмента не найдено';gcEdRunBtn(false);return;}
   var pick=null;
   if(dir>0){for(i=0;i<hits.length;i++){if(hits[i].line>cur){pick=hits[i];break;}}if(!pick)pick=hits[0];}
   else{for(i=hits.length-1;i>=0;i--){if(hits[i].line<cur){pick=hits[i];break;}}if(!pick)pick=hits[hits.length-1];}
@@ -7001,7 +7353,9 @@ function gcEdToolStep(dir){
   try{ta.blur();}catch(e){}
   if(keep)try{keep.focus();}catch(e){}
   ta.scrollTop=Math.max(0,pick.line*21-60);
+  gcEdMarkLine(pick.line);
   var n=0;hits.forEach(function(h,k){if(h===pick)n=k+1;});
+  gc._edToolPick={tab:gc.edTab||0,ord:n-1,t:pick.t,line:pick.line};gcEdRunBtn(true);
   f.textContent='Смена инструмента T'+pick.t+' · строка '+(pick.line+1)+' · '+n+' / '+hits.length;
 }
 function gcEdStep(dir){
@@ -7140,7 +7494,7 @@ try{progRender();modelLibRender();gcViewerSubUpdate();}catch(e){}
 var gcToolNameLastTap=0;
 function gcToolNameTap(e){
   var now=Date.now();
-  if(now-gcToolNameLastTap<320){e.preventDefault();gcToolNameOpenEd();}
+  if(now-gcToolNameLastTap<320){e.preventDefault();gcToolNameLastTap=0;gcToolNameOpenEd();return;}
   gcToolNameLastTap=now;
 }
 function gcToolNameOpenEd(){
@@ -7645,35 +7999,52 @@ document.addEventListener('click',function(e){
   if(!e.target.closest||(!e.target.closest('#gcMoreMenu')&&!e.target.closest('.gc-more-btn')))gcMoreClose();
 });
 
-function sendNC(id) {
-  var el = document.getElementById(id);
-  var code = el.tagName === 'TEXTAREA' ? el.value : el.innerText;
-  if (!code || code === 'Ошибка') return;
-
-  var filename = 'program_' + Date.now() + '.nc';
-  var blob = new Blob([code], { type: 'text/plain' });
-  var file = new File([blob], filename, { type: 'text/plain' });
-
-  // Сначала пробуем системный Share (iOS)
-  if (navigator.share && navigator.canShare) {
-    var data = { files: [file], title: 'NC программа', text: 'Программа для станка' };
-    if (navigator.canShare(data)) {
-      navigator.share(data).catch(function(){});
-      return;
-    }
-    // Без файла — просто текст
-    navigator.share({ title: 'NC программа', text: code }).catch(function(){});
+// v142.14: «Отправить в NC» отправляет только файл. Имя — номер программы (первая строка O…) + счётчик: O00125(1).nc, O00125(2).nc…
+// Нет номера в программе — окно с вводом названия. Счётчик по имени хранится в localStorage cncNcCnt_v1, растёт после успешной отправки.
+var NC_CNT_KEY='cncNcCnt_v1';
+function ncCntGet(){try{return JSON.parse(localStorage.getItem(NC_CNT_KEY)||'{}')||{};}catch(e){return {};}}
+function ncCntBump(name){try{var o=ncCntGet();o[name]=(o[name]||0)+1;localStorage.setItem(NC_CNT_KEY,JSON.stringify(o));}catch(e){}}
+function ncProgName(code){
+  var L=String(code||'').split(/\r?\n/),i,m;
+  for(i=0;i<L.length&&i<30;i++){m=/^\s*(O\s*\d+)/i.exec(L[i]);if(m)return m[1].replace(/\s+/g,'').toUpperCase();}
+  return '';
+}
+function ncCleanName(n){return String(n||'').replace(/[\\\/:*?"<>|\r\n\t]+/g,' ').replace(/\s+/g,' ').trim().slice(0,60);}
+function ncSendFile(code,name){
+  var o=ncCntGet(),n=(o[name]||0)+1,filename=name+'('+n+').nc';
+  var file=new File([new Blob([code],{type:'text/plain'})],filename,{type:'text/plain'});
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file]}).then(function(){ncCntBump(name);}).catch(function(){});
     return;
   }
-
-  // Fallback — скачать файл
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(file);a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  ncCntBump(name);
+}
+function ncAskName(cb){
+  var ov=document.createElement('div');ov.className='nc-ask';
+  ov.innerHTML='<div class="nc-ask-box"><b>Название программы</b><span>В программе нет номера O… Введите название файла.</span><input type="text" id="ncAskIn" placeholder="Например O0168" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="60"><div class="nc-ask-btns"><button type="button" id="ncAskNo">Отмена</button><button type="button" id="ncAskOk">Отправить</button></div></div>';
+  document.body.appendChild(ov);
+  var inp=ov.querySelector('#ncAskIn');
+  function close(){if(ov.parentNode)ov.parentNode.removeChild(ov);}
+  function ok(){var nm=ncCleanName(inp.value);if(!nm){inp.focus();return;}close();cb(nm);}
+  ov.querySelector('#ncAskNo').onclick=close;
+  ov.querySelector('#ncAskOk').onclick=ok;
+  inp.onkeydown=function(e){if(e.key==='Enter')ok();};
+  setTimeout(function(){inp.focus();},50);
+}
+function sendNCCode(code){
+  if(!code||code==='Ошибка')return;
+  var name=ncCleanName(ncProgName(code));
+  if(name){ncSendFile(code,name);return;}
+  ncAskName(function(nm){ncSendFile(code,nm);});
+}
+function sendNC(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  sendNCCode(el.tagName === 'TEXTAREA' ? el.value : el.innerText);
 }
 </script>
 <script>try{gcModelBrUi();}catch(e){}</script>
@@ -7697,7 +8068,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.10',APP_DATE='21.11.2026';
+var APP_VERSION='v142.14',APP_DATE='22.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}

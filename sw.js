@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cnc-helper-v142-10';
+const CACHE_NAME = 'cnc-helper-v142-14';
 const APP_SHELL = ['./', './index.html', './manifest.json', './apple-touch-icon.png', './icon-192.png', './icon-512.png', './favicon-32.png'];
 
 self.addEventListener('install', event => {
