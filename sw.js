@@ -1,8 +1,8 @@
-/* CNC помощник — service worker (v142.29, 26.11.2026).
+/* CNC помощник — service worker (v142.30, 26.11.2026).
    Есть сеть — берётся свежая версия с GitHub Pages; нет сети или она не отвечает — сохранённая копия.
    CACHE_NAME менять при каждом выпуске не нужно. */
 var PREFIX = 'cnc-helper-';
-var CACHE_NAME = PREFIX + 'v142.29';
+var CACHE_NAME = PREFIX + 'v142.30';
 var CORE = ['./', './index.html', './manifest.json', './apple-touch-icon.png', './icon-192.png', './icon-512.png', './favicon-32.png'];
 var CDN = 'https://cdn.jsdelivr.net/npm/occt-import-js@';   // модуль STEP, версия в адресе закреплена
 

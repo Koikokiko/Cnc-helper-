@@ -46,7 +46,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
 ХРАНЕНИЕ (браузер)
  Вкладки редактора 3D: localStorage cncTabs_v1. Программы: IndexedDB cncProgs. Модели: IDB cncGc / cncGcModels + localStorage
  cnc_model_folder_v1. Параметры привязки: cncGcMdlP. Баги: localStorage
- cncBugs_v1 (счётчик cncBugN). Яркость модели: cncGcMdlBr.
+ cncBugs_v1 (счётчик cncBugN). Яркость модели: cncGcMdlBr. v142.30: модель принадлежит вкладке — ключ «T<id вкладки>» в cncGcMdlP и IDB cncGc (id вкладки хранится в cncTabs_v1); старые записи по тексту программы подхватываются один раз. Вид (сетка/окружение/тени): cncGcLook.
 
 ОТКРЫТЫЕ ЗАДАЧИ
  - Haas №4 (A вокруг Y): проверить на станке направление A и центр X/Z.
@@ -58,6 +58,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.30 | Claude Sonnet 5.5 | 26.11.2026 | (1) Модель теперь принадлежит вкладке-программе: не теряется при правке текста, добавлении программы, смене вкладок и перезапуске; у новой вкладки модели нет; закрытие вкладки убирает её модель; перетаскивание вкладки переносит модель вместе с ней. Причина бага: модель хранилась по хэшу текста программы и переносилась только один раз (из «только модель» на первую программу). (2) Вид 3D (только Iso, камера над полом): свет «небо/земля» по оси Z (верх светлый, низ тёмный) + боковой свет; отражение процедурной карты окружения; пол с сеткой (мелкая через 1/5 крупной, затухание к краям) на уровне низа модели; тень детали на пол — проекция по лучу света, мягкий край. Переключатели «Сетка / Окружение / Тени» в ⚙ (по умолчанию включены, cncGcLook). Тени отключаются для моделей больше 150 тыс. треугольников. Не проверено на iPhone; проверено в Chromium (скриншоты, сценарии вкладок). Не сделано: тень детали на саму себя, перспективная камера.
  v142.29 | Claude Sonnet 5.5 | 26.11.2026 | Решение пользователя: только тёмная тема. Удалены 3 блока стилей для светлого режима системы (36 строк); правила для светлого режима не добавлять. Не проверено на iPhone.
  v142.28 | Claude Sonnet 5.5 | 26.11.2026 | Уборка стилей, шаг 1 (3D Viewer и редактор), вид не менялся: убрано перекрытых объявлений 125, объединено повторных правил 7, в один блок в конце <style> перенесено 84. Новые стили 3D и редактора писать в этот блок. Общие с другими разделами правила, !important и светлая тема не трогались. Не проверено на iPhone.
  v142.27 | Claude Sonnet 5.5 | 25.11.2026 | Панель поворотной оси в 3D Viewer: у «Ось A: Y/Z» и «Быстрое вращение» кнопки «−/+» были растянуты и закрывали число (стиль .gc-axis .gc-stock button). Кнопки 44px, поля друг под другом. Не проверено на iPhone.
@@ -2477,6 +2478,11 @@ body.gc-fs-on .bug-fab{display:none}
         <button type="button" id="gcVWork" class="active" onclick="gcToggleWork()">Рабочая зона: вкл</button>
         <button type="button" id="gcVAll" onclick="gcToggleAll()" title="Показывать все операции, а не только текущую">Все операции</button>
       </div>
+      <div class="cnc3d-views">
+        <button type="button" id="gcLk_grid" class="active" onclick="gcLookToggle('grid')">✓ Сетка (пол)</button>
+        <button type="button" id="gcLk_env" class="active" onclick="gcLookToggle('env')">✓ Окружение</button>
+        <button type="button" id="gcLk_shadow" class="active" onclick="gcLookToggle('shadow')">✓ Тени</button>
+      </div>
       <div class="gc-model" id="gcModelBox">
         <div class="gc-axis-title">Модель детали</div>
         <div class="gc-stock" style="grid-template-columns:1fr;margin-bottom:8px">
@@ -4042,12 +4048,14 @@ function generateDrill() {
 var TABS_KEY = 'cncTabs_v1', ED_KEY = 'cnc_editor_v1', ED_PREV = 'cnc_editor_prev';   // ED_* — прежний редактор главного экрана: читается один раз и переносится в первую вкладку
 var ED_M30 = /(^|\n)[ \t]*M30[ \t]*;?[ \t]*$/;
 function lineCount(t) { return t.replace(/\s+$/, '') === '' ? 0 : t.replace(/\s+$/, '').split('\n').length; }
+// v142.30: у каждой вкладки свой постоянный id; модель хранится по id вкладки, а не по тексту программы
+function tabsIds(fl) { (fl || []).forEach(function (f) { if (f && !f.id) f.id = Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4); }); }
 function tabsNonEmpty(f) { return String(f && f.text || '').trim() !== ''; }
 function tabsRestore() {
   var r = null;
   try {
     var d = JSON.parse(localStorage.getItem(TABS_KEY) || 'null');
-    if (d && Array.isArray(d.files) && d.files.length) r = { files: d.files.map(function (f) { return { name: String(f && f.name || ''), text: String(f && f.text || '') }; }), act: d.act | 0 };
+    if (d && Array.isArray(d.files) && d.files.length) r = { files: d.files.map(function (f) { return { id: String(f && f.id || ''), name: String(f && f.name || ''), text: String(f && f.text || '') }; }), act: d.act | 0 };
   } catch (e) {}
   if (!r) {
     var old = '';
@@ -4066,11 +4074,12 @@ function tabsRestore() {
 function tabsEnsure() {
   if (!gc.files || !gc.files.length) { var r = tabsRestore(); gc.files = r.files; gc.act = r.act; }
   if (gc.act == null || gc.act < 0 || gc.act >= gc.files.length) gc.act = 0;
+  tabsIds(gc.files);
 }
 var _tabsSaveFail = false;
 function tabsSave() {
   try {
-    localStorage.setItem(TABS_KEY, JSON.stringify({ v: 1, act: gc.act || 0, files: (gc.files || []).map(function (f) { return { name: String(f && f.name || ''), text: String(f && f.text || '') }; }) }));
+    localStorage.setItem(TABS_KEY, JSON.stringify({ v: 1, act: gc.act || 0, files: (gc.files || []).map(function (f) { return { id: String(f && f.id || ''), name: String(f && f.name || ''), text: String(f && f.text || '') }; }) }));
     _tabsSaveFail = false; return true;
   } catch (e) {
     if (!_tabsSaveFail) { _tabsSaveFail = true; try { gcToast('Вкладки не сохранились: память браузера заполнена', 8000); } catch (e2) {} }
@@ -4153,7 +4162,7 @@ function gcTabsIncoming(nf, actIdx, dedupe) {
   tabsEnsure();
   var fl = gc.files, act, i;
   nf = nf.map(function (f) { return { name: String(f && f.name || ''), text: String(f && f.text || '') }; });
-  if (!fl.some(tabsNonEmpty)) { fl = nf; act = actIdx || 0; }
+  if (!fl.some(tabsNonEmpty)) { var oid0 = fl[gc.act] && fl[gc.act].id; fl = nf; act = actIdx || 0; if (oid0 && fl[act]) fl[act].id = oid0; }
   else {
     var hit = -1;
     if (dedupe && nf.length === 1) {
@@ -4161,7 +4170,7 @@ function gcTabsIncoming(nf, actIdx, dedupe) {
       for (i = 0; i < fl.length; i++) if (String(fl[i].text || '').trim() === t) { hit = i; break; }
     }
     if (hit >= 0) act = hit;
-    else if (nf.length === 1 && !tabsNonEmpty(fl[gc.act])) { fl[gc.act] = nf[0]; act = gc.act; }
+    else if (nf.length === 1 && !tabsNonEmpty(fl[gc.act])) { nf[0].id = fl[gc.act].id; fl[gc.act] = nf[0]; act = gc.act; }
     else { var base = fl.length; fl = fl.concat(nf); act = base + (actIdx || 0); }
   }
   if (act < 0 || act >= fl.length) act = 0;
@@ -4898,17 +4907,19 @@ function gcNameConfirm(){
   gcToast('Имя: '+name,5000);
 }
 function gcLoad(code,files,act){
-  var fl=(files&&files.length)?files:[{name:'',text:String(code==null?'':code)}];
+  gcMdlStash();   // модель уходит в память своей вкладки
+  var fl=(files&&files.length)?files:[{id:(gc.files&&gc.files[gc.act]&&gc.files[gc.act].id)||'',name:'',text:String(code==null?'':code)}];
   var A=(act==null)?0:act;if(A<0||A>=fl.length)A=0;
+  tabsIds(fl);
   var ex=gcBuildExec(fl,A),listing=ex.used?ex.text:String(fl[A].text);
   gc.files=fl;gc.act=A;gc._tabsDirty=false;gc.lineOrig=ex.used?ex.orig:null;gc.execWarn=ex.used?ex.warns:[];gc.execInfo=ex.used?ex:null;gc.execDefs=ex.defs;gc.wcsSel='all';
-  var carryM=(gc.model&&gc.modelOnly)?gc.model:null;
+  gc._mTab=fl[A].id;gcMdlPurge(fl);
   gc.modelOnly=false;{var sc0=document.getElementById('gcodeView');if(sc0)sc0.classList.remove('gc-model-only');}
-  gc.src=listing;gc.key=gcHash(String(listing));gcHiddenLoad();gcModelRestore();
+  gc.src=listing;gc.key=gcHash(String(listing));gcHiddenLoad();var memM=gcModelRestore();
   var r=gcParse(listing);
   gc.parseIssues=r.issues;gc.toolChanges=r.toolChanges;gc.workBox=r.workBox;gc.pts=r.pts;gc.groups=r.groups;gc.lines=r.lines;gc.tools=r.tools;gc.toolSeq=r.toolSeq||r.tools;gc.total=r.total;gc.bbox=r.bbox;gc.warn=r.warn.concat(gc.execWarn||[]);gc.wcsList=r.wcsList||[];
   gc.lineFirst=r.lineFirst;gc.lineLast=r.lineLast;gc.lineOrder=r.lineOrder;
-  if(carryM){gc.model=carryM;try{gcModelTx();gcModelUi();gcModelSaveParams(true);gcModelSaveGeom();}catch(e){}}
+  if(memM){try{gcModelTx();gcModelUi();gcModelOnlySync();}catch(e){}}
   gc.playing=false;cancelAnimationFrame(gc.raf);gc.progress=0;gc.last=0;gc.stepIdx=-1;gc.panX=0;gc.panY=0;gc.zoom=1;gc.pointers={};gc.pinchDist=0;gc.toolFilter=null;gc.toolSet={};
   gcRebuildFilter();
   // Темп по умолчанию: чтобы вся программа проигрывалась секунд за 30–40.
@@ -5569,47 +5580,168 @@ function gcGlInit(){
     var cv=document.createElement('canvas'),gl=cv.getContext('webgl',{antialias:true,alpha:true,premultipliedAlpha:true});
     if(!gl)return gcGl;
     var vs='attribute vec3 a_pos;attribute vec3 a_nrm;uniform mat3 uM;uniform vec3 uT;uniform vec2 uOff;uniform vec2 uSize;uniform float uScale;uniform float uK;uniform vec2 uZ;varying vec3 vN;varying float vH;void main(){vec3 v=uM*a_pos+uT;float sx=uOff.x+v.x*uScale;float sy=uOff.y-v.y*uScale;gl_Position=vec4(sx/uSize.x*2.0-1.0,1.0-sy/uSize.y*2.0,-v.z*uK,1.0);vN=uM*a_nrm;vH=(a_pos.z-uZ.x)*uZ.y;}';
-    var fs='precision mediump float;varying vec3 vN;varying float vH;void main(){vec3 n=normalize(vN);float l=abs(dot(n,normalize(vec3(-0.35,0.5,0.8))));vec3 c=vec3(0.42,0.60,0.86)*(0.32+0.68*l)*(0.72+0.5*clamp(vH,0.0,1.0));gl_FragColor=vec4(c,1.0);}';
+    // v142.30: свет «небо/земля» по мировой оси Z (верх светлый, низ тёмный) + боковой ключевой свет + отражение процедурной карты окружения
+    var fs='precision mediump float;varying vec3 vN;varying float vH;uniform vec3 uUp;uniform float uEnv;void main(){'
+      +'vec3 n=normalize(vN);if(n.z<0.0)n=-n;'
+      +'float u=dot(n,uUp);'
+      +'vec3 hemi=mix(vec3(0.10,0.11,0.15),vec3(0.74,0.79,0.88),smoothstep(-0.85,0.9,u));'
+      +'float key=max(dot(n,normalize(vec3(-0.45,0.55,0.70))),0.0);'
+      +'vec3 c=vec3(0.66,0.74,0.88)*(hemi*0.95+vec3(key*0.26));'
+      +'vec3 r=reflect(vec3(0.0,0.0,-1.0),n);float ru=dot(r,uUp);'
+      +'vec3 sky=mix(vec3(0.62,0.68,0.78),vec3(1.0),smoothstep(0.0,0.9,ru));'
+      +'vec3 gnd=mix(vec3(0.30,0.32,0.37),vec3(0.04,0.05,0.07),smoothstep(0.0,0.9,-ru));'
+      +'vec3 env=ru>0.0?sky:gnd;'
+      +'float fr=pow(1.0-clamp(n.z,0.0,1.0),2.0);'
+      +'c+=uEnv*env*(0.10+0.35*fr)*0.9;'
+      +'c*=0.86+0.26*clamp(vH,0.0,1.0);'
+      +'gl_FragColor=vec4(c,1.0);}';
+    // Тень: вершины проецируются вдоль светового луча на плоскость пола z=uZf (в мировых координатах), затем в экран
+    var vs2='attribute vec3 a_pos;attribute vec3 a_nrm;uniform mat3 uMw;uniform vec3 uTw;uniform mat3 uRp;uniform vec3 uL;uniform float uZf;uniform vec2 uOff;uniform vec2 uSize;uniform float uScale;void main(){vec3 w=uMw*a_pos+uTw;float t=max((uZf-w.z)/uL.z,0.0);vec3 q=uRp*vec3(w.xy+uL.xy*t,uZf);float sx=uOff.x+q.x*uScale;float sy=uOff.y-q.y*uScale;gl_Position=vec4(sx/uSize.x*2.0-1.0,1.0-sy/uSize.y*2.0,0.0,1.0)+vec4(a_nrm*0.0,0.0);}';
+    var fs2='precision mediump float;void main(){gl_FragColor=vec4(0.0,0.0,0.0,1.0);}';
     var mk=function(type,src){var sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw new Error('shader');return sh;};
-    var pr=gl.createProgram();gl.attachShader(pr,mk(gl.VERTEX_SHADER,vs));gl.attachShader(pr,mk(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);
-    if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw new Error('link');
-    var L={};['uM','uT','uOff','uSize','uScale','uK','uZ'].forEach(function(n){L[n]=gl.getUniformLocation(pr,n);});
-    gcGl={cv:cv,gl:gl,pr:pr,L:L,pos:gl.getAttribLocation(pr,'a_pos'),nrm:gl.getAttribLocation(pr,'a_nrm'),buf:gl.createBuffer(),model:null,n:0};
+    var mp=function(v,f){var q=gl.createProgram();gl.attachShader(q,mk(gl.VERTEX_SHADER,v));gl.attachShader(q,mk(gl.FRAGMENT_SHADER,f));gl.bindAttribLocation(q,0,'a_pos');gl.bindAttribLocation(q,1,'a_nrm');gl.linkProgram(q);if(!gl.getProgramParameter(q,gl.LINK_STATUS))throw new Error('link');return q;};
+    var pr=mp(vs,fs),L={};
+    ['uM','uT','uOff','uSize','uScale','uK','uZ','uUp','uEnv'].forEach(function(n){L[n]=gl.getUniformLocation(pr,n);});
+    var sh=null,L2={};
+    try{sh=mp(vs2,fs2);['uMw','uTw','uRp','uL','uZf','uOff','uSize','uScale'].forEach(function(n){L2[n]=gl.getUniformLocation(sh,n);});}catch(e2){sh=null;}
+    gcGl={cv:cv,gl:gl,pr:pr,L:L,sh:sh,L2:L2,pos:0,nrm:1,buf:gl.createBuffer(),model:null,n:0};
   }catch(e){gcGl=false;}
   return gcGl;
 }
 function gcMm3(A,B){var r=[],i,j;for(i=0;i<3;i++)for(j=0;j<3;j++)r.push(A[i*3]*B[j]+A[i*3+1]*B[3+j]+A[i*3+2]*B[6+j]);return r;}
 function gcMv3(A,v){return [A[0]*v[0]+A[1]*v[1]+A[2]*v[2],A[3]*v[0]+A[4]*v[1]+A[5]*v[2],A[6]*v[0]+A[7]*v[1]+A[8]*v[2]];}
-function gcModelSolid(ctx,P){
-  var m=gc.model,g=gcGlInit();
-  if(!g||!m||!m.tri||!m.tri.length||m.tri.length/9>400000||!m.bb)return false;
-  var gl=g.gl,pw=Math.round(P.W*P.dpr),ph=Math.round(P.H*P.dpr),i;
-  if(g.cv.width!==pw||g.cv.height!==ph){g.cv.width=pw;g.cv.height=ph;}
-  if(g.model!==m){
-    var nt=m.tri.length/9,d=new Float32Array(nt*18),t=m.tri;
-    for(i=0;i<nt;i++){
-      var b=i*9,ux=t[b+3]-t[b],uy=t[b+4]-t[b+1],uz=t[b+5]-t[b+2],wx=t[b+6]-t[b],wy=t[b+7]-t[b+1],wz=t[b+8]-t[b+2];
-      var nx=uy*wz-uz*wy,ny=uz*wx-ux*wz,nz=ux*wy-uy*wx,ln=Math.sqrt(nx*nx+ny*ny+nz*nz)||1;nx/=ln;ny/=ln;nz/=ln;
-      for(var k=0;k<3;k++){var o=i*18+k*6;d[o]=t[b+k*3];d[o+1]=t[b+k*3+1];d[o+2]=t[b+k*3+2];d[o+3]=nx;d[o+4]=ny;d[o+5]=nz;}
-    }
-    gl.bindBuffer(gl.ARRAY_BUFFER,g.buf);gl.bufferData(gl.ARRAY_BUFFER,d,gl.STATIC_DRAW);g.model=m;g.n=nt*3;g.z0=1e9;g.z1=-1e9;for(i=2;i<t.length;i+=3){if(t[i]<g.z0)g.z0=t[i];if(t[i]>g.z1)g.z1=t[i];}
+// Буфер вершин модели (позиция + нормаль грани) — один раз на модель
+function gcGlBuf(g,m){
+  if(g.model===m)return;
+  var gl=g.gl,i,nt=m.tri.length/9,d=new Float32Array(nt*18),t=m.tri;
+  for(i=0;i<nt;i++){
+    var b=i*9,ux=t[b+3]-t[b],uy=t[b+4]-t[b+1],uz=t[b+5]-t[b+2],wx=t[b+6]-t[b],wy=t[b+7]-t[b+1],wz=t[b+8]-t[b+2];
+    var nx=uy*wz-uz*wy,ny=uz*wx-ux*wz,nz=ux*wy-uy*wx,ln=Math.sqrt(nx*nx+ny*ny+nz*nz)||1;nx/=ln;ny/=ln;nz/=ln;
+    for(var k=0;k<3;k++){var o=i*18+k*6;d[o]=t[b+k*3];d[o+1]=t[b+k*3+1];d[o+2]=t[b+k*3+2];d[o+3]=nx;d[o+4]=ny;d[o+5]=nz;}
   }
+  gl.bindBuffer(gl.ARRAY_BUFFER,g.buf);gl.bufferData(gl.ARRAY_BUFFER,d,gl.STATIC_DRAW);g.model=m;g.n=nt*3;g.z0=1e9;g.z1=-1e9;
+  for(i=2;i<t.length;i+=3){if(t[i]<g.z0)g.z0=t[i];if(t[i]>g.z1)g.z1=t[i];}
+}
+// Матрицы модели: M,T — модель → вид; Mw,Tw — модель → мир (после поворота A), Rp — мир → вид
+function gcModelMats(P){
+  var m=gc.model;
   var Rp=[P.cyw,-P.syw,0,P.sp*P.syw,P.sp*P.cyw,P.cp,-P.cp*P.syw,-P.cp*P.cyw,P.sp],Rl=[1,0,0,0,1,0,0,0,1],ca=[0,0,0];
   if(P.liveA){var ae=(gcAxis.inv?-1:1)*P.liveA*Math.PI/180,c=Math.cos(ae),s=Math.sin(ae);Rl=gcAxis.ax==='Y'?[c,0,s,0,1,0,-s,0,c]:[1,0,0,0,c,-s,0,s,c];ca=gcRotCenter3();}
   var cz=Math.cos(m.rz*Math.PI/180),sz=Math.sin(m.rz*Math.PI/180),Rz=[cz,-sz,0,sz,cz,0,0,0,1],Rm=gcMm3(Rz,m.Rb);
   var tzb=gcMv3(Rz,m.tb),tm=[tzb[0]+m.off[0],tzb[1]+m.off[1],tzb[2]+m.off[2]+(m.zref==='top'?-m.zq:0)];
   var M=gcMm3(gcMm3(Rp,Rl),Rm),q=gcMv3(Rl,[tm[0]-ca[0],tm[1]-ca[1],tm[2]-ca[2]]),T=gcMv3(Rp,[q[0]+ca[0],q[1]+ca[1],q[2]+ca[2]]);
+  return {Rp:Rp,Rl:Rl,ca:ca,M:M,T:T,Mw:gcMm3(Rl,Rm),Tw:[q[0]+ca[0],q[1]+ca[1],q[2]+ca[2]]};
+}
+function gcM3t(A){return [A[0],A[3],A[6],A[1],A[4],A[7],A[2],A[5],A[8]];}
+function gcModelSolid(ctx,P){
+  var m=gc.model,g=gcGlInit();
+  if(!g||!m||!m.tri||!m.tri.length||m.tri.length/9>400000||!m.bb)return false;
+  var gl=g.gl,pw=Math.round(P.W*P.dpr),ph=Math.round(P.H*P.dpr),i;
+  if(g.cv.width!==pw||g.cv.height!==ph){g.cv.width=pw;g.cv.height=ph;}
+  gcGlBuf(g,m);
+  var K=gcModelMats(P),M=K.M,T=K.T;
   var bb=m.bb,R=Math.hypot(Math.max(Math.abs(bb.x0),Math.abs(bb.x1)),Math.max(Math.abs(bb.y0),Math.abs(bb.y1)),Math.max(Math.abs(bb.z0),Math.abs(bb.z1)))+2*Math.hypot(gcAxis.y,gcAxis.z)+1;
   gl.viewport(0,0,pw,ph);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
   gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LESS);gl.disable(gl.CULL_FACE);gl.useProgram(g.pr);
   gl.bindBuffer(gl.ARRAY_BUFFER,g.buf);
-  gl.enableVertexAttribArray(g.pos);gl.vertexAttribPointer(g.pos,3,gl.FLOAT,false,24,0);
-  gl.enableVertexAttribArray(g.nrm);gl.vertexAttribPointer(g.nrm,3,gl.FLOAT,false,24,12);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);
+  gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
   gl.uniformMatrix3fv(g.L.uM,false,[M[0],M[3],M[6],M[1],M[4],M[7],M[2],M[5],M[8]]);
   gl.uniform3f(g.L.uT,T[0],T[1],T[2]);gl.uniform2f(g.L.uOff,P.ox,P.oy);gl.uniform2f(g.L.uSize,P.W,P.H);gl.uniform1f(g.L.uScale,P.scale);gl.uniform1f(g.L.uK,0.95/R);gl.uniform2f(g.L.uZ,g.z0,1/Math.max(1e-6,g.z1-g.z0));
+  gl.uniform3f(g.L.uUp,0,P.cp,P.sp);gl.uniform1f(g.L.uEnv,gcLook().env?1:0);
   gl.drawArrays(gl.TRIANGLES,0,g.n);
   ctx.save();ctx.globalAlpha=Math.min(1,gcModelBr()*1.6);ctx.drawImage(g.cv,0,0,P.W,P.H);ctx.restore();
   return true;
+}
+// ---------- v142.30: пол (сетка), тень детали, карта окружения; переключатели «Вид» в ⚙ ----------
+function gcLook(){
+  if(!gc.look){
+    var o={grid:true,env:true,shadow:true};
+    try{var j=JSON.parse(localStorage.getItem('cncGcLook')||'null');if(j&&typeof j==='object'){['grid','env','shadow'].forEach(function(k){if(typeof j[k]==='boolean')o[k]=j[k];});}}catch(e){}
+    gc.look=o;
+  }
+  return gc.look;
+}
+function gcLookToggle(k){
+  var L=gcLook();L[k]=!L[k];
+  try{localStorage.setItem('cncGcLook',JSON.stringify(L));}catch(e){}
+  gcLookUi();gcDraw();
+}
+function gcLookUi(){
+  var L=gcLook(),nm={grid:'Сетка (пол)',env:'Окружение',shadow:'Тени'};
+  Object.keys(nm).forEach(function(k){
+    var el=document.getElementById('gcLk_'+k);if(!el)return;
+    el.classList.toggle('active',!!L[k]);el.textContent=(L[k]?'✓ ':'')+nm[k];
+  });
+}
+var gcLookCv={};
+function gcLookCanvas(id,w,h){
+  var c=gcLookCv[id];if(!c){c=gcLookCv[id]=document.createElement('canvas');}
+  if(c.width!==w||c.height!==h){c.width=w;c.height=h;}
+  return c;
+}
+// Высота пола: низ модели, а без модели — низ рабочей зоны программы
+function gcFloorZ(b){
+  var m=gc.model;
+  if(m&&m.bb&&m.mode!=='off')return m.bb.z0;
+  return b.z0;
+}
+function gcFloorDraw(ctx,S,P,b){
+  var L=gcLook();if(!L.grid&&!L.shadow)return;
+  var m=gc.model,bf=gcModelFitBox(b),zf=gcFloorZ(b),W=P.W,H=P.H,dpr=P.dpr;
+  var sx=bf.x1-bf.x0,sy=bf.y1-bf.y0,sp=Math.max(sx,sy,10),mg=sp*0.35;
+  var major=mill3dNiceStep(sp+2*mg),minor=major/5;
+  var x0=Math.floor((bf.x0-mg)/major)*major,x1=Math.ceil((bf.x1+mg)/major)*major,y0=Math.floor((bf.y0-mg)/major)*major,y1=Math.ceil((bf.y1+mg)/major)*major;
+  var cx=(x0+x1)/2,cy=(y0+y1)/2,pc=S(cx,cy,zf),k,q,ex=1,ey=1;
+  [[x0,y0],[x1,y0],[x1,y1],[x0,y1]].forEach(function(c){q=S(c[0],c[1],zf);ex=Math.max(ex,Math.abs(q[0]-pc[0]));ey=Math.max(ey,Math.abs(q[1]-pc[1]));});
+  var fc=gcLookCanvas('floor',Math.round(W*dpr),Math.round(H*dpr)),fx=fc.getContext('2d');
+  fx.setTransform(dpr,0,0,dpr,0,0);fx.clearRect(0,0,W,H);fx.globalCompositeOperation='source-over';
+  // плоскость пола
+  var c4=[S(x0,y0,zf),S(x1,y0,zf),S(x1,y1,zf),S(x0,y1,zf)];
+  fx.beginPath();c4.forEach(function(c,i){if(i)fx.lineTo(c[0],c[1]);else fx.moveTo(c[0],c[1]);});fx.closePath();
+  fx.fillStyle='rgba(150,170,200,0.10)';fx.fill();
+  if(L.grid){
+    var nx=Math.round((x1-x0)/minor),ny=Math.round((y1-y0)/minor);
+    if(nx<=120&&ny<=120){
+      var drawSet=function(major_,alpha,lw){
+        fx.beginPath();
+        for(k=0;k<=nx;k++){if((k%5===0)!==major_)continue;var X=x0+k*minor,a1=S(X,y0,zf),a2=S(X,y1,zf);fx.moveTo(a1[0],a1[1]);fx.lineTo(a2[0],a2[1]);}
+        for(k=0;k<=ny;k++){if((k%5===0)!==major_)continue;var Y=y0+k*minor,c1=S(x0,Y,zf),c2=S(x1,Y,zf);fx.moveTo(c1[0],c1[1]);fx.lineTo(c2[0],c2[1]);}
+        fx.strokeStyle='rgba(170,190,220,'+alpha+')';fx.lineWidth=lw;fx.stroke();
+      };
+      drawSet(false,0.16,0.6);drawSet(true,0.34,0.9);
+    }
+  }
+  // мягкое затухание к краям (эллипс по проекции пола)
+  fx.save();fx.globalCompositeOperation='destination-in';fx.translate(pc[0],pc[1]);fx.scale(1,ey/ex);
+  var gr=fx.createRadialGradient(0,0,0,0,0,ex);gr.addColorStop(0,'rgba(0,0,0,1)');gr.addColorStop(0.55,'rgba(0,0,0,0.9)');gr.addColorStop(1,'rgba(0,0,0,0)');
+  fx.fillStyle=gr;fx.fillRect(-ex*2,-ex*2,ex*4,ex*4);fx.restore();
+  ctx.drawImage(fc,0,0,W,H);
+  if(L.shadow)gcShadowDraw(ctx,P,zf);
+}
+// Тень: проекция тела на пол по лучу света (мировой свет сверху-слева-спереди), мягкий край — через ступенчатое уменьшение
+function gcShadowDraw(ctx,P,zf){
+  var m=gc.model,g=gcGlInit();
+  if(!g||!g.sh||!m||m.mode!=='solid'||!m.tri||!m.tri.length||m.tri.length/9>150000||!m.bb)return;
+  var gl=g.gl,pw=Math.round(P.W*P.dpr),ph=Math.round(P.H*P.dpr);
+  if(g.cv.width!==pw||g.cv.height!==ph){g.cv.width=pw;g.cv.height=ph;}
+  gcGlBuf(g,m);
+  var K=gcModelMats(P),Ln=Math.hypot(0.35,0.30,0.89),L2=g.L2;
+  gl.viewport(0,0,pw,ph);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.useProgram(g.sh);
+  gl.bindBuffer(gl.ARRAY_BUFFER,g.buf);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);
+  gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
+  gl.uniformMatrix3fv(L2.uMw,false,gcM3t(K.Mw));gl.uniform3f(L2.uTw,K.Tw[0],K.Tw[1],K.Tw[2]);gl.uniformMatrix3fv(L2.uRp,false,gcM3t(K.Rp));
+  gl.uniform3f(L2.uL,0.35/Ln,-0.30/Ln,-0.89/Ln);gl.uniform1f(L2.uZf,zf);
+  gl.uniform2f(L2.uOff,P.ox,P.oy);gl.uniform2f(L2.uSize,P.W,P.H);gl.uniform1f(L2.uScale,P.scale);
+  gl.drawArrays(gl.TRIANGLES,0,g.n);
+  var w1=Math.max(8,Math.round(P.W/4)),h1=Math.max(8,Math.round(P.H/4)),w2=Math.max(4,Math.round(w1/2)),h2=Math.max(4,Math.round(h1/2));
+  var c1=gcLookCanvas('sh1',w1,h1),x1=c1.getContext('2d'),c2=gcLookCanvas('sh2',w2,h2),x2=c2.getContext('2d');
+  x1.clearRect(0,0,w1,h1);x1.imageSmoothingEnabled=true;x1.drawImage(g.cv,0,0,w1,h1);
+  x2.clearRect(0,0,w2,h2);x2.imageSmoothingEnabled=true;x2.drawImage(c1,0,0,w2,h2);
+  ctx.save();ctx.imageSmoothingEnabled=true;try{ctx.imageSmoothingQuality='high';}catch(e){}
+  ctx.globalAlpha=0.55;ctx.drawImage(c2,0,0,P.W,P.H);ctx.restore();
 }
 // Яркость модели 0.15…1 (по умолчанию 0.5), хранится в localStorage
 function gcModelBr(){
@@ -5656,19 +5788,20 @@ function gcIdb(cb){
 var gcModelTimer=0;
 function gcModelSaveParams(now){
   clearTimeout(gcModelTimer);
+  var mkey=gcMKey(),mm=gc.model,mlib=gc.libId||null;   // ключ и модель фиксируем сразу: за 300 мс активная вкладка может смениться
   var run=function(){
-    if(gc.key){
+    if(mkey){
       var st=gcLsGet('cncGcMdlP');
-      if(!gc.model)delete st[gc.key];
-      else st[gc.key]={off:gc.model.off,rz:gc.model.rz,zref:gc.model.zref,mode:gc.model.mode,al:gc.model.al||{},t:Date.now()};
-      gcLsSet('cncGcMdlP',st,12);
+      if(!mm)delete st[mkey];
+      else st[mkey]={off:mm.off,rz:mm.rz,zref:mm.zref,mode:mm.mode,al:mm.al||{},lib:mlib,t:Date.now()};
+      gcLsSet('cncGcMdlP',st,40);
     }
     // модель из «Папки моделей»: запись папки обновляется вместе с привязкой (раньше хранила снимок на момент сохранения)
-    if(gc.libId&&gc.model){
+    if(mlib&&mm){
       try{
         var ls=modelLibLoad(),i;
-        for(i=0;i<ls.length;i++)if(ls[i].id===gc.libId){
-          ls[i].off=gc.model.off||[0,0,0];ls[i].rz=gc.model.rz||0;ls[i].zref=gc.model.zref||'bottom';ls[i].mode=gc.model.mode||'solid';ls[i].al=gc.model.al||{};
+        for(i=0;i<ls.length;i++)if(ls[i].id===mlib){
+          ls[i].off=mm.off||[0,0,0];ls[i].rz=mm.rz||0;ls[i].zref=mm.zref||'bottom';ls[i].mode=mm.mode||'solid';ls[i].al=mm.al||{};
           modelLibSave(ls);break;
         }
       }catch(e){}
@@ -5677,7 +5810,7 @@ function gcModelSaveParams(now){
   if(now)run();else gcModelTimer=setTimeout(run,300);
 }
 function gcModelSaveGeom(){
-  var key=gc.key,m=gc.model;
+  var key=gcMKey(),m=gc.model;
   gcIdb(function(db){
     if(!db)return;
     try{
@@ -5688,26 +5821,50 @@ function gcModelSaveGeom(){
         all.openCursor().onsuccess=function(e){
           var c=e.target.result;
           if(c){list.push({k:c.key,t:c.value.t||0});c.continue();}
-          else if(list.length>8){list.sort(function(a,b){return a.t-b.t;});list.slice(0,list.length-8).forEach(function(x){all.delete(x.k);});}
+          else if(list.length>24){list.sort(function(a,b){return a.t-b.t;});list.slice(0,list.length-24).forEach(function(x){all.delete(x.k);});}
         };
       };
     }catch(e){}
   });
 }
+// v142.30: модель принадлежит вкладке. gc._mTab — id вкладки, чья модель сейчас в gc.model; gc.tabMdl — модели вкладок в памяти.
+gc.tabMdl=gc.tabMdl||{};
+function gcMTab(){
+  if(!gc._mTab){tabsEnsure();gc._mTab=(gc.files[gc.act]&&gc.files[gc.act].id)||'';}
+  return gc._mTab;
+}
+function gcMKey(){var t=gcMTab();return t?('T'+t):gc.key;}
+function gcMdlStash(){
+  var id=gc._mTab;if(!id)return;
+  if(gc.model)gc.tabMdl[id]={m:gc.model,lib:gc.libId||null};else delete gc.tabMdl[id];
+}
+function gcMdlPurge(fl){
+  Object.keys(gc.tabMdl).forEach(function(id){if(!fl.some(function(f){return f&&f.id===id;}))delete gc.tabMdl[id];});
+}
+// Возвращает true, если модель вкладки взята из памяти сразу; иначе ищет в хранилище (по id вкладки, затем по тексту — старые записи).
 function gcModelRestore(){
-  gc.model=null;gcModelUi();
-  var key=gc.key,pm=gcLsGet('cncGcMdlP')[key]||{};
+  gc.model=null;gc.libId=null;gcModelUi();
+  var tid=gc._mTab,mem=gc.tabMdl[tid];
+  if(mem&&mem.m){gc.model=mem.m;gc.libId=mem.lib||null;return true;}
+  var key='T'+tid,lkey=gc.key,st=gcLsGet('cncGcMdlP'),pm=st[key]||st[lkey]||{};
   gcIdb(function(db){
     if(!db)return;
     try{
-      var rq=db.transaction('models','readonly').objectStore('models').get(key);
-      rq.onsuccess=function(){
-        var r=rq.result;if(!r||!r.tri||gc.key!==key||gc.model)return;
+      var os=db.transaction('models','readonly').objectStore('models'),rq=os.get(key);
+      var done=function(r,legacy){
+        if(!r||!r.tri||gc._mTab!==tid||gc.model)return;
+        gc.libId=pm.lib||null;
         gcModelBuild(r.name,r.tri,pm.off,pm.rz,pm.zref,pm.mode,r.seg||null,pm.al||{});
         gcModelUi();gcDraw();
+        if(legacy){try{gcModelSaveParams(true);gcModelSaveGeom();}catch(e){}}   // старая запись по тексту — переносим на вкладку
+      };
+      rq.onsuccess=function(){
+        if(rq.result){done(rq.result,false);return;}
+        try{var r2=db.transaction('models','readonly').objectStore('models').get(lkey);r2.onsuccess=function(){done(r2.result,true);};}catch(e){}
       };
     }catch(e){}
   });
+  return false;
 }
 function gcObjParse(txt){
   var V=[],T=[],L=txt.split(/\r?\n/),i,k;
@@ -6669,6 +6826,8 @@ function gcDraw(){
     return S(r3[0],r3[1],r3[2]);
   };
   ctx.save();ctx.beginPath();ctx.rect(0,padT-6,W,H-padT+6);ctx.clip();
+  var VP={W:W,H:H,dpr:dpr,ox:ox,oy:oy,scale:scale,cyw:cyw,syw:syw,cp:cp,sp:sp,liveA:liveA};
+  if(gc.view==='iso'&&sp>0.03){try{gcFloorDraw(ctx,S,VP,b);}catch(e){}}   // v142.30: пол и тень под всем остальным
   // Сетка / каркас как в v60
   ctx.font='10px -apple-system, sans-serif';
   var plan=(gc.view==='top');
@@ -6703,7 +6862,7 @@ function gcDraw(){
     ctx.font='bold 11px -apple-system, sans-serif';ctx.fillText(a[0],e[0]+3,e[1]-3);
   });
   gc.lastSP=SP;gc.lastView={cyw:cyw,syw:syw,cp:cp,sp:sp};
-  gcModelDraw(ctx,SP,{W:W,H:H,dpr:dpr,ox:ox,oy:oy,scale:scale,cyw:cyw,syw:syw,cp:cp,sp:sp,liveA:liveA});
+  gcModelDraw(ctx,SP,VP);
   // Путь: весь — приглушённо, пройденная часть — ярко.
   gcGroupMeta();
   var curSeq=gc._seqAt&&gc._seqAt.length?gc._seqAt[Math.min(upto,gc._seqAt.length-1)]:0,fadeOn=(gc.toolFilter==null);
@@ -7022,7 +7181,7 @@ function gcEdLoadPicked(input){
     var last=-1;
     nf.forEach(function(f){
       var item={name:String(f.name||''),text:String(f.text||'')};
-      if(last<0&&!String(fl[cur].text||'').trim()){fl[cur]=item;last=cur;}
+      if(last<0&&!String(fl[cur].text||'').trim()){item.id=fl[cur].id;fl[cur]=item;last=cur;}
       else{fl.push(item);last=fl.length-1;}
     });
     gc.edTab=last;gc.act=last;gc._edDirty=true;gc.edStack=[];
@@ -8354,7 +8513,7 @@ function sendNC(id) {
   sendNCCode(el.tagName === 'TEXTAREA' ? el.value : el.innerText);
 }
 </script>
-<script>try{gcModelBrUi();}catch(e){}</script>
+<script>try{gcModelBrUi();gcLookUi();}catch(e){}</script>
 
 <button class="bug-fab" id="bugFab" type="button" onclick="bugOpen()" aria-label="Записать баг"><svg viewBox="0 0 24 24"><path d="M8.5 8.5h7v5.5a3.5 3.5 0 01-7 0z"/><path d="M12 8.5V6M9.5 5.5L11 7M14.5 5.5L13 7M4.5 12h4M15.5 12h4M5.5 18l3-2M18.5 18l-3-2M5.5 7l3 2M18.5 7l-3 2"/></svg><span class="bug-badge" id="bugBadge" style="display:none"></span></button>
 <div class="bug-sheet" id="bugSheet" style="display:none" onclick="if(event.target===this)bugClose()">
@@ -8375,7 +8534,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.29',APP_DATE='26.11.2026';
+var APP_VERSION='v142.30',APP_DATE='26.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
