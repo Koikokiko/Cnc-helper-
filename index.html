@@ -35,6 +35,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Не выдумывать: что не проверено на iPhone, так и говорить.
 
 СТИЛЬ (v126+)
+ Только тёмная тема (решение пользователя, v142.29).
  Тёмный минимализм: фон #050506, карточки #151619, тонкая рамка, акцент один —
  приглушённый голубой #4b90d0 (--accent). Без свечения и ярких градиентов.
  Линейные иконки, радиусы 14-20, кнопки-таблетки. Стекло (blur) только на
@@ -43,7 +44,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  G0 тонкие серые. Полный экран просмотра: нижняя панель открывается вручную (⌃).
 
 ХРАНЕНИЕ (браузер)
- Программы: IndexedDB cncProgs. Модели: IDB cncGc / cncGcModels + localStorage
+ Вкладки редактора 3D: localStorage cncTabs_v1. Программы: IndexedDB cncProgs. Модели: IDB cncGc / cncGcModels + localStorage
  cnc_model_folder_v1. Параметры привязки: cncGcMdlP. Баги: localStorage
  cncBugs_v1 (счётчик cncBugN). Яркость модели: cncGcMdlBr.
 
@@ -57,21 +58,23 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.29 | Claude Sonnet 5.5 | 26.11.2026 | Решение пользователя: только тёмная тема. Удалены 3 блока стилей для светлого режима системы (36 строк); правила для светлого режима не добавлять. Не проверено на iPhone.
+ v142.28 | Claude Sonnet 5.5 | 26.11.2026 | Уборка стилей, шаг 1 (3D Viewer и редактор), вид не менялся: убрано перекрытых объявлений 125, объединено повторных правил 7, в один блок в конце <style> перенесено 84. Новые стили 3D и редактора писать в этот блок. Общие с другими разделами правила, !important и светлая тема не трогались. Не проверено на iPhone.
+ v142.27 | Claude Sonnet 5.5 | 25.11.2026 | Панель поворотной оси в 3D Viewer: у «Ось A: Y/Z» и «Быстрое вращение» кнопки «−/+» были растянуты и закрывали число (стиль .gc-axis .gc-stock button). Кнопки 44px, поля друг под другом. Не проверено на iPhone.
+ v142.26 | Claude Sonnet 5.5 | 25.11.2026 | Анимации (собрано от v142.22; правки знака из v142.23–142.25 сюда не входят): переезжающая подсветка вкладок редактора; плавное открытие/закрытие меню ⋯ и окон «Все D», «Расставить M0», «Сверить инструменты»; раскрытие списка T в «Расставить M0»; сжатие кнопок при нажатии; вспышка строки при выборе T стрелками; анимация знака «+/−». Свой CSS/JS, без библиотек; при «Уменьшении движения» отключаются. Не проверено на iPhone. sw.js не менялся.
+ v142.22 | Claude Sonnet 5.5 | 25.11.2026 | По списку багов B1, B2, B4–B7 (B3 не было): B1+B2 — «Выравнивание стола»: строка «Поверни стол по B± на X°» с тремя знаками после запятой (раньше 4), в скобках всегда значение B на станке 0–360: B+ 0.5° → (0.500), B− 0.5° → (359.500); «наклон» тоже с тремя знаками. B4 — «Фрезерование отверстий»: у «Глубина Z» убран «+ / −», слева постоянный «−», в поле только цифры (по умолчанию 10); в программе Z всегда отрицательная (если ввели со знаком — не удваивается); 0 — ошибка «должна быть больше 0». B5 — «Загрузить программу» убрана из меню ⋯, кнопка «Загрузить» стоит в полосе вкладок после «＋». B6 — из меню ⋯ убраны «К подпрограмме (M98)» и «Назад из подпрограммы» (функции в коде остались, M98 при построении траектории работает как раньше). B7 — «Баги и заметки»: в заголовок записи добавлен путь «Экран › Окно», например «Просмотр › Выравнивание стола», «Просмотр: полноэкранный редактор › меню ⋯»; в контексте редактора — «вкладка N из M, название»; фиксируется только то, что открыто в момент нажатия. sw.js не менялся. Не проверено на iPhone.
+ v142.21 | Claude Sonnet 5.5 | 24.11.2026 | (1) «Выравнивание стола»: поля X/Z больше не содержат предустановленный 0 (пустые, серая подсказка 123.456), X и Z каждой точки стоят в своей строке на всю ширину — влезает 3 знака до точки и 3 после (123.432). (2) Фрезерование отверстий: «Глубина Z» и «Шаг по Z» разнесены (глубина — отдельной строкой, ниже подача и обороты, шаг — последней строкой); «Шаг по Z» запоминает последнее введённое значение (localStorage cncMillZstep_v1; нет значения — 2); «Диаметр готового отверстия» и «Номер инструмента T» стартуют пустыми с серой подсказкой («например 30», «например 5»); пустой диаметр даёт понятное сообщение. (3) Редактор 3D, меню ⋯: «Загрузить программу» — каждый выбранный файл открывается в новой вкладке (пустая текущая вкладка занимается первым файлом). Расчёт программ не менялся. Не проверено на iPhone.
+v142.20 | Claude Sonnet 5.5 | 23.11.2026 | Фрезерование отверстий: (1) у «Глубина Z (минус)» добавлен переключатель «+ / −» (на iPhone минус с цифровой клавиатуры не набрать — глубину вводили положительной и получали «Проверьте диаметры, высоты, глубину…»). (2) Сообщения об ошибках шапки теперь называют конкретное поле: пустое поле, диаметр фрезы, Подход Z, Безопасная Z ≤ Подход Z, глубина без минуса, шаг, подача, обороты. Расчёт программы не менялся. Не проверено на iPhone.
+ v142.19 | Claude Sonnet 5.5 | 23.11.2026 | Фрезерование отверстий (расфрезеровка): у «Центр X» и «Центр Y» каждого отверстия добавлен переключатель «+ / −» — минус ставится кнопкой, без ввода с цифровой клавиатуры iPhone. Знак хранится в тексте поля (−25), кнопка показывает текущий знак и при ручном вводе минуса переключается сама; при пустом поле выбор «−» ставит «-» и открывает ввод. Расчёт программы не менялся. Не проверено на iPhone.
+ v142.18 | Claude Sonnet 5.5 | 23.11.2026 | «Сверить инструменты»: подбор пар по ступеням. Раньше пара находилась только при точном совпадении названия, а FR D50 SPEED и FREZA D50 SPEED (O00152 и O00125) считались разными. Теперь: 1) название совпало — «совпало»; 2) тот же диаметр D и начало названия совпадает (FR ↔ FREZA) — «проверьте»; 3) тот же диаметр и тот же номер T при разных названиях — «проверьте». В каждой ступени сначала берётся инструмент с тем же номером T. Инструменты с разным диаметром (SVERLO D12 и SVERLO D13) по-прежнему разные. Не проверено на iPhone.
+ v142.17 | Claude Sonnet 5.5 | 23.11.2026 | «Сверить инструменты» исправлено под реальные программы (O0194 / O0195): смена инструмента распознаётся и слитно (T14M06, T5M06), и через пробел (T14 M6); название берётся как первый комментарий после смены инструмента (до следующего T, до 15 строк — в O0195 он через 5 строк после T), а если в программе комментарии стоят перед T — как раньше; повторная T подряд (T14M6 во втором блоке) — тот же инструмент. При замене H находится и после точки (G43Z200.H14), H08 заменяется как H8. Не проверено на iPhone.
+ v142.16 | Claude Sonnet 5.5 | 23.11.2026 | (1) Меню ⋯ редактора 3D → «Сверить инструменты»: эталон — активная вкладка, целевая — другая (при двух вкладках сама, иначе выбор из списка); меняется только целевая. Инструмент опознаётся по названию и диаметру D: название — комментарий в строке T, иначе строка-комментарий рядом до или после T (что в программе встречается чаще); диаметр — из названия (D12, Ø12). Совпало название — «совпало»; тот же диаметр и первое слово — «проверьте»; иначе «нет пары». Пару можно выбрать вручную в списке под каждым инструментом эталона. T и H меняются вместе (H = T): все T вне комментариев и строк G65, H в строках с G43/G44/M6; замена одним проходом, обмен T1↔T2 безопасен; N-номера и комментарии не трогаются. Инструменты целевой без пары не меняются и показаны отдельным списком; если после замены один номер окажется у двух инструментов — предупреждение и вопрос при «Применить». Одна правка, откат кнопкой ↺. (2) Вкладки редактора 3D перетаскиваются: удержать ~0,4 с и передвинуть; порядок сохраняется, активная вкладка и вкладка на экране остаются теми же, траектория пересчитывается при закрытии редактора. Не проверено на iPhone.
+ v142.15 | Claude Sonnet 5.5 | 23.11.2026 | (1) «Редактор программы» убран с главного экрана полностью (экран, кнопка, диалог открытия файла, поиск/замена старого редактора). Единственный редактор — в 3D Viewer. (2) Редактор 3D с вкладками: вкладка = отдельная программа; «＋» новая вкладка, ✕ закрыть (если текст не сохранён в документах — вопрос); название — номер O и комментарий, иначе имя файла, иначе «Новая»; точка ● у вкладки, по которой строится траектория. Тап по вкладке делает её активной: траектория по активной, M98 ищет подпрограммы в остальных вкладках (переход «К подпрограмме» вкладку траектории не меняет). (3) Вкладки сохраняются при перезапуске (localStorage cncTabs_v1), текст — сразу при вводе. Старый текст редактора главного экрана один раз переносится первой вкладкой. (4) Кнопки «Добавить в редактор» (сверление, торцевание, фрезерование, отверстия, история) кладут блок в редактор 3D: пусто — в активную вкладку; не пусто — окно «Добавить в конец / Заменить текущую программу / Новая вкладка»; ссылка «открыть» открывает редактор 3D. (5) «Показать траекторию», «С телефона», «Из приложения», документы: в пустой редактор — заменяют, иначе открываются новой вкладкой (одинаковый текст — просто его вкладка), ничего не затирается. Комплект из нескольких файлов теперь = несколько вкладок; выполняется только активная, остальные — подпрограммы. (6) «Очистить» в меню 3D чистит активную вкладку (закрывает её, если вкладок несколько). (7) В меню ⋯ редактора добавлено «Посчитать время обработки» (перенесено со старого экрана; комментарий со временем в конец, откат ↺). Не проверено на iPhone.
  v142.14 | Claude Sonnet 5.5 | 22.11.2026 | (1) «Отправить в NC» (везде): уходит только файл .nc, без текста-подписи; имя — номер программы из первой строки O… как в программе плюс счётчик: O00125(1).nc, O00125(2).nc (счётчик по имени в localStorage cncNcCnt_v1, растёт после успешной отправки, сброса нет); нет номера — окно ввода названия. Из окна редактора теперь уходит текст редактора (раньше уходил текст другого поля, без правок, в т.ч. без /M0). Если системное «Поделиться» файлы не принимает — файл скачивается. (2) Меню ⋯: «К подпрограмме (M98)» и «Назад из подпрограммы» скрыты, если в редакторе одна программа. (3) Тап мимо меню ⋯ закрывает его; «Расставить M0»: ✕ при изменённых галочках спрашивает «Закрыть без применения?». Окна «Все D» и «Расставить M0» полноэкранные, закрываются кнопкой ✕. Не проверено на iPhone.
  v142.13 | Claude Sonnet 5.5 | 22.11.2026 | (1) «Просмотр всех D»: D после числа с точкой без пробела (Y-100.D28) больше не пропускается — перед D запрещены только буква, «_» и «#»; для T проверка прежняя, строгая. На O00125.NC было 12 строк, стало 14 (T1 FREZA D50 SPEED — D28, T29 FREZA D12D 250 — D33). (2) Меню ⋯ → «Расставить M0»: окно со списком T; M0/M00 перед сменой инструмента относится к следующему T; галочка = перед ним /M0 (остановки нет, инструмент меняется сам), стоит сама, если /M0 уже есть; тап по галочке T меняет все его смены, тап по названию раскрывает отдельные смены со строками; «Отметить все» / «Снять все»; «Применить» — одна правка с общей отменой. Номер N перед M0 убирается: «N12 M00» → «/M00». Меняются только строки, где M0 — единственный код (плюс N и комментарий); M0 среди других кодов и M0 после последнего T не трогаются, о них сказано в окне. Не проверено на iPhone.
- v142.12 | Claude Sonnet 5.5 | 22.11.2026 | (1) Редактор: стрелки поиска по T подсвечивают найденную строку голубой полосой. (2) «Переписать номера строк» — N1, N2, N3… шаг 1 (GOTO / M97 P / M99 P переносятся). (3) Кнопка «пуск» в редакторе закреплена всегда: запускает только с T, выбранной стрелками, и после правок текста (T ищется заново по номеру и порядковому месту); нет выбора или конфликт — предупреждение «Выберите T стрелками», запуска нет; обычный ввод в поле поиска сбрасывает выбор. (4) Убраны проверки: G0 по XY ниже верха заготовки (rapidXY), поворот оси A на G0 ниже верха (rotLow), смена инструмента не выше верха (toolchange); остальные проверки остались. (5) «Просмотр всех D» в меню ⋯: окно со списком «T + комментарий — D…» (новая строка при смене T или новом комментарии перед D, одинаковые D не повторяются, строки G65 и комментарии пропускаются); тап по строке — переход к первой D этой строки с подсветкой; под поиском появляется ряд «D≡ ‹ D D ›» для возврата к списку и перехода к предыдущей / следующей D, просмотренные строки помечены точкой. Не проверено на iPhone.
- v142.11 | Claude Sonnet 5.5 | 22.11.2026 | Сделано по списку багов B1–B6: B1 — в полном экране подписи на canvas (T/строка/X/Y/Z/A) сдвигаются вниз на safe-area, больше не прячутся под верхним баром; B2 — убрано предупреждение «Быстрый ход (G0) вниз … ниже верха заготовки» (rapidDown; остальные проверки как были); B3 — стрелки поиска по T в редакторе находят T после номера кадра N (N10T5, N10 T5), в меню ⋯ добавлены «Убрать номера строк» и «Переписать номера строк» (шаг 10, пропускают пустые строки, %, O-заголовок и комментарии; GOTO / M97 P / M99 P переносятся на новые номера; откат кнопкой ↺); B4 — viewport maximum-scale=1 + user-scalable=no, touch-action: manipulation у окна кода и редактора, блок gesturestart, поля поиска и замены в редакторе 16px, сброс счётчика двойного тапа; B5 — после поиска по T рядом со стрелками появляется малая кнопка с иконкой пуска: закрывает редактор и запускает воспроизведение с этой смены инструмента; B6 — вероятная причина: потерянный pointerup/pointercancel оставлял «призрачный» указатель в gc.pointers, и любое касание считалось щипком (только зум); теперь число касаний сверяется с touch-событиями, указатели сбрасываются при touchend/touchcancel, потере фокуса и сворачивании. Не проверено на iPhone: B4 и B6 (причина B6 — предположение). sw.js: CACHE_NAME cnc-helper-v142-11.
  v142.10 | GPT-6 | 21.11.2026 | Подготовка PWA для GitHub Pages: обновлены метаданные установки, добавлены комплект иконок и манифест, настроен service worker для установки на iPhone и обновления приложения. Функциональность CNC не менялась.
- v142.9 | Claude Sonnet 5.5 | 21.11.2026 | Чистка без изменения вида: удалён мёртвый код анимации листов (gcFxOpen / gcFxClose после раннего return), gcGooSvgInit, gcFxRect, gcFxOrigin, слушатель gcLastTapEl, CSS .gc-goo и SVG-фильтр gcGooF; убраны перекрытые слои переменных :root (оставлен последний блок и четыре переменные --glass, --glass-strong, --ios-shadow, --ios-radius). Вид проверен попиксельно. Шторки открываются и закрываются, как раньше.
- v142.8 | Claude Sonnet 5.5 | 21.11.2026 | 3D-модель, мастер привязки: (1) сам запускается только у модели без какой-либо привязки и без отметки «пропущено», а не при каждом открытии неполной привязки; (2) в панели мастера кнопка «Пропустить всё» (отказ запоминается вместе с привязкой модели; «Отмена» тоже запоминает); (3) в «Обнуление модели» кнопка «Привязать заново» — сбрасывает привязку и запускает мастер. (4) ИСПРАВЛЕНО: модель из «Папки моделей» теряла привязку, сделанную после сохранения (при повторном открытии возвращался снимок на момент сохранения и мастер начинал заново); теперь запись папки обновляется вместе с привязкой. Ручной запуск «Пройти по шагам» работает как раньше.
- v142.7 | Claude Sonnet 5.5 | 21.11.2026 | (1) ИСПРАВЛЕНО: выравнивание стола — если ввести правую точку первой (ΔX < 0), угол теперь тот же, что при обычном порядке (раньше выдавало около 179°). (2) Haas: в выборе системы координат добавлены G154 P1–P99; в строке цикла W154.01–W154.99 (две цифры), в многоцелевом режиме перед циклом G154P5G0G90; Нужна проверка на станке: приём W154.01 макросом.
- v142.6 | Claude Sonnet 5.5 | 21.11.2026 | (1) Щуп выбирается кнопками T20 / T28 / T30 / T50: T20 — Hexagon, T28 — Hexagon или Renishaw, T30 и T50 — Haas; T сам переключает станок, смена станка подбирает подходящий T; выбор запоминается. (2) Проверка при вводе у точек: красные поля и причина в карточке (Z подхода выше Z подачи, обязательные значения, размер, отпуск, подача > 0). (3) Для двух и более точек перед генерацией показывается напоминание проверить X, Y, Z со списком точек; вторым нажатием («Проверил — сгенерировать») программа создаётся.
- v142.5 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое: проверка — Z подхода (G0) всегда выше Z опускания / начала подачи (G1 F) у каждой точки, иначе программа не генерируется и показывается сообщение с номером точки.
- v142.4 | Claude Sonnet 5.5 | 21.11.2026 | (1) Haas G65 P9995 третьим станком (Hexagon → Renishaw → Haas), по образцу OBNUL.nc: A10 отверстие, A11 бобышка (E = −отпуск, H0 I0), A14 / A16 выступ X / Y (H = −отпуск), A15 / A17 паз X / Y, A20 плоскость (X → D, Y → E, Z → H, значение со знаком); W = 53 + номер G5x (G54 → W54.); сдвиги всегда нули. В одиночном и многоцелевом режиме. Нужна проверка на станке. (2) Шапка многоцелевого: поле H убрано (H = T), комментарий убран и добавляется автоматически «OBNULENIE <циклы>», блок «Высоты и подача» убран — Z подхода, Z опускания, F и безопасная Z только у точек (новая точка копирует предыдущую). (3) Убрана голубая плавающая кнопка «±» у всех числовых полей. (4) В подписях паза и выступа убраны «M4 A1» и т. п. Сделано на v142.3; циклы Haas из v143 (план) в этом файле написаны заново по образцу.
- v142.3 | Claude Sonnet 5.5 | 21.11.2026 | ИСПРАВЛЕНО: у наружного диаметра и выступа (M5 / D-) перед циклом больше нет G1 вниз над деталью (щуп врезался в заготовку при подходе). Теперь G1 идёт на «Z начала цикла (над деталью)» (по умолчанию рабочая Z из шапки), вниз за край опускается сам цикл параметром отпуска. Внутренний диаметр, паз, X/Y торец по-прежнему опускаются на «Z опускания».
- v142.2 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое обнуление, все операции и станки: подход по Z (G0), опускание на подаче G1 Z.. F.. (теперь со знаком + / − и отдельным полем, не зависит от параметра цикла), безопасная Z после цикла; у каждой точки своё, пусто = из шапки. Параметры цикла (отпуск за край / за деталь) вынесены отдельно; у наружного диаметра появилось поле отпуска. Циклы Haas ещё не добавлены (нет строк-образцов).
- v142.1 | Claude Sonnet 5.5 | 21.11.2026 | Многоцелевое обнуление: у каждой точки блок «Движение по точке» — Z подхода (выход на точку), опускание (рабочая Z у Z-касания, за край у остальных), подача F и безопасная Z после цикла. Пустое поле берёт значение из шапки; X/Y и цикл по-прежнему у каждой точки. Сделано на файле v142 (в нём нет циклов Haas G65 P9995 из плана v143 — перенести правку в v143).
- v127–v142 | Claude Sonnet / Haiku / Grok | 14–17.11.2026 | (сжато) v127: просмотрщик не теряет модель, поворот 360, подсветка T в редакторе; v128: блок NOTES, версия на главном, раздел «Баги и заметки»; v129: B1–B7, мастер обнуления, фикс чипсов; v130: PWA (manifest, service worker); v131–v132.1: станки Solex №6 / Haas №4 / Haas №1, привязка модели по плоскости и отверстию; v133: подпрограммы M98/M99, комплекты файлов, системы G54–G59/G154, вкладки редактора; v134: луч на кнопке «Пуск»; v135: счётчик Rolling counter; v136–v137: листы без анимации; v138–v142: «Выравнивание стола» (позже без оси B и названия станка, в «Обнуление»).
+ v142.11–v142.12 (22.11): правки по багам B1–B6; редактор: подсветка T, нумерация N, пуск с выбранной стрелкой T, «Просмотр всех D».
+ v127–v142.9 | Claude Sonnet / Haiku / Grok | 14–17.11.2026 | (сжато) v127: просмотрщик не теряет модель, поворот 360, подсветка T в редакторе; v128: блок NOTES, версия на главном, раздел «Баги и заметки»; v129: B1–B7, мастер обнуления, фикс чипсов; v130: PWA (manifest, service worker); v131–v132.1: станки Solex №6 / Haas №4 / Haas №1, привязка модели по плоскости и отверстию; v133: подпрограммы M98/M99, комплекты файлов, системы G54–G59/G154, вкладки редактора; v134: луч на кнопке «Пуск»; v135: счётчик Rolling counter; v136–v137: листы без анимации; v138–v142: «Выравнивание стола» (позже без оси B и названия станка, в «Обнуление»). v142.1–v142.9 (21.11.2026): многоцелевое обнуление — «Движение по точке» (Z подхода, опускание G1 со знаком, F, безопасная Z; пусто = из шапки), поле H убрано (H = T), комментарий OBNULENIE авто; Haas G65 P9995 третьим станком (A10/A11/A14–A17/A20, W = 53 + G5x; нужна проверка на станке); щуп кнопками T20/T28/T30/T50; проверки точек и напоминание при 2+ точках; у наружного диаметра/выступа нет G1 вниз над деталью (v142.3); выравнивание стола — первая точка справа даёт тот же угол (v142.7); Haas G154 P1–P99; мастер привязки модели — «Пропустить всё», «Привязать заново», привязка из «Папки моделей» больше не теряется (v142.8); чистка мёртвого кода и CSS (v142.9).
  v126–v119 | Claude + пользователь | 12–14.11.2026 | Дизайн, просмотрщик, документы, обнуление.
 =====================================================================
 -->
@@ -228,7 +231,6 @@ window.addEventListener('unhandledrejection',function(e){try{var r=e.reason;wind
   }
   .mini-cycle-group { display:inline-flex; align-items:center; gap:5px; padding:4px 6px; border:1px solid var(--border); border-radius:10px; margin:0 4px 5px 0; }
   .mini-cycle-group > span { font-size:.74rem; color:var(--muted); padding:0 3px; }
-
 
 .help-details { margin: 0 0 14px; border: 1px solid var(--border); border-radius: 14px; background: rgba(255,255,255,.045); overflow: hidden; }
 .help-details summary { padding: 12px 14px; cursor: pointer; font-weight: 650; color: var(--text); list-style: none; }
@@ -480,49 +482,15 @@ button:focus-visible {
   outline: 2px solid #9bc1e4;
   outline-offset: 3px;
 }
-@media (prefers-color-scheme: light) {
-  body {
-    background:
-      radial-gradient(ellipse at 10% 0%, rgba(94,157,255,.22), transparent 42%),
-      radial-gradient(ellipse at 90% 25%, rgba(181,146,255,.19), transparent 38%),
-      linear-gradient(155deg, #eaf2ff 0%, #f5f7fc 54%, #e9f2fb 100%);
-    color: var(--text);
-  }
-  .card, .point-card, .result-box, .menu-btn {
-    background: linear-gradient(145deg, rgba(255,255,255,.82), rgba(255,255,255,.52));
-    border-color: rgba(54,79,122,.13);
-    box-shadow: 0 12px 32px rgba(58,82,125,.10), inset 0 1px 0 rgba(255,255,255,.9);
-  }
-  .menu-btn, .op-btn { color: #2c2c2c; }
-  .op-btn { background: rgba(255,255,255,.56); border-color: rgba(54,79,122,.13); }
-  .menu-btn .icon-box, .op-btn .icon-box { background: linear-gradient(145deg, rgba(76,139,255,.18), rgba(76,139,255,.07)); }
-  label, .section-title { color: #64738b; }
-  select, input[type="text"] {
-    background: rgba(255,255,255,.78);
-    color: #252525;
-    border-color: rgba(54,79,122,.17);
-  }
-  .sign-btn { background: rgba(65,130,245,.09); color: #2869ca; }
-  .btn-secondary { background: rgba(255,255,255,.62); color: #373737; border-color: rgba(54,79,122,.16); }
-  .btn-add { background: rgba(75,139,255,.07); color: #2869ca; }
-  .result-box { background: rgba(245,249,255,.9); color: #174d91; }
-  .point-card .ptitle, .op-name { color: #285fae; }
-  .mini-op { background: rgba(80,111,160,.07); color: #373737; border-color: rgba(54,79,122,.14); }
-  .mini-op.active { background: rgba(68,130,240,.13); color: #205db6; }
-  .back { color: #276bd0; }
-}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
-
 
 .mode-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .mode-choice{min-height:58px;padding:12px 14px;border-radius:16px;border:1px solid rgba(130,160,210,.28);background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.045));color:var(--text);font-size:.96rem;font-weight:650;line-height:1.25;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:background .15s ease,border-color .15s ease,transform .15s ease}
 .mode-choice:active{transform:scale(.98)}
 .mode-choice.active{color:#fff;border-color:rgba(93,155,255,.78);background:linear-gradient(135deg,#438cff,#2868df);box-shadow:0 7px 18px rgba(35,105,225,.22),inset 0 1px 0 rgba(255,255,255,.2)}
 @media(max-width:380px){.mode-choice{min-height:62px;padding:10px 8px;font-size:.88rem}}
-
-
 
 /* Финальная визуальная полировка: единая сетка, отступы и иерархия секций */
 .field { margin-bottom: 16px; }
@@ -563,11 +531,6 @@ select, input[type="text"], .ios-large-input, .ios-large-select, .mill-point-inp
   .card { padding: 16px; }
   .grid2, .row, .ops, .mode-switch { column-gap: 9px; row-gap: 10px; }
 }
-@media (prefers-color-scheme: light) {
-  .section-title { color: #52647f; }
-  .section-title::after { background: linear-gradient(90deg, rgba(72,105,160,.25), rgba(72,105,160,0)); }
-}
-
 
 /* CNC помощник — строгая серо-графитовая тема */
 html { background:#111316; }
@@ -598,8 +561,6 @@ select:focus,input:focus { border-color:#9aa4ae; box-shadow:0 0 0 3px rgba(160,1
 input[type="file"] { width:100%; color:var(--muted); padding:10px 0; }
 .viewer { width:100%; height:68vh; border:1px solid var(--border); border-radius:12px; background:#fff; }
 .viewer img { width:100%; height:100%; object-fit:contain; }
-@media (prefers-color-scheme: light) { body { background:linear-gradient(160deg,#1a1a1a,#101215 58%,#1c1c1c); color:var(--text); } .card,.point-card,.result-box,.menu-btn { background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); border-color:var(--border); color:var(--text); } .op-btn { color:var(--text); background:rgba(255,255,255,.055); } select,input[type="text"] { background:var(--input); color:var(--text); border-color:var(--border); } .btn-secondary { color:var(--text); } .section-title,label { color:#b5bdc5; } .back { color:#c5cbd1; } }
-
 
 /* Единый серо-металлический стиль иконок во всех разделах и вложенных режимах */
 .menu-btn .icon-box, .op-btn .icon-box {
@@ -614,7 +575,6 @@ input[type="file"] { width:100%; color:var(--muted); padding:10px 0; }
 .menu-btn .icon-box svg *, .op-btn .icon-box svg * {
   /* Сохраняем геометрию и смысл исходных пиктограмм, убираем цветовые акценты. */
 }
-
 
 /* Холодная стальная сине-графитовая палитра иконок и акцентов */
 :root { --steel-1:#dfe6ef; --steel-2:#9aa8bb; --steel-3:#566377; --steel-glow:#8fb0da; }
@@ -988,20 +948,18 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
-
   /* CNC 3D preview */
   .cnc3d-card{background:linear-gradient(155deg,#272727,#1a1a1a);border:1px solid #3e3e3e;border-radius:18px;padding:14px;margin-bottom:14px;overflow:hidden}
   .cnc3d-controls{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:8px;margin-top:10px}
-  .cnc3d-controls button,.cnc3d-views button{background:#2e2e2e;border:1px solid #474747;color:#e5edf7;border-radius:10px;padding:10px 6px;font-size:.82rem;font-weight:600}
-  .cnc3d-controls button.primary{background:#1d3b61;border-color:#4b90d0;color:#f2f7ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+  .cnc3d-controls button,.cnc3d-views button{padding:10px 6px;font-size:.82rem;font-weight:600}
+  
   .cnc3d-views{display:flex;gap:7px;margin-top:8px}
   .cnc3d-views button{flex:1;padding:8px}
-  .cnc3d-views button.active{border-color:#4b90d0;background:#1d3b61}
+  
   .cnc3d-status{display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#aab6c6;font-size:.75rem}
   .cnc3d-timeline{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;margin-top:10px;padding:4px 14px;min-height:34px;box-sizing:border-box;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:linear-gradient(135deg,rgba(245,247,250,.085),rgba(148,163,184,.045));color:#c5d2e2;font-size:.78rem;font-weight:650;font-variant-numeric:tabular-nums;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
   .cnc3d-timeline input{width:100%;min-width:0;height:24px;margin:0;appearance:none;-webkit-appearance:none;background:transparent!important;border:0!important;box-shadow:none!important;outline:0;accent-color:#4b90d0;touch-action:pan-x;opacity:.9}
-  .cnc3d-timeline input::-webkit-slider-runnable-track{height:6px;border-radius:9px;background:linear-gradient(90deg,rgba(75,144,208,.95) 0 var(--seek-progress,0%),rgba(255,255,255,.2) var(--seek-progress,0%) 100%);border:0}
-  .cnc3d-timeline input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:50%;background:rgba(239,246,255,.96);border:1px solid rgba(255,255,255,.72);box-shadow:0 1px 6px rgba(0,0,0,.28)}
+
   .cnc3d-timeline input::-moz-range-track{height:6px;border-radius:9px;background:rgba(255,255,255,.2)}
   .cnc3d-timeline input::-moz-range-progress{height:6px;border-radius:9px;background:rgba(75,144,208,.95)}
   .cnc3d-timeline input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:rgba(239,246,255,.96);border:1px solid rgba(255,255,255,.72);box-shadow:0 1px 6px rgba(0,0,0,.28)}
@@ -1025,12 +983,11 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
   .gc-expand svg{width:15px;height:15px;display:block}
   #gcodeView.gc-fs .gc-expand{bottom:12px;right:12px;top:auto;}
 
-
   /* iOS увеличивает страницу при фокусе на поле со шрифтом меньше 16px */
   .point-card select.mill-point-input,.cnc3d-head select,.cnc3d-step-controls select,.editor-ta{font-size:16px!important}
   #gcCanvas{display:block;width:100%;height:320px;border-radius:12px;background:radial-gradient(ellipse at 50% 38%,#343434 0%,#181818 76%);touch-action:none;-webkit-user-select:none;user-select:none}
   body.gc-fs-on{overflow:hidden!important;touch-action:none}
-  body.gc-fs-on .screen:not(#gcodeView){display:none!important}
+  
   #gcodeView.gc-fs{
     position:fixed;inset:0;z-index:1000;max-width:none;width:100%;margin:0;padding:0;
     background:#121212;display:flex!important;flex-direction:column;min-height:100svh;animation:none;
@@ -1048,61 +1005,29 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
   #gcodeView.gc-fs .gc-tool-name,
   #gcodeView.gc-fs .cnc3d-status,
   #gcodeView.gc-fs .gc-fs-hide{display:none!important}
-  #gcodeView.gc-fs .cnc3d-card{
-    flex:1;display:flex;flex-direction:column;margin:0;border:0;border-radius:0;
-    background:#121212;box-shadow:none;padding:0;min-height:0;overflow:hidden;
-  }
-  #gcodeView.gc-fs .cnc3d-stage{flex:1;min-height:0;display:flex;position:relative}
-  #gcodeView.gc-fs #gcCanvas{height:auto!important;flex:1;width:100%;border-radius:0;min-height:0}
-  #gcodeView.gc-fs .gc-fs-bar{
-    display:flex;gap:10px;align-items:center;justify-content:space-between;
-    padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));
-    background:rgba(30,30,30,.72);border-bottom:1px solid rgba(255,255,255,.08);
-    -webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);
-    flex-shrink:0;z-index:6;
-  }
-  #gcodeView.gc-fs .gc-fs-bar button{
-    min-height:42px;min-width:42px;padding:7px 14px;border-radius:999px;
-    border:1px solid rgba(75,144,208,.14);background:rgba(58,132,197,.12);color:#7fb2de;
-    font-weight:650;font-size:.92rem;display:inline-flex;align-items:center;justify-content:center;
-  }
-  #gcodeView.gc-fs .gc-fs-bar button.gc-fs-x{padding:0;width:42px}
-  #gcodeView.gc-fs .gc-fs-bar .gc-fs-title{
-    color:#e8eef8;font-size:.9rem;font-weight:650;flex:1;text-align:center;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px;
-  }
+  #gcodeView.gc-fs .cnc3d-card{flex:1;flex-direction:column;margin:0;border:0;border-radius:0;background:#121212;box-shadow:none;padding:0;min-height:0;overflow:hidden}
+  #gcodeView.gc-fs .cnc3d-stage{flex:1;min-height:0;display:flex}
+  
+  #gcodeView.gc-fs .gc-fs-bar{display:flex;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));flex-shrink:0}
+
   .gc-fs-bar{display:none}
-  #gcodeView.gc-fs .gc-fs-bottom{
-    display:flex!important;flex-direction:column;gap:8px;
-    padding:10px 12px;padding-bottom:calc(18px + env(safe-area-inset-bottom));
-    background:rgba(30,30,30,.72);border-top:1px solid rgba(255,255,255,.08);
-    -webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);
-    flex-shrink:0;z-index:6;
-  }
-  #gcodeView.gc-fs #gcToolChips{display:none!important}
+  #gcodeView.gc-fs .gc-fs-bottom{display:flex!important;flex-direction:column;padding:10px 12px;padding-bottom:calc(18px + env(safe-area-inset-bottom));flex-shrink:0}
+  
   .gc-fs-bottom{display:none}
   #gcodeView.gc-fs .gc-fs-bottom .gc-fs-row{display:flex;gap:8px;align-items:center}
   #gcodeView.gc-fs .gc-fs-bottom .gc-fs-main{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:8px;align-items:center}
-  #gcodeView.gc-fs .gc-fs-bottom button,
-  #gcodeView.gc-fs .gc-fs-bottom select{
-    min-height:44px;border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#f2f5fa;
-    font-weight:600;font-size:.88rem;padding:8px 12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
-    -webkit-appearance:none;appearance:none;width:100%;
-  }
+  
   #gcodeView.gc-fs .gc-fs-bottom button.primary{background:linear-gradient(135deg,#5b9fff,#2f6fe0);color:#fff;font-size:.95rem}
-  #gcodeView.gc-fs .gc-fs-bottom select{text-align:center}
+  
   #gcodeView.gc-fs .gc-fs-views{display:flex;gap:6px}
-  #gcodeView.gc-fs .gc-fs-views button{flex:1;font-size:.78rem;padding:8px 4px}
+  
   #gcodeView.gc-fs .gc-fs-views button.gc-view-toggle{flex:2.4;font-size:.86rem}
-  #gcodeView.gc-fs .gc-fs-views #gcVG0Fs,#gcodeView.gc-fs .gc-fs-views #gcVFutureFs{flex:1}
+  
   #gcodeView.gc-fs .gc-fs-line-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  #gcodeView.gc-fs .gc-fs-line-controls button{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+  
   #gcodeView.gc-fs .gc-line-counter{color:#e5edf7;font-size:.82rem;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:center;padding:0 4px}
   #gcodeView.gc-fs .gc-fs-views button.active{background:rgba(75,144,208,.28);color:#dbeafe}
-  #gcodeView.gc-fs .cnc3d-controls,
-  #gcodeView.gc-fs .cnc3d-timeline,
-  #gcodeView.gc-fs .cnc3d-step-controls,
-  #gcodeView.gc-fs .cnc3d-views{display:none!important}
+  
   .gc-check{margin-top:12px;padding:11px 12px;border:1px solid #444444;border-radius:12px;background:rgba(16,16,16,.48)}
   .gc-check h3{margin:0 0 8px;font-size:.86rem;color:#edf4fc}
   .gc-stock{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;align-items:end}
@@ -1115,8 +1040,7 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
   .gc-issue i{flex:0 0 9px;height:9px;border-radius:50%;margin-top:4px}
   .gc-issue.sev-error i{background:#f87171}.gc-issue.sev-warn i{background:#fbbf24}.gc-issue.sev-info i{background:#4b90d0}
   .gc-more{color:#8492a5;font-size:.74rem;margin-top:8px}
-  .gc-tools,#gcodeView.gc-fs .gc-tools-fs{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;bottom:0;z-index:30;padding:6px 2px 8px;scrollbar-width:none;background:linear-gradient(180deg,rgba(18,18,18,0),rgba(18,18,18,.94) 28%)}
-  .gc-tools{margin-top:6px}
+
   .gc-tools::-webkit-scrollbar,.gc-tools-fs::-webkit-scrollbar{display:none}
   .gc-tools button,#gcodeView.gc-fs .gc-fs-bottom .gc-tools-fs button{
     flex:0 0 auto;width:auto;min-width:48px;min-height:36px;padding:0 14px;border-radius:999px;
@@ -1131,30 +1055,30 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
   .gc-ctl button,.gc-ctl select{background:#2e2e2e;border:1px solid #474747;color:#e5edf7;border-radius:12px;min-height:44px;padding:0 8px;font-size:.88rem;font-weight:600;min-width:0;text-align:center;touch-action:manipulation}
   .gc-ctl button.primary{background:#1d3b61;border-color:#4b90d0;color:#f2f7ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
   .gc-ctl button.active{border-color:#4b90d0;background:#1d3b61}
-  .gc-ctl select{font-size:16px!important}
+  
   .gc-settings{margin-top:10px;padding:12px;border:1px solid #3e3e3e;border-radius:14px;background:rgba(255,255,255,.03)}
-  .gc-settings .gc-axis:first-of-type{margin-top:12px}
+  
   .gc-model{margin-top:14px;padding-top:12px;border-top:1px solid #373737}
   .gc-model .cnc3d-views button{min-height:44px}
   .gc-issue-row{display:flex;gap:6px;align-items:stretch}
   .gc-issue-row .gc-issue{flex:1;margin-top:6px}
-  .gc-issue-row.dim .gc-issue{opacity:.55}
+  
   .gc-issue-x{flex:0 0 46px;margin-top:6px;border-radius:10px;border:1px solid #474747;background:#2e2e2e;color:#c5d2e2;font-size:1rem;font-weight:600}
   .gc-hid-toggle{display:block;width:100%;margin-top:8px;padding:9px 10px;border-radius:10px;border:1px dashed #474747;background:transparent;color:#9fb2c8;font-size:.78rem}
   #gcSetBtn.open{border-color:#4b90d0;background:#1d3b61}
-  #gcodeView.gc-fs .gc-ctl,#gcodeView.gc-fs .gc-settings{display:none!important}
+  
   .gc-axis-title{font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:#91a2b8;margin-bottom:6px}
   .gc-axis .cnc3d-views{margin-bottom:8px}
   .gc-axis .gc-stock button{width:100%;min-height:44px;font-size:.8rem}
 
-.gc-tool-name{margin:8px 12px 4px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--border);}
-.gc-tool-name-t{font-weight:700;font-size:0.95rem;color:#5eead4;}
+.gc-tool-name{margin:8px 12px 4px;padding:10px 12px}
+.gc-tool-name-t{font-weight:700;font-size:0.95rem}
 .gc-tool-name-op{font-size:0.78rem;color:var(--text);margin-top:3px;word-break:break-all;opacity:.92;}
 .gc-tool-name-desc{font-size:0.72rem;color:var(--muted);margin-top:2px;word-break:break-all;}
 
 .gc-coords-line{margin:8px 10px 4px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
 .gc-coords-line strong{color:var(--text);font-weight:650;margin-right:2px}
-.gc-code-panel{margin:6px 10px 8px;border:1px solid var(--border);border-radius:14px;background:rgba(11,11,11,.55);overflow:hidden;position:relative}
+.gc-code-panel{margin:6px 10px 8px;overflow:hidden;position:relative}
 .gc-code-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 12px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03)}
 .gc-code-head span{font-size:.72rem;color:var(--muted);font-weight:600}
 .gc-code-exp{min-width:36px;min-height:36px;border-radius:10px;border:1px solid rgba(75,144,208,.18);background:rgba(58,132,197,.12);color:#7fb2de;display:inline-flex;align-items:center;justify-content:center;padding:0}
@@ -1163,20 +1087,19 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .gc-code-line{position:absolute;left:0;right:0;height:20px;box-sizing:border-box;line-height:18px;padding:1px 10px 1px 8px;display:flex;gap:8px;white-space:pre;cursor:default}
 .gc-code-line .n{color:#5a6a80;min-width:2.6em;text-align:right;user-select:none;flex-shrink:0}
 .gc-code-line .t{color:#c5d4e8;flex:1;overflow:hidden;text-overflow:ellipsis}
-.gc-code-line.act{background:rgba(56,189,248,.14)}
-.gc-code-line.act .n{color:#5eead4}
+
 .gc-code-line.act .t{color:#e8f4ff;font-weight:600}
 .gc-code-empty{padding:18px 12px;text-align:center;color:var(--muted);font-size:.8rem}
 
 /* Fullscreen code editor overlay */
-.gc-ed-ov{position:fixed;inset:0;z-index:2000;background:#121212;display:none;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.gc-ed-ov{position:fixed;inset:0;z-index:2000;display:none;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
 .gc-ed-ov.on{display:flex}
-.gc-ed-top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(30,30,30,.92);flex-shrink:0}
-.gc-ed-top .back-x{min-width:40px;min-height:40px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.12);color:#7fb2de;font-size:1.1rem}
+.gc-ed-top{display:flex;align-items:center;gap:8px;padding:10px 12px;flex-shrink:0}
+.gc-ed-top .back-x{min-width:40px;min-height:40px;border-radius:12px;font-size:1.1rem}
 .gc-ed-top h2{flex:1;margin:0;font-size:.95rem;font-weight:700;color:#e8eef8;text-align:center}
 .gc-ed-actions{display:flex;gap:6px}
-.gc-ed-actions button{min-width:40px;min-height:40px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.12);color:#7fb2de;font-size:.85rem;font-weight:650;padding:0 10px}
-.gc-ed-search{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(23,23,23,.95);flex-shrink:0}
+.gc-ed-actions button{min-width:40px;min-height:40px;border-radius:12px;font-size:.85rem;font-weight:650;padding:0 10px}
+.gc-ed-search{padding:8px 12px;flex-shrink:0}
 .gc-ed-search-row{display:flex;gap:6px;align-items:center}
 .gc-ed-search-row input{flex:1;min-height:40px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:16px}
 .gc-ed-search-row .fr-arrow{min-width:40px;min-height:40px}
@@ -1186,9 +1109,9 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .gc-ed-repl .row{display:flex;gap:6px}
 .gc-ed-repl input{flex:1;min-height:38px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:16px}
 .gc-ed-repl .btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.gc-ed-repl .btns button{min-height:40px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.14);color:#cfe0f0;font-weight:650;font-size:.85rem}
-.gc-ed-ta{flex:1;width:100%;border:0;resize:none;padding:12px 14px;font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;color:#e5f0ff;background:#121212;box-sizing:border-box}
-.gc-ed-menu{position:absolute;right:12px;top:58px;z-index:5;min-width:200px;padding:6px;border-radius:14px;background:rgba(34,34,34,.98);border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 40px rgba(0,0,0,.45);display:none}
+.gc-ed-repl .btns button{min-height:40px;border-radius:12px;font-weight:650;font-size:.85rem}
+.gc-ed-ta{flex:1;width:100%;resize:none;padding:12px 14px;font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;color:#e5f0ff;box-sizing:border-box}
+.gc-ed-menu{position:absolute;right:12px;top:58px;z-index:5;min-width:200px;padding:6px;border-radius:14px}
 .gc-ed-menu.on{display:block}
 .gc-ed-menu button{display:block;width:100%;text-align:left;padding:12px 14px;border:0;background:transparent;color:#e8eef8;font-size:.9rem;border-radius:10px;font-weight:600}
 .gc-ed-menu button:active{background:rgba(75,144,208,.12)}
@@ -1203,21 +1126,19 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .prog-item .del{min-width:36px;min-height:36px;border-radius:10px;border:1px solid rgba(255,100,100,.2);background:rgba(255,80,80,.1);color:#ff8a8a}
 .prog-empty{font-size:.8rem;color:var(--muted);padding:8px 4px}
 
-
-#gcodeView > .back{margin-bottom:4px}
 .gc-head-compact{text-align:center;margin:0 0 8px;padding:0 8px}
-.gc-head-compact h1{font-size:.98rem;font-weight:700;margin:0;line-height:1.25;word-break:break-word}
+.gc-head-compact h1{line-height:1.25;word-break:break-word}
 .gc-head-compact p{font-size:.68rem;color:var(--muted);margin:3px 0 0;line-height:1.3}
-.gc-top-acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 10px;padding:0 2px}
-.gc-act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:64px;min-height:48px;padding:6px 10px;border-radius:14px;border:1px solid rgba(75,144,208,.18);background:rgba(58,132,197,.12);color:#b6d8f7;font-size:.68rem;font-weight:650}
+
+.gc-act{flex-direction:column;gap:3px;min-width:64px}
 .gc-act svg{opacity:.92}
 
 /* zero sheet */
-.gc-zero-sheet{position:fixed;inset:0;z-index:1800;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
-.gc-zero-card{width:100%;max-width:420px;border-radius:18px;background:rgba(30,30,30,.98);border:1px solid rgba(255,255,255,.1);padding:14px}
-.gc-zero-title{font-weight:700;font-size:.95rem;margin-bottom:10px;text-align:center}
+.gc-zero-sheet{position:fixed;inset:0;z-index:1800;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.gc-zero-card{width:100%;max-width:420px}
+.gc-zero-title{margin-bottom:10px;text-align:center}
 .gc-zero-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.gc-zero-grid button{min-height:44px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.12);color:#e8eef8;font-weight:650;font-size:.85rem}
+.gc-zero-grid button{min-height:44px;font-weight:650;font-size:.85rem}
 .gc-zero-more,.gc-zero-close{width:100%;margin-top:8px;min-height:42px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#cfe0f0;font-weight:650}
 .gc-zero-close{margin-top:6px}
 
@@ -1244,22 +1165,22 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 
 .gc-ed-hl{background:rgba(94,234,212,.28);border-radius:2px}
 
-
-
 .gc-prog-name{font-size:.82rem;font-weight:650;color:#dce8f6;margin:4px 0 2px;line-height:1.3;word-break:break-word}
-.gc-head-compact h1{font-size:.92rem;font-weight:700;margin:0;color:var(--muted);letter-spacing:.02em}
-.gc-head-compact p#gc_sub{font-size:.68rem;color:var(--muted);margin:2px 0 0}
+.gc-head-compact h1{margin:0}
+
 .gc-top-acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 10px;padding:0 2px}
-.gc-act{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 6px;border-radius:14px;border:1px solid rgba(75,144,208,.18);background:rgba(58,132,197,.12);color:#cfe0f0;font-size:.8rem;font-weight:650}
+.gc-act{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 6px;font-size:.8rem;font-weight:650}
 .gc-zero-grid1{grid-template-columns:1fr}
 .gc-zero-row{display:flex;gap:6px}
-.gc-zero-row>button:first-child{flex:1;min-width:0}
+
 .gc-zero-row .gc-zero-side{flex:0 0 46px;min-width:46px;padding:0}
 .gc-zero-row .gc-zero-side.active,.gc-zero-more.active{border-color:var(--accent);color:var(--accent)}
-.gc-zero-row .gc-zero-side:disabled{opacity:.35}
+
 .gc-tbl-card{max-width:420px}
 .gc-tbl-hint{font-size:12px;color:var(--muted);margin:2px 0 10px;line-height:1.35}
-.gc-tbl-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.gc-tbl-row{display:grid;grid-template-columns:22px 1fr;align-items:center;gap:6px 8px;margin-bottom:10px}
+.gc-tbl-row .gc-tbl-n{grid-row:1 / span 2;align-self:start;margin-top:9px}
+
 .gc-tbl-f{flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:14px;padding:0 6px 0 10px;background:var(--input);color:var(--muted);font-size:13px}
 .gc-tbl-f:focus-within{border-color:var(--accent)}
 .gc-tbl-f>span{flex:0 0 auto}
@@ -1275,26 +1196,13 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .gc-wiz-bar{position:absolute;left:8px;right:56px;bottom:8px;z-index:6;padding:6px 8px;border-radius:14px;background:rgba(24,24,24,.92);border:1px solid rgba(75,144,208,.5);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .gc-wiz-txt{font-weight:650;font-size:.78rem;color:#e8f1ff;text-align:center;margin-bottom:5px;line-height:1.25}
 /* ===== полный экран: модель на весь экран, панель поверх ===== */
-#gcodeView.gc-fs > .gc-head-row,#gcodeView.gc-fs .gc-more-menu,#gcodeView.gc-fs .gc-notes-fold,#gcodeView.gc-fs .gc-settings,#gcodeView.gc-fs .gc-ctl,#gcodeView.gc-fs .gc-tools{display:none!important}
-#gcodeView.gc-fs .cnc3d-card{position:relative;display:block}
-#gcodeView.gc-fs .cnc3d-stage{position:absolute;inset:0}
-#gcodeView.gc-fs #gcCanvas{position:absolute;inset:0;height:100%!important;width:100%}
-#gcodeView.gc-fs .gc-expand{display:none}
-#gcodeView.gc-fs .gc-fs-bar{position:absolute;top:0;left:0;right:0;flex-direction:row-reverse;justify-content:flex-start;padding:calc(8px + env(safe-area-inset-top)) 10px 0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none;z-index:8;gap:8px}
-#gcodeView.gc-fs .gc-fs-bar button{pointer-events:auto;min-height:36px;min-width:36px;padding:0 12px;font-size:.8rem;background:rgba(30,30,30,.6)}
-#gcodeView.gc-fs .gc-fs-bar button.gc-fs-x{width:36px;padding:0}
-#gcodeView.gc-fs .gc-fs-bar .gc-fs-title{display:none}
-#gcodeView.gc-fs .gc-fs-bottom{position:absolute;left:0;right:0;bottom:0;z-index:8;gap:6px;padding:6px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(18,18,18,.88),rgba(18,18,18,.6) 75%,rgba(18,18,18,0));border:0;-webkit-backdrop-filter:none;backdrop-filter:none}
-#gcodeView.gc-fs .gc-fs-bottom button,#gcodeView.gc-fs .gc-fs-bottom select{min-height:40px}
-#gcodeView.gc-fs .gc-fs-bottom:not(.open) .gc-fs-line-controls,#gcodeView.gc-fs .gc-fs-bottom:not(.open) .gc-fs-views{display:none}
+
+#gcodeView.gc-fs .gc-fs-bar .gc-fs-title{color:#e8eef8;font-size:.9rem;font-weight:650;flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px;display:none}
+
 #gcodeView.gc-fs .gc-fs-bottom .cnc3d-timeline{display:flex!important;padding:0 4px;margin:0;min-height:0;background:none;border:0;box-shadow:none;gap:8px;font-size:.72rem;color:#9fb2c8}
-#gcodeView.gc-fs .gc-fs-bottom .cnc3d-timeline input{flex:1}
-#gcodeView.gc-fs .gc-fs-bottom button.gc-fs-more{width:56px;min-height:22px;height:22px;padding:0;margin:0 auto;border-radius:11px;font-size:.8rem;line-height:1}
-#gcodeView.gc-fs.gc-fs-clean .gc-fs-bar,#gcodeView.gc-fs.gc-fs-clean .gc-fs-bottom{display:none!important}
-#gcodeView.gc-fs .gc-wiz-bar{bottom:auto;top:calc(52px + env(safe-area-inset-top))}
+
 .gc-fs-more{display:none}
-#gcodeView.gc-fs .gc-fs-bottom button.gc-fs-more{display:block}
-#gcodeView.gc-model-only .cnc3d-timeline,#gcodeView.gc-model-only .gc-tools,#gcodeView.gc-model-only .gc-ctl-main,#gcodeView.gc-model-only #gcVRapid,#gcodeView.gc-model-only #gcVFuture,#gcodeView.gc-model-only .gc-coords-line,#gcodeView.gc-model-only .gc-code-panel,#gcodeView.gc-model-only .gc-tool-name,#gcodeView.gc-model-only .cnc3d-status,#gcodeView.gc-model-only .gc-check,#gcodeView.gc-model-only #gcVAll,#gcodeView.gc-model-only .gc-fs-main,#gcodeView.gc-model-only .gc-fs-line-controls,#gcodeView.gc-model-only #gcToolChipsFs,#gcodeView.gc-model-only #gcVG0Fs,#gcodeView.gc-model-only #gcVFutureFs,#gcodeView.gc-model-only #gcVAllFs,#gcodeView.gc-model-only .gc-fs-bottom .cnc3d-timeline{display:none!important}
+
 .gc-wiz-btns{display:flex;gap:6px}
 .gc-wiz-btns button{flex:1;min-height:30px;border-radius:10px;border:1px solid rgba(75,144,208,.2);background:rgba(58,132,197,.14);color:#cfe0f0;font-weight:650;font-size:.78rem;padding:0 6px}
 .gc-app-prog-list,.gc-chip-sheet-list{max-height:40vh;overflow:auto;margin:4px 0 8px}
@@ -1303,30 +1211,23 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .gc-chip-sheet-list .op{display:block;font-size:.7rem;color:#9eb1c9;margin-top:3px;font-weight:500}
 .gc-notes-fold{margin:10px 12px 8px;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:6px 10px;background:rgba(255,255,255,.02)}
 .gc-notes-fold summary{cursor:pointer;font-size:.78rem;color:var(--muted);font-weight:650;list-style:none}
-.gc-notes-fold summary::-webkit-details-marker{display:none}
-.gc-notes-fold summary::before{content:'▸ ';color:#7fb2de}
-.gc-notes-fold[open] summary::before{content:'▾ '}
+
 .gc-ed-wrap{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
-.gc-ed-mark{position:absolute;left:0;right:0;height:21px;background:rgba(34,197,94,.28);border-left:3px solid #22c55e;pointer-events:none;z-index:1;transition:top .05s linear}
-.gc-ed-wrap{background:#121212}
-.gc-ed-wrap .gc-ed-ta{position:relative;z-index:2;background:transparent;flex:1;width:100%;border:0;resize:none;padding:12px 14px;font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:13.5px;line-height:21px;color:#e5f0ff;box-sizing:border-box}
+.gc-ed-mark{position:absolute;left:0;right:0;height:21px;pointer-events:none;z-index:1;transition:top .05s linear}
 
+.gc-ed-wrap .gc-ed-ta{position:relative;z-index:2;flex:1;width:100%;resize:none;padding:12px 14px;font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:13.5px;line-height:21px;color:#e5f0ff;box-sizing:border-box}
 
-.gc-head-row{display:flex;align-items:center;justify-content:space-between;margin:0 0 2px}
-.gc-head-row .back{margin:0}
 .gc-more-btn{min-width:42px;min-height:42px;border-radius:12px;border:1px solid rgba(75,144,208,.16);background:rgba(58,132,197,.12);color:#7fb2de;font-size:1.2rem;font-weight:700;line-height:1}
 .gc-more-menu{display:none;position:absolute;right:14px;top:52px;z-index:50;min-width:210px;padding:6px;border-radius:14px;background:rgba(29,29,29,.98);border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 36px rgba(0,0,0,.45)}
 .gc-more-menu.on{display:block}
 .gc-more-menu button{display:block;width:100%;text-align:left;padding:12px 14px;border:0;border-radius:10px;background:transparent;color:#e8eef8;font-weight:650;font-size:.9rem}
 .gc-more-menu button:active{background:rgba(75,144,208,.12)}
-#gcodeView{position:relative}
-.gc-head-compact h1{font-size:1.25rem!important;font-weight:700!important;color:var(--text)!important;letter-spacing:0!important}
-.gc-toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:3000;max-width:92vw;padding:10px 16px;border-radius:14px;background:rgba(34,34,34,.96);border:1px solid rgba(94,234,212,.25);color:#e8eef8;font-size:.85rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .25s}
+
+.gc-toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);max-width:92vw;padding:10px 16px;border-radius:14px;background:rgba(34,34,34,.96);border:1px solid rgba(94,234,212,.25);color:#e8eef8;font-size:.85rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .25s}
 .gc-toast.on{opacity:1}
 .lib-section{margin-top:6px}
 
-
-.gc-head-row{display:flex;align-items:center;gap:8px;margin:0 0 6px;position:relative}
+.gc-head-row{justify-content:space-between;display:flex;align-items:center;gap:8px;margin:0 0 6px;position:relative}
 .gc-head-row .back{margin:0;flex-shrink:0}
 .gc-head-title{flex:1;margin:0;text-align:center;font-size:1.28rem;font-weight:700;color:var(--text);line-height:1.2;position:absolute;left:0;right:0;pointer-events:none}
 .gc-head-row .gc-back-min,.gc-head-row .gc-more-btn{position:relative;z-index:1;min-width:40px;height:36px;display:flex;align-items:center;justify-content:center;padding:0 8px;font-size:1.35rem;font-weight:600;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(190,198,207,.18);color:#c5cbd1}
@@ -1335,7 +1236,6 @@ button:disabled { opacity: .42; cursor: not-allowed; transform: none; }
 .gc-name-edit{display:flex;gap:8px;align-items:center;margin:6px 0 4px}
 .gc-name-edit input{flex:1;min-height:40px;border-radius:12px;border:1px solid var(--border);background:var(--input);color:var(--text);padding:0 12px;font-size:.9rem}
 .gc-name-edit button{min-height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(94,234,212,.3);background:rgba(94,234,212,.15);color:#5eead4;font-weight:700}
-
 
 /* ===== v126: единый минималистичный дизайн ===== */
 :root {
@@ -1432,11 +1332,9 @@ button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .cnc3d-controls button.primary { background:var(--accent); border-color:transparent; color:var(--on-accent); box-shadow:none; }
 .cnc3d-controls button.active, .cnc3d-views button.active { background:var(--accent-soft); border-color:var(--accent-line); color:var(--accent); }
 #gcFsDock { background:rgba(24,25,29,.66) !important; -webkit-backdrop-filter:blur(20px) saturate(140%); backdrop-filter:blur(20px) saturate(140%); border:1px solid rgba(255,255,255,.1) !important; border-radius:26px !important; box-shadow:none !important; }
-#gcodeView.gc-fs .gc-fs-top button, #gcodeView.gc-fs .gc-fs-corner button { border-radius:50%; background:rgba(24,25,29,.62); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.1); }
+
 .gc-chip, .cnc3d-chip, [data-tool].on, [data-tool].active { border-radius:17px; }
 
-#gcodeView #gcPlay, #gcodeView .cnc3d-controls button.primary { background:var(--accent) !important; border-color:transparent !important; color:var(--on-accent) !important; font-weight:700; box-shadow:none !important; }
-#gcodeView #gcPlay:active { background:var(--accent-dark) !important; }
 #gcodeView .cnc3d-card, #gcodeView .cnc3d-timeline { background:var(--card); border-color:var(--line); box-shadow:none; }
 
 /* v127 */
@@ -1444,58 +1342,80 @@ button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 .gc-ed-ov{background:var(--bg) !important}
 .gc-ed-top{background:var(--card) !important;border-bottom:1px solid var(--line)}
 .gc-ed-search{background:var(--card) !important;border-bottom:1px solid var(--line)}
-.gc-ed-top .back-x,.gc-ed-actions button,.gc-ed-repl .btns button{background:var(--card2) !important;border:1px solid var(--line) !important;color:var(--text) !important}
+
 .gc-ed-menu{background:#1c1d21 !important;border:1px solid var(--line) !important;box-shadow:none !important}
 .gc-ed-mark{background:rgba(75,144,208,.22) !important;border-left:3px solid var(--accent) !important}
-.gc-code-panel,.gc-tool-name,.gc-check{margin-left:0 !important;margin-right:0 !important}
+
 .gc-code-panel,.gc-tool-name{background:var(--card) !important;border:1px solid var(--line) !important;border-radius:var(--r-sm)}
 .gc-tool-name-t{color:var(--accent)}
 .gc-code-line.act{background:var(--accent-soft)}
-.gc-code-line.act .n{color:var(--accent)}
-.gc-ed-wrap .gc-ed-ta,.gc-ed-ta{background:transparent !important;background-color:transparent !important;border:0 !important;border-radius:0 !important}
-
 
 /* v133: поле имени, вкладки редактора, комплект файлов, системы координат */
 #gcNameEdit{margin:4px 0 2px;gap:6px}
-#gcNameEdit input#gcNameInput{min-height:34px!important;height:34px!important;width:auto!important;border:0!important;border-bottom:1px solid rgba(148,163,184,.5)!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;box-shadow:none!important;color:var(--text);padding:0 2px!important;font-size:.9rem;outline:none}
-#gcNameEdit input#gcNameInput:focus{border-bottom-color:var(--accent)!important}
-#gcNameEdit input#gcNameInput::placeholder{color:var(--muted)}
-#gcNameEdit button{min-height:34px!important;padding:0 10px!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--accent)!important;font-weight:700;box-shadow:none!important}
+
 .gc-ed-tabs{display:none;gap:6px;overflow-x:auto;padding:6px 12px 2px;-webkit-overflow-scrolling:touch}
 .gc-ed-tabs button{flex:0 0 auto;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:.8rem;font-weight:600;white-space:nowrap;max-width:60vw;overflow:hidden;text-overflow:ellipsis}
 .gc-ed-tabs button.sel{border-color:var(--accent);color:var(--accent)}
+/* v142.15: вкладки редактора 3D — отдельные программы, «＋» и ✕ */
+
+.gc-ed-tabs .gc-tab button{min-height:34px;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--text);font-size:.8rem;font-weight:600;white-space:nowrap}
+
+.gc-ed-tabs .gc-tab{flex:0 0 auto;display:inline-flex;align-items:stretch;border:1px solid var(--line);border-radius:999px;background:var(--card2);overflow:hidden;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* v142.16: сверка инструментов */
+.gc-ed-tlsrc{display:flex;flex-direction:column;gap:6px;padding:10px 12px 0;font-size:.82rem;color:var(--muted)}
+.gc-ed-tlsrc b{color:var(--text);font-weight:650}
+.gc-ed-tlsrc select,.gc-ed-tlr select{width:100%;min-height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:16px;padding:0 10px}
+.gc-ed-tlr{margin-bottom:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+.gc-ed-tlr.warn{border-color:#d9a441}
+.gc-ed-tlr.none{opacity:.7}
+.gc-ed-tlh{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.92rem}
+.gc-ed-tlh b{flex:none}
+.gc-ed-tlh em{flex:1;min-width:0;font-style:normal;color:var(--muted);font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-ed-tlh .bd{flex:none;font-size:.7rem;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+
+.gc-ed-tlx{margin-top:6px;font-size:.78rem;color:var(--muted)}
+.gc-ed-tlsec{margin:12px 2px 6px;font-size:.78rem;font-weight:650;color:var(--muted)}
+.gc-ed-tlun{padding:8px 12px;border-radius:12px;border:1px dashed var(--line);margin-bottom:6px;font-size:.84rem;color:var(--muted)}
+.gc-ed-tlun b{color:var(--text)}
+.gc-ed-tlbad{margin:0 0 8px;padding:8px 12px;border-radius:12px;border:1px solid #d9a441;color:#d9a441;font-size:.8rem;line-height:1.35}
+.mill-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.mill-lbl label{margin:0}
+.sgn{display:inline-flex;flex:none;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.sgn button{min-width:40px;min-height:34px;border:0;border-radius:0;background:transparent;color:var(--muted);font-size:1.1rem;font-weight:700;padding:0}
+.sgn button.on{background:var(--accent);color:#06121f}
+.gc-ed-tabs .gc-tabload{flex:0 0 auto;min-height:34px;padding:0 14px;border-radius:999px;border:1px dashed var(--line);background:transparent;color:var(--accent);font-size:.8rem;font-weight:600}
+.gc-ed-tabs .gc-tabplus{flex:0 0 auto;min-width:40px;min-height:34px;padding:0 12px;border-radius:999px;border:1px dashed var(--line);background:transparent;color:var(--accent);font-size:1.05rem;font-weight:700}
 .gc-set-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
 .gc-set-row .nm{flex:1;min-width:0}
 .gc-set-row .nm b{display:block;font-size:.85rem;font-weight:650;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gc-set-row .nm span{display:block;font-size:.72rem;color:var(--muted)}
 .gc-set-row button{flex:0 0 40px;min-width:40px;min-height:40px;padding:0;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text)}
-.gc-set-row button:disabled{opacity:.35}
+
 .gc-wcs{display:none;gap:6px;overflow-x:auto;padding:4px 0}
 .gc-wcs button{flex:0 0 auto;min-height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card2);color:var(--muted);font-size:.78rem;font-weight:600}
 .gc-wcs button.sel{border-color:var(--accent);color:var(--accent)}
 .gc-wcs .lbl{flex:0 0 auto;align-self:center;font-size:.72rem;color:var(--muted);padding-right:2px}
 .gc-zero-wcs{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 8px}
-#gcodeView.gc-fs .gc-wcs{display:none!important}
 
 /* v142.11: B1 (отступ шапки полного экрана), B4 (без зума по двойному тапу), B5 (кнопка «пуск» с выбранной T) */
 html,body,#gcodeView,#gcCodeList,#gcToolName,.gc-ed-ov,.gc-ed-ov *{touch-action:manipulation}
-#gcodeView.gc-fs #gcCanvas{touch-action:none}
+
 .gc-ed-search-row .gc-ed-runt{display:flex;opacity:.5;min-width:46px;width:46px;min-height:46px;height:46px;align-items:center;justify-content:center;border-radius:14px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);padding:0}
-.gc-ed-search-row .gc-ed-runt.on{opacity:1}
-.gc-ed-search-row .gc-ed-runt svg{width:16px;height:16px;display:block}
+
 /* v142.12: список D */
 .gc-ed-drow{display:none;gap:6px;align-items:center;margin-top:6px}
-.gc-ed-drow.on{display:flex}
+
 .gc-ed-drow button{min-height:36px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:.85rem;font-weight:650}
 .gc-ed-drow .gc-ed-dinfo{flex:1;min-width:0;font-size:.72rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
-.gc-ed-dlist{display:none;position:absolute;left:0;right:0;bottom:0;top:env(safe-area-inset-top);z-index:7;background:var(--bg);flex-direction:column}
-.gc-ed-dlist.on{display:flex}
+.gc-ed-dlist{position:absolute;left:0;right:0;bottom:0;top:env(safe-area-inset-top);z-index:7;background:var(--bg);flex-direction:column}
+
 .gc-ed-dhead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--card)}
 .gc-ed-dhead b{font-size:1rem}
 .gc-ed-dhead button{min-width:40px;min-height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:1rem}
 .gc-ed-dbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 12px 24px}
 .gc-ed-dbody button{display:block;width:100%;text-align:left;padding:12px;margin-bottom:6px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:.92rem;line-height:1.35;word-break:break-word}
-.gc-ed-dbody button.vis::before{content:"● ";color:var(--accent)}
+
 .gc-ed-dbody button.cur{border-color:var(--accent);background:var(--accent-soft)}
 .gc-ed-dempty{padding:20px 6px;color:var(--muted);text-align:center;font-size:.9rem}
 .gc-ed-m0tools{display:flex;gap:8px;padding:10px 12px 0}
@@ -1507,9 +1427,9 @@ html,body,#gcodeView,#gcCodeList,#gcToolName,.gc-ed-ov,.gc-ed-ov *{touch-action:
 .gc-ed-m0box{flex:none;width:48px;min-height:46px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:0}
 .gc-ed-m0box span{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:var(--bg);line-height:1}
 .gc-ed-m0box.all span{background:var(--accent);border-color:var(--accent)}
-.gc-ed-m0box.all span::after{content:"✓"}
+
 .gc-ed-m0box.part span{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.gc-ed-m0box.part span::after{content:"–"}
+
 .gc-ed-m0t{flex:1;min-width:0;display:flex;align-items:center;gap:8px;text-align:left;padding:10px 12px 10px 0;border:0;background:transparent;color:var(--text);font-size:.92rem;line-height:1.3}
 .gc-ed-m0t b{flex:none}
 .gc-ed-m0t em{flex:1;min-width:0;font-style:normal;color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1533,14 +1453,8 @@ html,body,#gcodeView,#gcCodeList,#gcToolName,.gc-ed-ov,.gc-ed-ov *{touch-action:
 
 /* v134: моно-луч на кнопке «Пуск» (только в покое; CSS без зависимостей) */
 @property --gc-beam-a{syntax:'<angle>';inherits:false;initial-value:0deg}
-#gcodeView #gcPlay.gc-beam{position:relative;isolation:isolate}
-#gcodeView #gcPlay.gc-beam::after{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:-1;
-  background:conic-gradient(from var(--gc-beam-a),rgba(255,255,255,0) 0deg,rgba(255,255,255,0) 250deg,rgba(255,255,255,.15) 300deg,#fff 340deg,rgba(255,255,255,0) 360deg);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
-  filter:drop-shadow(0 0 3px rgba(255,255,255,.45));animation:gcBeamSpin 3.2s linear infinite}
+
 @keyframes gcBeamSpin{to{--gc-beam-a:360deg}}
-@media (prefers-reduced-motion: reduce){#gcodeView #gcPlay.gc-beam::after{animation:none;--gc-beam-a:300deg}}
 
 /* ══ v135: счётчик «Rolling counter» (адаптация Bencho, MIT) — цвета из палитры приложения ══ */
 .rc{display:flex;align-items:center;box-sizing:border-box;width:100%;padding:4px;margin:2px 0 8px;border-radius:14px;background:var(--input);border:1px solid var(--border);color:var(--text);font-family:inherit}
@@ -1570,7 +1484,7 @@ html,body,#gcodeView,#gcCodeList,#gcToolName,.gc-ed-ov,.gc-ed-ov *{touch-action:
 body[data-screen="home"] .bug-fab{top:calc(30px + env(safe-area-inset-top));right:66px}
 body[data-screen="gcodeView"] .bug-fab{right:66px}
 body.ed-open .bug-fab{top:calc(10px + env(safe-area-inset-top));right:112px}
-body.gc-fs-on .bug-fab{display:none}
+
 .app-ver{text-align:center;color:var(--muted);font-size:.74rem;margin:16px 0 4px;opacity:.7}
 .bug-sheet{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding-top:env(safe-area-inset-top);overscroll-behavior:none;-webkit-overflow-scrolling:touch}
 .bug-card{width:100%;max-width:440px;max-height:min(88vh,calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 12px));overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#151619;border:1px solid var(--line);border-radius:26px 26px 0 0;padding:max(16px,env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
@@ -1588,13 +1502,124 @@ body.gc-fs-on .bug-fab{display:none}
 .bug-item .bi-m{font-size:.72rem;color:var(--muted);margin-bottom:2px}
 .bug-item button{width:30px;height:30px;border-radius:50%;background:var(--card2);border:1px solid var(--line);color:var(--muted);padding:0;flex:none}
 .bug-empty{color:var(--muted);font-size:.85rem;text-align:center;padding:10px 0}
-.gc-toast{z-index:4000 !important}
 
 /* v142.1: движение по точке (многоцелевое обнуление) */
 .pt-motion{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .pt-motion-title{font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .pt-motion-title span{font-weight:400;opacity:.8}
 .pt-motion .field label{font-size:.74rem}
+/* ══ v142.26: анимации (свой CSS/JS, без библиотек) ══ */
+/* 1. подсветка активной вкладки переезжает */
+.gc-ed-tabs{position:relative}
+.gc-tab-ind{position:absolute;left:0;top:0;box-sizing:border-box;border:1.5px solid var(--accent);border-radius:999px;background:rgba(75,144,208,.12);pointer-events:none;z-index:1;transition:transform .24s cubic-bezier(.25,.8,.25,1),width .24s cubic-bezier(.25,.8,.25,1)}
+
+/* 2. меню ⋯ и окна: мягкое появление и закрытие */
+
+/* 6. переключатель + | −: подсветка переезжает */
+@supports selector(:has(*)){
+.sgn{position:relative}
+.sgn::before{content:"";position:absolute;top:0;bottom:0;left:0;width:50%;background:var(--accent);transition:transform .18s cubic-bezier(.25,.8,.25,1)}
+.sgn:has(button:last-child.on)::before{transform:translateX(100%)}
+.sgn button{position:relative;flex:1 1 0;transition:color .18s ease}
+.sgn button.on{background:transparent}
+}
+/* v142.27: кнопки «−/+» счётчика не растягиваются общими стилями панели (число снова видно); поля оси — друг под другом */
+
+/* ══════════ v142.28: СТИЛИ 3D VIEWER И РЕДАКТОРА (один блок) ══════════ */
+
+/* ── Редактор: вкладки, меню ⋯, окна ── */
+.gc-ed-tabs .gc-tab .tb{padding:0 8px 0 12px;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+.gc-ed-tabs .gc-tab.nox .tb{padding-right:12px}
+.gc-ed-tabs .gc-tab.sel{border-color:var(--accent)}
+.gc-ed-tabs .gc-tab.sel .tb{color:var(--accent)}
+.gc-ed-tabs .gc-tab.act .tb::before{content:"\25CF";font-size:.55em;margin-right:5px;vertical-align:middle;color:var(--accent)}
+.gc-ed-tabs .gc-tab.dragging{transform:scale(1.07);box-shadow:0 6px 18px rgba(0,0,0,.45);position:relative;z-index:2}
+.gc-ed-search-row .gc-ed-runt svg{width:16px;height:16px;display:block}
+.gc-ed-drow.on{display:flex}
+.gc-ed-tabs.has-ind .gc-tab.sel{border-color:var(--line)}
+.gc-ed-tabs.has-ind:has(.dragging) .gc-tab-ind{display:none}
+.gc-ed-tabs.has-ind .gc-tab.sel.dragging{border-color:var(--accent)}
+.gc-ed-menu{display:block;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(-6px) scale(.96);transform-origin:top right;transition:opacity .15s ease,transform .15s ease,visibility 0s linear .15s}
+.gc-ed-menu.on{visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:opacity .18s ease,transform .18s cubic-bezier(.25,.8,.25,1),visibility 0s}
+.gc-ed-dlist{display:flex;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(24px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
+.gc-ed-dlist.on{display:flex;visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:opacity .22s ease,transform .22s cubic-bezier(.25,.8,.25,1),visibility 0s}
+
+/* ── 3D Viewer: экран, панели, настройки ── */
+.cnc3d-timeline input::-webkit-slider-runnable-track{height:6px;border-radius:9px;background:linear-gradient(90deg,rgba(75,144,208,.95) 0 var(--seek-progress,0%),rgba(255,255,255,.2) var(--seek-progress,0%) 100%);border:0}
+.cnc3d-timeline input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:50%;background:rgba(239,246,255,.96);border:1px solid rgba(255,255,255,.72);box-shadow:0 1px 6px rgba(0,0,0,.28)}
+.gc-ctl select{font-size:16px!important}
+.gc-settings .gc-axis:first-of-type{margin-top:12px}
+.gc-issue-row.dim .gc-issue{opacity:.55}
+#gcodeView > .back{margin-bottom:4px}
+.gc-head-compact p#gc_sub{font-size:.68rem;color:var(--muted);margin:2px 0 0}
+.gc-zero-row>button:first-child{flex:1;min-width:0}
+.gc-zero-row .gc-zero-side:disabled{opacity:.35}
+.gc-tbl-row .gc-tbl-f{grid-column:2}
+.gc-tbl-row .gc-tbl-f input::placeholder{color:var(--muted);opacity:.45}
+.gc-notes-fold summary::-webkit-details-marker{display:none}
+.gc-notes-fold summary::before{content:'▸ ';color:#7fb2de}
+.gc-notes-fold[open] summary::before{content:'▾ '}
+#gcodeView{position:relative}
+.gc-head-compact h1{font-size:1.25rem!important;font-weight:700!important;color:var(--text)!important;letter-spacing:0!important}
+#gcodeView #gcPlay:active{background:var(--accent-dark) !important}
+.gc-code-panel,.gc-tool-name,.gc-check{margin-left:0 !important;margin-right:0 !important}
+.gc-code-line.act .n{color:var(--accent)}
+#gcNameEdit input#gcNameInput{min-height:34px!important;height:34px!important;width:auto!important;border:0!important;border-bottom:1px solid rgba(148,163,184,.5)!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;box-shadow:none!important;color:var(--text);padding:0 2px!important;font-size:.9rem;outline:none}
+#gcNameEdit input#gcNameInput:focus{border-bottom-color:var(--accent)!important}
+#gcNameEdit input#gcNameInput::placeholder{color:var(--muted)}
+#gcNameEdit button{min-height:34px!important;padding:0 10px!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--accent)!important;font-weight:700;box-shadow:none!important}
+.gc-set-row button:disabled{opacity:.35}
+#gcodeView #gcPlay.gc-beam::after{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:-1;background:conic-gradient(from var(--gc-beam-a),rgba(255,255,255,0) 0deg,rgba(255,255,255,0) 250deg,rgba(255,255,255,.15) 300deg,#fff 340deg,rgba(255,255,255,0) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);filter:drop-shadow(0 0 3px rgba(255,255,255,.45));animation:gcBeamSpin 3.2s linear infinite}
+@media (prefers-reduced-motion: reduce){
+  #gcodeView #gcPlay.gc-beam::after{animation:none;--gc-beam-a:300deg}
+}
+.gc-toast{z-index:4000 !important}
+.gc-axis .gc-stock .rc button.rc-btn{width:44px;min-height:44px;height:44px;font-size:1.2rem}
+.gc-axis .gc-stock{grid-template-columns:1fr}
+.gc-axis .gc-stock label{min-height:0}
+
+/* ── 3D Viewer: полный экран ── */
+body.gc-fs-on .screen:not(#gcodeView){display:none!important}
+#gcodeView.gc-fs .gc-fs-bar button{border-radius:999px;border:1px solid rgba(75,144,208,.14);color:#7fb2de;font-weight:650;display:inline-flex;align-items:center;justify-content:center}
+#gcodeView.gc-fs #gcToolChips{display:none!important}
+#gcodeView.gc-fs .gc-fs-bottom button, #gcodeView.gc-fs .gc-fs-bottom select{border-radius:14px;border:0;background:rgba(255,255,255,.12);color:#f2f5fa;font-weight:600;font-size:.88rem;padding:8px 12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1);-webkit-appearance:none;appearance:none;width:100%}
+#gcodeView.gc-fs .gc-fs-bottom select{text-align:center}
+#gcodeView.gc-fs .gc-fs-views button{flex:1;font-size:.78rem;padding:8px 4px}
+#gcodeView.gc-fs .gc-fs-views #gcVG0Fs,#gcodeView.gc-fs .gc-fs-views #gcVFutureFs{flex:1}
+#gcodeView.gc-fs .gc-fs-line-controls button{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#gcodeView.gc-fs .cnc3d-controls, #gcodeView.gc-fs .cnc3d-timeline, #gcodeView.gc-fs .cnc3d-step-controls, #gcodeView.gc-fs .cnc3d-views{display:none!important}
+#gcodeView.gc-fs > .gc-head-row,#gcodeView.gc-fs .gc-more-menu,#gcodeView.gc-fs .gc-notes-fold,#gcodeView.gc-fs .gc-settings,#gcodeView.gc-fs .gc-ctl,#gcodeView.gc-fs .gc-tools{display:none!important}
+#gcodeView.gc-fs .cnc3d-card{position:relative;display:block}
+#gcodeView.gc-fs .cnc3d-stage{position:absolute;inset:0}
+#gcodeView.gc-fs .gc-expand{display:none}
+#gcodeView.gc-fs .gc-fs-bar{position:absolute;top:0;left:0;right:0;flex-direction:row-reverse;justify-content:flex-start;padding:calc(8px + env(safe-area-inset-top)) 10px 0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none;z-index:8;gap:8px}
+#gcodeView.gc-fs .gc-fs-bar button{pointer-events:auto;min-height:36px;min-width:36px;padding:0 12px;font-size:.8rem;background:rgba(30,30,30,.6)}
+#gcodeView.gc-fs .gc-fs-bar button.gc-fs-x{width:36px;padding:0}
+#gcodeView.gc-fs .gc-fs-bottom{position:absolute;left:0;right:0;bottom:0;z-index:8;gap:6px;padding:6px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(18,18,18,.88),rgba(18,18,18,.6) 75%,rgba(18,18,18,0));border:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+#gcodeView.gc-fs .gc-fs-bottom button,#gcodeView.gc-fs .gc-fs-bottom select{min-height:40px}
+#gcodeView.gc-fs .gc-fs-bottom:not(.open) .gc-fs-line-controls,#gcodeView.gc-fs .gc-fs-bottom:not(.open) .gc-fs-views{display:none}
+#gcodeView.gc-fs .gc-fs-bottom .cnc3d-timeline input{flex:1}
+#gcodeView.gc-fs.gc-fs-clean .gc-fs-bar,#gcodeView.gc-fs.gc-fs-clean .gc-fs-bottom{display:none!important}
+#gcodeView.gc-fs .gc-wiz-bar{bottom:auto;top:calc(52px + env(safe-area-inset-top))}
+#gcodeView.gc-fs .gc-fs-bottom button.gc-fs-more{width:56px;min-height:22px;height:22px;padding:0;margin:0 auto;border-radius:11px;font-size:.8rem;line-height:1;display:block}
+#gcodeView.gc-model-only .cnc3d-timeline,#gcodeView.gc-model-only .gc-tools,#gcodeView.gc-model-only .gc-ctl-main,#gcodeView.gc-model-only #gcVRapid,#gcodeView.gc-model-only #gcVFuture,#gcodeView.gc-model-only .gc-coords-line,#gcodeView.gc-model-only .gc-code-panel,#gcodeView.gc-model-only .gc-tool-name,#gcodeView.gc-model-only .cnc3d-status,#gcodeView.gc-model-only .gc-check,#gcodeView.gc-model-only #gcVAll,#gcodeView.gc-model-only .gc-fs-main,#gcodeView.gc-model-only .gc-fs-line-controls,#gcodeView.gc-model-only #gcToolChipsFs,#gcodeView.gc-model-only #gcVG0Fs,#gcodeView.gc-model-only #gcVFutureFs,#gcodeView.gc-model-only #gcVAllFs,#gcodeView.gc-model-only .gc-fs-bottom .cnc3d-timeline{display:none!important}
+#gcodeView.gc-fs .gc-fs-top button, #gcodeView.gc-fs .gc-fs-corner button{border-radius:50%;background:rgba(24,25,29,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1)}
+#gcodeView.gc-fs .gc-wcs{display:none!important}
+#gcodeView.gc-fs #gcCanvas{position:absolute;inset:0;height:100%!important;width:100%;flex:1;border-radius:0;min-height:0;touch-action:none}
+body.gc-fs-on .bug-fab{display:none}
+
+/* ── Прочие правила 3D (порядок важен) ── */
+#gcodeView #gcPlay, #gcodeView .cnc3d-controls button.primary{background:var(--accent) !important;border-color:transparent !important;color:var(--on-accent) !important;font-weight:700;box-shadow:none !important}
+.gc-ed-top .back-x,.gc-ed-actions button,.gc-ed-repl .btns button{background:var(--card2) !important;border:1px solid var(--line) !important;color:var(--text) !important}
+.gc-ed-wrap .gc-ed-ta,.gc-ed-ta{background:transparent !important;background-color:transparent !important;border:0 !important;border-radius:0 !important}
+.gc-ed-tabs .gc-tab .tx{padding:0 11px 0 4px;color:var(--muted);font-size:.78rem}
+.gc-ed-tlr.ok .bd{border-color:var(--accent);color:var(--accent)}
+.gc-ed-tlr.warn .bd{border-color:#d9a441;color:#d9a441}
+.gc-ed-search-row .gc-ed-runt.on{opacity:1}
+.gc-ed-dbody button.vis::before{content:"● ";color:var(--accent)}
+.gc-ed-m0box.all span::after{content:"✓"}
+.gc-ed-m0box.part span::after{content:"–"}
+#gcodeView #gcPlay.gc-beam{position:relative;isolation:isolate}
 </style>
 </head>
 <body>
@@ -1662,10 +1687,6 @@ body.gc-fs-on .bug-fab{display:none}
       <div>Фрезерование</div>
       <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">Сверление, плоскость, отверстия</div>
     </div>
-  </button>
-  <button class="menu-btn" onclick="go('editor')">
-    <div class="icon-box mi"><svg viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg></div>
-    <div><div>Редактор программы</div><div id="editorSub" style="font-size:.78rem;color:var(--muted);margin-top:2px">Пусто</div></div>
   </button>
   <button class="menu-btn" onclick="go('drawings')">
     <div class="icon-box mi"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
@@ -1941,7 +1962,7 @@ body.gc-fs-on .bug-fab{display:none}
 
   <div class="card">
     <div class="section-title">Инструмент</div>
-    <div class="field"><label>Номер инструмента T (H будет таким же)</label><input class="ios-large-input" type="text" id="m_t" value="1" inputmode="numeric"></div>
+    <div class="field"><label>Номер инструмента T (H будет таким же)</label><input class="ios-large-input" type="text" id="m_t" value="" placeholder="например 5" inputmode="numeric"></div>
     <div class="field"><label>Диаметр фрезы, мм</label><input type="text" id="m_tool" value="10" inputmode="decimal"></div>
   </div>
 
@@ -1957,14 +1978,12 @@ body.gc-fs-on .bug-fab{display:none}
       <div class="field"><label>Безопасная Z</label><input class="ios-large-input" id="m_safe" value="100" inputmode="decimal"></div>
       <div class="field"><label>Подход Z</label><input class="ios-large-input" id="m_clear" value="2" inputmode="decimal"></div>
     </div>
-    <div class="grid2">
-      <div class="field"><label>Глубина Z (минус)</label><input class="ios-large-input" id="m_depth" value="-10" inputmode="decimal"></div>
-      <div class="field"><label>Шаг по Z</label><input class="ios-large-input" id="m_zstep" value="2" inputmode="decimal"></div>
-    </div>
+    <div class="field"><label>Глубина Z, мм (всегда со знаком «−»)</label><div style="display:flex;align-items:center;gap:10px"><span style="flex:0 0 auto;font-size:1.7rem;font-weight:700;color:var(--accent);line-height:1">&minus;</span><input class="ios-large-input" id="m_depth" value="10" inputmode="decimal" style="flex:1;min-width:0"></div></div>
     <div class="grid2">
       <div class="field"><label>Подача F</label><input class="ios-large-input" id="m_feed" value="300" inputmode="decimal"></div>
       <div class="field"><label>Обороты</label><input class="ios-large-input" id="m_rpm" value="3000" inputmode="numeric"></div>
     </div>
+    <div class="field"><label>Шаг по Z (за один проход)</label><input class="ios-large-input" id="m_zstep" value="2" inputmode="decimal" oninput="millSaveZstep()"></div>
     <details class="help-details"><summary>Что включается автоматически?</summary><div class="help-content"><p>При запуске автоматически включаются шпиндель M03 с заданными оборотами и СОЖ M08. В конце программы — M05 и M09.</p></div></details>
     <div class="field"><label>Коррекция радиуса инструмента</label>
       <div class="mode-switch">
@@ -2196,58 +2215,14 @@ body.gc-fs-on .bug-fab{display:none}
   <div class="hint" id="drill_msg"></div>
 </div>
 
-<!-- EDITOR -->
-<div class="screen" id="editor">
-  <button class="back" onclick="go('home')">← Назад</button>
-  <header><h1>Редактор программы</h1><p id="editor_info">Пусто</p></header>
-  <input type="file" id="editor_file" style="display:none" onchange="openEditorFile(this)">
-  <button class="btn btn-secondary" style="margin-top:0;margin-bottom:12px" onclick="document.getElementById('editor_file').click()">Открыть файл</button>
-  <details class="help-details" id="fr_details"><summary>Найти и заменить</summary>
-    <div class="help-content" style="padding-top:4px">
-      <div class="field"><label>Найти</label><input type="text" id="fr_find" autocapitalize="characters" autocorrect="off" spellcheck="false" oninput="frChanged()"></div>
-      <div class="field"><label>Заменить на</label><input type="text" id="fr_repl" autocapitalize="characters" autocorrect="off" spellcheck="false"></div>
-      <div class="fr-nav">
-        <button type="button" class="fr-arrow" onclick="frStep(-1)" aria-label="Предыдущее">↑</button>
-        <div class="fr-count" id="fr_count">Введите текст для поиска</div>
-        <button type="button" class="fr-arrow" onclick="frStep(1)" aria-label="Следующее">↓</button>
-      </div>
-      <div class="grid2">
-        <button type="button" class="btn btn-secondary" style="margin-top:0" onclick="frReplaceOne()">Заменить</button>
-        <button type="button" class="btn" onclick="frReplaceAll()">Заменить всё</button>
-      </div>
-    </div>
-  </details>
-  <textarea id="editor_ta" class="editor-ta" wrap="off" spellcheck="false" autocapitalize="characters" autocorrect="off" autocomplete="off" placeholder="Здесь будет программа" oninput="editorChanged()"></textarea>
-  <p class="subtle-note" style="margin:8px 2px 14px">Блоки добавляются кнопкой «Добавить в редактор» на экранах результата. Между блоками вместо M30 ставится M0, M30 остаётся последней строкой.</p>
-  <button class="btn btn-secondary" onclick="editorCalculateTime()">Посчитать время обработки</button>
-  <div class="hint" id="editor_time_msg" style="margin:0 0 10px"></div>
-  <button class="btn" onclick="copyText('editor_ta','editor_msg')">Скопировать</button>
-  <button class="btn btn-secondary" onclick="gcOpen('editor_ta','editor')">Показать траекторию</button>
-  <button class="btn btn-secondary" onclick="sendNC('editor_ta')">Отправить в NC</button>
-  <button class="btn btn-secondary" id="editor_undo" onclick="undoEditorAdd()" style="display:none">Отменить последнее действие</button>
-  <button class="btn btn-secondary" onclick="clearEditor()">Очистить редактор</button>
-  <div class="hint" id="editor_msg"></div>
-</div>
-
-<!-- FILE DIALOG -->
-<div class="dlg-backdrop" id="fileDlg">
-  <div class="dlg">
-    <div class="section-title" id="fileDlgTitle" style="margin-bottom:8px">Файл</div>
-    <p class="subtle-note" style="margin-bottom:14px">В редакторе уже есть программа. Что сделать с файлом?</p>
-    <button class="btn" onclick="fileApply('replace')">Заменить текущую программу</button>
-    <button class="btn btn-secondary" onclick="fileApply('append')">Добавить в конец</button>
-    <button class="btn btn-secondary" onclick="fileApply('cancel')">Отмена</button>
-  </div>
-</div>
-
 <!-- BLOCK DIALOG -->
 <div class="dlg-backdrop" id="blockDlg">
   <div class="dlg">
     <div class="section-title" style="margin-bottom:8px">Добавление блока</div>
-    <p class="subtle-note" style="margin-bottom:14px">В редакторе уже есть программа. Что сделать с этим блоком?</p>
-    <button class="btn" onclick="blockApply('replace')">Заменить текущую программу</button>
-    <button class="btn btn-secondary" onclick="blockApply('end')">Добавить в конец</button>
-    <button class="btn btn-secondary" onclick="blockApply('begin')">Добавить в начало</button>
+    <p class="subtle-note" style="margin-bottom:14px">В редакторе 3D Viewer уже есть программа. Что сделать с этим блоком?</p>
+    <button class="btn" onclick="blockApply('end')">Добавить в конец</button>
+    <button class="btn btn-secondary" onclick="blockApply('replace')">Заменить текущую программу</button>
+    <button class="btn btn-secondary" onclick="blockApply('tab')">Новая вкладка</button>
     <button class="btn btn-secondary" onclick="blockApply('cancel')">Отмена</button>
   </div>
 </div>
@@ -2407,11 +2382,11 @@ body.gc-fs-on .bug-fab{display:none}
       <div class="gc-zero-title">Выравнивание стола</div>
       <div class="gc-tbl-hint">Щупом на левом краю, затем на правом. Введите координаты станка X и Z; знак — кнопкой + / −.</div>
       <div class="gc-tbl-row"><span class="gc-tbl-n">1</span>
-        <div class="gc-tbl-f"><span>X</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl1x" type="text" inputmode="decimal" value="0" data-nopm oninput="gcTblCalc()"></div>
-        <div class="gc-tbl-f"><span>Z</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl1z" type="text" inputmode="decimal" value="0" data-nopm oninput="gcTblCalc()"></div></div>
+        <div class="gc-tbl-f"><span>X</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl1x" type="text" inputmode="decimal" placeholder="123.456" data-nopm oninput="gcTblCalc()"></div>
+        <div class="gc-tbl-f"><span>Z</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl1z" type="text" inputmode="decimal" placeholder="123.456" data-nopm oninput="gcTblCalc()"></div></div>
       <div class="gc-tbl-row"><span class="gc-tbl-n">2</span>
-        <div class="gc-tbl-f"><span>X</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl2x" type="text" inputmode="decimal" value="0" data-nopm oninput="gcTblCalc()"></div>
-        <div class="gc-tbl-f"><span>Z</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl2z" type="text" inputmode="decimal" value="0" data-nopm oninput="gcTblCalc()"></div></div>
+        <div class="gc-tbl-f"><span>X</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl2x" type="text" inputmode="decimal" placeholder="123.456" data-nopm oninput="gcTblCalc()"></div>
+        <div class="gc-tbl-f"><span>Z</span><button type="button" class="gc-tbl-sg" onclick="gcTblSign(this)" aria-label="Знак значения">+</button><input id="gcTbl2z" type="text" inputmode="decimal" placeholder="123.456" data-nopm oninput="gcTblCalc()"></div></div>
       <div class="gc-tbl-res" id="gcTblRes"></div>
       <svg class="gc-tbl-svg" id="gcTblSvg" viewBox="0 0 320 170" role="img" aria-label="Схема наклона стола"></svg>
       <button type="button" class="gc-zero-close" onclick="gcTblClose()">Закрыть</button>
@@ -2601,12 +2576,12 @@ body.gc-fs-on .bug-fab{display:none}
     <button type="button" onclick="gcEdSendNC()">Отправить в NC</button>
     <button type="button" onclick="gcEdSave()">Сохранить</button>
     <button type="button" onclick="gcEdShowRepl()">Найти / Заменить</button>
-    <button type="button" id="gcEdBtnSub" onclick="gcEdGoSub()">К подпрограмме (M98)</button>
-    <button type="button" id="gcEdBtnBack" onclick="gcEdGoBack()">Назад из подпрограммы</button>
     <button type="button" onclick="gcEdStripN()">Убрать номера строк</button>
     <button type="button" onclick="gcEdRenumberN()">Переписать номера строк</button>
     <button type="button" onclick="gcEdDOpen()">Просмотр всех D</button>
     <button type="button" onclick="gcEdM0Open()">Расставить M0</button>
+    <button type="button" onclick="gcEdTlOpen()">Сверить инструменты</button>
+    <button type="button" onclick="gcEdCalcTime()">Посчитать время обработки</button>
   </div>
   <div class="gc-ed-search">
     <div class="gc-ed-search-row">
@@ -2644,6 +2619,14 @@ body.gc-fs-on .bug-fab{display:none}
     <div class="gc-ed-m0body" id="gcEdM0Body"></div>
     <div class="gc-ed-m0foot"><button type="button" id="gcEdM0Apply" onclick="gcEdM0Apply()">Применить</button></div>
   </div>
+  <div class="gc-ed-dlist" id="gcEdTlList">
+    <div class="gc-ed-dhead"><b>Сверить инструменты</b><button type="button" onclick="gcEdTlClose()" aria-label="Закрыть">✕</button></div>
+    <div class="gc-ed-tlsrc" id="gcEdTlSrc"></div>
+    <div class="gc-ed-m0note" id="gcEdTlNote"></div>
+    <div class="gc-ed-m0body" id="gcEdTlBody"></div>
+    <div class="gc-ed-m0foot"><button type="button" id="gcEdTlApply" onclick="gcEdTlApply()">Применить</button></div>
+  </div>
+  <input type="file" id="gcEdLoadFile" hidden multiple accept=".nc,.cnc,.txt,.mpf,.h,.min,.NC,.TXT,.CNC,text/plain,*/*" onchange="gcEdLoadPicked(this)">
   <div class="gc-ed-tabs" id="gcEdTabs"></div>
   <div class="gc-ed-wrap">
     <div class="gc-ed-mark" id="gcEdMark" style="display:none"></div>
@@ -2708,11 +2691,15 @@ function setMillComp(mode) {
   document.getElementById('m_d_wrap').style.display = millComp ? 'block' : 'none';
 }
 
+var MILL_ZSTEP_KEY='cncMillZstep_v1';
+function millSaveZstep(){try{var v=document.getElementById('m_zstep').value.trim();if(v!=='')localStorage.setItem(MILL_ZSTEP_KEY,v);}catch(e){}}
+function millLoadZstep(){try{var v=localStorage.getItem(MILL_ZSTEP_KEY),el=document.getElementById('m_zstep');if(v&&el)el.value=v;}catch(e){}}
 function startMilling() {
   millPoints = [];
   addMillPoint();
   setMillMode('spiral');
   setMillComp('G40');
+  millLoadZstep();
   go('millHeader');
 }
 
@@ -2723,7 +2710,7 @@ function setMillMode(mode) {
 }
 
 function addMillPoint() {
-  millPoints.push({ id: Date.now() + Math.random(), x: '0', y: '0', end: '30', prepared: false, preDiameter: '' });
+  millPoints.push({ id: Date.now() + Math.random(), x: '0', y: '0', end: '', prepared: false, preDiameter: '' });
   renderMillPoints();
 }
 
@@ -2745,6 +2732,42 @@ function setMillPrepared(id, value) {
   if (wrap) wrap.style.display = pt.prepared ? 'block' : 'none';
 }
 
+// v142.19: у координат центра переключатель «+ / −» (на iPhone с цифровой клавиатуры минус не ввести). Знак хранится в самом тексте поля.
+function millIsNeg(v){return /^\s*[-\u2212]/.test(String(v==null?'':v));}
+function millCoordField(pt,f,label,ph){
+  var neg=millIsNeg(pt[f]);
+  return '<div class="field"><div class="mill-lbl"><label>'+label+'</label><span class="sgn" id="mill_sgn_'+f+'_'+pt.id+'">'
+    +'<button type="button" class="'+(neg?'':'on')+'" aria-label="Плюс" onclick="setMillSign('+pt.id+",'"+f+"','+')\">+</button>"
+    +'<button type="button" class="'+(neg?'on':'')+'" aria-label="Минус" onclick="setMillSign('+pt.id+",'"+f+"','-')\">\u2212</button></span></div>"
+    +'<input class="mill-point-input" id="mill_in_'+f+'_'+pt.id+'" type="text" value="'+esc(pt[f])+'" inputmode="decimal" placeholder="'+ph+'" oninput="updateMillPoint('+pt.id+",'"+f+"',this.value);syncMillSign("+pt.id+",'"+f+"')\"></div>";
+}
+// то же для полей шапки (глубина Z): inputId + «_sgn» — контейнер кнопок
+function syncFieldSign(inputId){
+  var inp=document.getElementById(inputId),box=document.getElementById(inputId+'_sgn');
+  if(!inp||!box)return;
+  var neg=millIsNeg(inp.value),b=box.querySelectorAll('button');
+  b[0].classList.toggle('on',!neg);b[1].classList.toggle('on',neg);
+}
+function setFieldSign(inputId,sg){
+  var inp=document.getElementById(inputId);if(!inp)return;
+  var digits=String(inp.value||'').trim().replace(/^[-+\u2212]\s*/,'');
+  inp.value=(sg==='-'?'-':'')+digits;
+  syncFieldSign(inputId);
+  if(!digits){try{inp.focus();}catch(e){}}
+}
+function syncMillSign(id,f){
+  var inp=document.getElementById('mill_in_'+f+'_'+id),box=document.getElementById('mill_sgn_'+f+'_'+id);
+  if(!inp||!box)return;
+  var neg=millIsNeg(inp.value),b=box.querySelectorAll('button');
+  b[0].classList.toggle('on',!neg);b[1].classList.toggle('on',neg);
+}
+function setMillSign(id,f,sg){
+  var inp=document.getElementById('mill_in_'+f+'_'+id);if(!inp)return;
+  var digits=String(inp.value||'').trim().replace(/^[-+\u2212]\s*/,'');
+  inp.value=(sg==='-'?'-':'')+digits;
+  updateMillPoint(id,f,inp.value);syncMillSign(id,f);
+  if(!digits){try{inp.focus();}catch(e){}}
+}
 function renderMillPoints() {
   var list = document.getElementById('millPointsList');
   list.innerHTML = '';
@@ -2755,10 +2778,10 @@ function renderMillPoints() {
       <div class="ptitle">Отверстие ${idx + 1}</div>
       ${millPoints.length > 1 ? '<button class="del" onclick="removeMillPoint(' + pt.id + ')">✕</button>' : ''}
       <div class="grid2">
-        <div class="field"><label>Центр X</label><input class="mill-point-input" type="text" value="${esc(pt.x)}" inputmode="decimal" placeholder="Например, -25" oninput="updateMillPoint(${pt.id},'x',this.value)"></div>
-        <div class="field"><label>Центр Y</label><input class="mill-point-input" type="text" value="${esc(pt.y)}" inputmode="decimal" placeholder="Например, -10" oninput="updateMillPoint(${pt.id},'y',this.value)"></div>
+        ${millCoordField(pt,'x','Центр X','Например, 25')}
+        ${millCoordField(pt,'y','Центр Y','Например, 10')}
       </div>
-      <div class="field"><label>Диаметр готового отверстия, мм</label><input class="mill-point-input" value="${esc(pt.end)}" inputmode="decimal" oninput="updateMillPoint(${pt.id},'end',this.value)"></div>
+      <div class="field"><label>Диаметр готового отверстия, мм</label><input class="mill-point-input" value="${esc(pt.end)}" inputmode="decimal" placeholder="например 30" oninput="updateMillPoint(${pt.id},'end',this.value)"></div>
       <div class="field"><label>Состояние центра</label><select class="mill-point-input" onchange="setMillPrepared(${pt.id},this.value)"><option value="no" ${pt.prepared ? '' : 'selected'}>Центр не выбран</option><option value="yes" ${pt.prepared ? 'selected' : ''}>Центр уже выбран</option></select></div>
       <div class="field" id="mill_bore_wrap_${pt.id}" style="display:${pt.prepared ? 'block' : 'none'}"><label>Диаметр существующего отверстия, мм</label><input class="mill-point-input" value="${esc(pt.preDiameter)}" inputmode="decimal" placeholder="Не меньше диаметра фрезы" oninput="updateMillPoint(${pt.id},'preDiameter',this.value)"></div>`;
     list.appendChild(card);
@@ -2801,23 +2824,6 @@ function withTimeComment(lines) {
   // время — в конце, чтобы не перебивать имя программы в первом комментарии
   return body + '\n' + formatTimeComment(body);
 }
-function editorCalculateTime() {
-  var ta=document.getElementById('editor_ta'), msg=document.getElementById('editor_time_msg');
-  var code=ta.value.trim();
-  if(!code){ msg.textContent='Сначала добавьте программу в редактор.'; msg.className='hint error'; return; }
-  var arr=code.split(/\r?\n/).filter(function(ln,i,a){
-    var t=ln.trim();
-    if(/^\(Расчетное время обработки:/i.test(t))return false;
-    return true;
-  });
-  while(arr.length && !arr[arr.length-1].trim()) arr.pop();
-  var body=arr.join('\n');
-  var comment=formatTimeComment(body);
-  ta.value=body + '\n' + comment;
-  edSet(ta.value); editorInfo(); editorFit();
-  msg.textContent=comment.slice(1,-1)+' · без смены инструмента, разгона шпинделя и пауз; G83 — приблизительно'; msg.className='hint ok';
-}
-
 function parseMillingWord(line, letter) {
   var re = new RegExp('(?:^|\\s)' + letter + '([-+]?(?:\\d+\\.?\\d*|\\.\\d+))(?=\\s|;|$)', 'i');
   var m = String(line).replace(/\([^)]*\)/g, '').match(re);
@@ -2912,19 +2918,27 @@ function generateMilling() {
   function fail(text) { msg.innerText = text; msg.classList.add('error'); return false; }
   var t=document.getElementById('m_t').value.trim(), h=t;
   var tool=millNumber('m_tool'), safe=millNumber('m_safe'), clear=millNumber('m_clear');
-  var depth=millNumber('m_depth'), zstep=millNumber('m_zstep'), feed=millNumber('m_feed'), rpm=millNumber('m_rpm');
+  var depthRaw=millNumber('m_depth'), depth=(depthRaw===null?null:-Math.abs(depthRaw)), zstep=millNumber('m_zstep'), feed=millNumber('m_feed'), rpm=millNumber('m_rpm');
   var wcs=document.getElementById('m_wcs').value;
   var dComp=millComp?document.getElementById('m_d').value.trim():'';
   if(millComp&&!/^\d+$/.test(dComp))return fail('Укажите номер D-корректора');
   if(!/^\d+$/.test(t))return fail('Укажите корректный номер инструмента T');
-  if([tool,safe,clear,depth,zstep,feed,rpm].some(v=>v===null))return fail('Проверьте числовые параметры шапки');
-  if(tool<=0||safe<=clear||clear<=0||depth>=0||zstep<=0||feed<=0||rpm<=0)return fail('Проверьте диаметры, высоты, глубину и положительные шаги/подачу');
+  var hdrNames=[[tool,'Диаметр фрезы'],[safe,'Безопасная Z'],[clear,'Подход Z'],[depth,'Глубина Z'],[zstep,'Шаг по Z'],[feed,'Подача F'],[rpm,'Обороты']];
+  for(var hi=0;hi<hdrNames.length;hi++)if(hdrNames[hi][0]===null)return fail('Поле «'+hdrNames[hi][1]+'» пустое или не число');
+  if(tool<=0)return fail('Диаметр фрезы должен быть больше 0');
+  if(clear<=0)return fail('Подход Z должен быть больше 0');
+  if(safe<=clear)return fail('Безопасная Z ('+fmt(safe)+') должна быть больше Подхода Z ('+fmt(clear)+')');
+  if(depth===0)return fail('Глубина Z должна быть больше 0');
+  if(zstep<=0)return fail('Шаг по Z должен быть больше 0');
+  if(feed<=0)return fail('Подача F должна быть больше 0');
+  if(rpm<=0)return fail('Обороты должны быть больше 0');
   if(!millPoints.length)return fail('Добавьте хотя бы одно отверстие');
 
   // Сначала проверяем все точки и определяем, где требуется предварительное сверление.
   var plans=[], boreCache={};
   for(var i=0;i<millPoints.length;i++){
     var pt=millPoints[i],x=Number(String(pt.x).trim().replace(',','.')),y=Number(String(pt.y).trim().replace(',','.')),dia=Number(String(pt.end).trim().replace(',','.'));
+    if(String(pt.end).trim()==='')return fail('Отверстие '+(i+1)+': укажите диаметр готового отверстия');
     if(![x,y,dia].every(Number.isFinite))return fail('Отверстие '+(i+1)+': проверьте X, Y и диаметр');
     if(dia<=tool)return fail('Отверстие '+(i+1)+': диаметр готового отверстия должен быть больше диаметра фрезы');
     var prepared=!!pt.prepared, bore=0, auto=false;
@@ -3212,7 +3226,7 @@ function calculateDrilling(){
   var rec=getDrillRecommendation(d,material,type,coolant),vc=rec.vc,n=rec.rpm,fz=rec.fz,feed=rec.feed;
   out.textContent='Скорость резания Vc: '+Math.round(vc)+' м/мин\nОбороты шпинделя n: '+n+' об/мин\nОриентировочная подача: '+feed+' мм/мин\n\nПодача принята ориентировочно '+fz.toFixed(3)+' мм/об. Проверьте по паспорту сверла и материалу.';
 }
-document.addEventListener('DOMContentLoaded',function(){refreshEditorBtn();refreshMachineUI();renderDrawings();renderHistory();calculateISO(false);});
+document.addEventListener('DOMContentLoaded',function(){refreshMachineUI();renderDrawings();renderHistory();calculateISO(false);});
 
 
 // История последних 5 расчётов (localStorage)
@@ -3276,8 +3290,7 @@ function go(id, fromPop) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   closeHistorySheet();
-  if(id==='home'){renderHistory();refreshEditorBtn();}
-  if(id==='editor')loadEditor();
+  if(id==='home'){renderHistory();try{gcViewerSubUpdate();}catch(e){}}
   if(id==='progPoints'&&typeof renderPoints==='function')renderPoints();
   if(id==='schedule')shInit();
   if(!fromPop){
@@ -3294,8 +3307,7 @@ window.addEventListener('popstate',function(e){
   var keep=function(){try{history.pushState({s:curScreen()},'');}catch(err){}};
   var sheet=document.getElementById('histSheet');
   if(sheet&&sheet.classList.contains('open')){closeHistorySheet();keep();return;}
-  var fd=document.getElementById('fileDlg'),bd=document.getElementById('blockDlg');
-  if(fd&&fd.classList.contains('open')){fileApply('cancel');keep();return;}
+  var bd=document.getElementById('blockDlg');
   if(bd&&bd.classList.contains('open')){blockApply('cancel');keep();return;}
   if(gc.fs){gcExitFs();keep();return;}
   var id=(e.state&&e.state.s)||'home';
@@ -3514,6 +3526,7 @@ function setProbeDirection(neg) {
 function toggleSign(key) {
   isNeg[key] = !isNeg[key];
   document.getElementById(key + '_sign').innerText = isNeg[key] ? '−' : '+';
+  uiSignPop(document.getElementById(key + '_sign'));
   if (key === 'p') updateDirNote();
 }
 
@@ -3652,6 +3665,7 @@ function togglePointSign(id, field) {
   if (!pt) return;
   pt[field] = !pt[field];
   renderPoints();
+  uiSignPop(document.querySelector('.sign-btn[onclick="togglePointSign(' + id + ",'" + field + '\')"]'));
 }
 
 function setPointDirection(id, neg) {
@@ -4022,42 +4036,48 @@ function generateDrill() {
 }
 
 
-// ===== Редактор программы =====
-var ED_KEY = 'cnc_editor_v1', ED_PREV = 'cnc_editor_prev';
-function edGet() { try { return localStorage.getItem(ED_KEY) || ''; } catch (e) { return ''; } }
-function edSet(t) { try { localStorage.setItem(ED_KEY, t); } catch (e) {} }
-function edPrevGet() { try { return localStorage.getItem(ED_PREV); } catch (e) { return null; } }
-function edPrevSet(t) { try { if (t === null) localStorage.removeItem(ED_PREV); else localStorage.setItem(ED_PREV, t); } catch (e) {} }
+// ===== Редактор программы: вкладки в 3D Viewer (v142.15) =====
+// Редактора на главном экране больше нет. Программы живут во вкладках редактора 3D Viewer: gc.files = [{name,text}] в порядке вкладок,
+// gc.act — активная вкладка (по ней строится траектория; M98 ищет подпрограммы в остальных вкладках). Хранение: localStorage cncTabs_v1.
+var TABS_KEY = 'cncTabs_v1', ED_KEY = 'cnc_editor_v1', ED_PREV = 'cnc_editor_prev';   // ED_* — прежний редактор главного экрана: читается один раз и переносится в первую вкладку
 var ED_M30 = /(^|\n)[ \t]*M30[ \t]*;?[ \t]*$/;
 function lineCount(t) { return t.replace(/\s+$/, '') === '' ? 0 : t.replace(/\s+$/, '').split('\n').length; }
-function refreshEditorBtn() {
-  var s = document.getElementById('editorSub');
-  if (!s) return;
-  var n = lineCount(edGet());
-  s.textContent = n ? 'Строк: ' + n : 'Пусто';
+function tabsNonEmpty(f) { return String(f && f.text || '').trim() !== ''; }
+function tabsRestore() {
+  var r = null;
+  try {
+    var d = JSON.parse(localStorage.getItem(TABS_KEY) || 'null');
+    if (d && Array.isArray(d.files) && d.files.length) r = { files: d.files.map(function (f) { return { name: String(f && f.name || ''), text: String(f && f.text || '') }; }), act: d.act | 0 };
+  } catch (e) {}
+  if (!r) {
+    var old = '';
+    try { old = localStorage.getItem(ED_KEY) || ''; } catch (e) {}
+    r = { files: [{ name: '', text: old }], act: 0 };
+    if (old.trim()) {   // старый текст редактора — один раз первой вкладкой
+      try {
+        localStorage.setItem(TABS_KEY, JSON.stringify({ v: 1, act: 0, files: r.files }));
+        localStorage.removeItem(ED_KEY); localStorage.removeItem(ED_PREV);
+      } catch (e) {}
+    }
+  }
+  if (r.act < 0 || r.act >= r.files.length) r.act = 0;
+  return r;
 }
-function editorInfo() {
-  var n = lineCount(document.getElementById('editor_ta').value);
-  document.getElementById('editor_info').textContent = n ? 'Строк: ' + n : 'Пусто';
+function tabsEnsure() {
+  if (!gc.files || !gc.files.length) { var r = tabsRestore(); gc.files = r.files; gc.act = r.act; }
+  if (gc.act == null || gc.act < 0 || gc.act >= gc.files.length) gc.act = 0;
 }
-// высота поля по содержимому: пустое компактное, длинное с ограничением
-function editorFit() {
-  var ta = document.getElementById('editor_ta');
-  ta.style.height = 'auto';
-  var max = Math.round(window.innerHeight * 0.62);
-  ta.style.height = Math.min(Math.max(ta.scrollHeight + 2, 96), max) + 'px';
+var _tabsSaveFail = false;
+function tabsSave() {
+  try {
+    localStorage.setItem(TABS_KEY, JSON.stringify({ v: 1, act: gc.act || 0, files: (gc.files || []).map(function (f) { return { name: String(f && f.name || ''), text: String(f && f.text || '') }; }) }));
+    _tabsSaveFail = false; return true;
+  } catch (e) {
+    if (!_tabsSaveFail) { _tabsSaveFail = true; try { gcToast('Вкладки не сохранились: память браузера заполнена', 8000); } catch (e2) {} }
+    return false;
+  }
 }
-function showUndo() { document.getElementById('editor_undo').style.display = edPrevGet() === null ? 'none' : 'block'; }
-function loadEditor() {
-  document.getElementById('editor_ta').value = edGet();
-  document.getElementById('editor_msg').innerText = '';
-  showUndo(); editorInfo(); editorFit(); frChanged();
-}
-function editorChanged() {
-  edSet(document.getElementById('editor_ta').value);
-  edPrevSet(null);
-  showUndo(); editorInfo(); editorFit();
-}
+function tabsTouched() { gc._tabsDirty = true; tabsSave(); try { gcViewerSubUpdate(); } catch (e) {} }
 // склейка блоков: старая M30 заменяется на M0, M30 остаётся только в конце
 function composeAppend(cur, block) {
   cur = cur.replace(/\s+$/, ''); block = block.replace(/\s+$/, '');
@@ -4077,168 +4097,76 @@ function composeAppend(cur, block) {
   if (!ED_M30.test(next)) next += '\nM30;';
   return next;
 }
+var pendingBlock = null, pendingBlockMsg = null;
 function addToEditor(id, msgId) {
   var block = document.getElementById(id).innerText.replace(/\s+$/, '');
   if (!block) return;
   var msg = document.getElementById(msgId);
-  var cur = edGet().replace(/\s+$/, '');
-  if (cur && cur.indexOf(block) >= 0) {
-    msg.className = 'hint';
-    msg.innerHTML = 'Этот блок уже есть в редакторе · <a href="#" class="hint-link" onclick="go(\'editor\');return false">открыть</a>';
-    return;
+  tabsEnsure();
+  var open = '<a href="#" class="hint-link" onclick="gcEditorOpenHere();return false">открыть</a>';
+  var fl = gc.files, i;
+  for (i = 0; i < fl.length; i++) {
+    if (String(fl[i].text || '').indexOf(block) >= 0) {
+      msg.className = 'hint';
+      msg.innerHTML = 'Этот блок уже есть в редакторе (вкладка «' + esc(gcTabLabel(fl[i], i)) + '») · ' + open;
+      return;
+    }
   }
+  var cur = String(fl[gc.act].text || '').replace(/\s+$/, '');
   if (cur === '') {
-    edPrevSet('');
-    edSet(composeAppend('', block));
+    fl[gc.act].text = composeAppend('', block);
+    tabsTouched();
     msg.className = 'hint ok';
-    msg.innerHTML = '✓ Добавлено в редактор · <a href="#" class="hint-link" onclick="go(\'editor\');return false">открыть</a>';
+    msg.innerHTML = '✓ Добавлено в редактор · ' + open;
     return;
   }
   pendingBlock = block; pendingBlockMsg = msgId;
   document.getElementById('blockDlg').classList.add('open');
 }
-var pendingBlock = null, pendingBlockMsg = null;
 function blockApply(mode) {
   document.getElementById('blockDlg').classList.remove('open');
   if (mode === 'cancel' || !pendingBlock) { pendingBlock = null; pendingBlockMsg = null; return; }
-  var cur = edGet().replace(/\s+$/, '');
-  edPrevSet(cur);
-  if (mode === 'replace') edSet(pendingBlock.replace(/\s+$/, ''));
-  else if (mode === 'begin') edSet(composeAppend(pendingBlock, cur));
-  else edSet(composeAppend(cur, pendingBlock));
+  tabsEnsure();
+  var fl = gc.files, cur = String(fl[gc.act].text || '').replace(/\s+$/, '');
+  if (mode === 'replace') fl[gc.act].text = pendingBlock.replace(/\s+$/, '');
+  else if (mode === 'tab') { fl.push({ name: '', text: composeAppend('', pendingBlock) }); gc.act = fl.length - 1; }
+  else fl[gc.act].text = composeAppend(cur, pendingBlock);
   var msgId = pendingBlockMsg;
   pendingBlock = null; pendingBlockMsg = null;
+  tabsTouched();
   var m = document.getElementById(msgId);
-  m.className = 'hint ok';
-  m.innerHTML = '✓ Добавлено в редактор · <a href="#" class="hint-link" onclick="go(\'editor\');return false">открыть</a>';
-}
-function undoEditorAdd() {
-  var p = edPrevGet();
-  if (p === null) return;
-  edSet(p); edPrevSet(null); loadEditor();
-}
-function clearEditor() {
-  if (edGet().trim() === '') return;
-  if (!confirm('Очистить редактор? Это можно отменить кнопкой «Отменить последнее действие».')) return;
-  edPrevSet(edGet()); edSet(''); loadEditor();
-}
-
-// ----- открытие файла -----
-var pendingFile = null;
-function readFileText(f) {
-  return new Promise(function (res, rej) {
-    var r = new FileReader();
-    r.onload = function () { res(String(r.result)); };
-    r.onerror = function () { rej(r.error); };
-    r.readAsText(f);
-  });
-}
-async function openEditorFile(input) {
-  var f = input.files && input.files[0];
-  var msg = document.getElementById('editor_msg');
-  msg.className = 'hint'; msg.innerText = '';
-  if (!f) return;
-  function fail(t) { msg.innerText = t; msg.classList.add('error'); }
-  if (f.size > 2 * 1024 * 1024) { fail('Файл слишком большой для редактора (больше 2 МБ)'); try { input.value = ''; } catch (e) {} return; }
-  var text;
-  try { text = await readFileText(f); } catch (e) { fail('Не удалось прочитать файл'); try { input.value = ''; } catch (e2) {} return; }
-  try { input.value = ''; } catch (e) {}
-  if (text.indexOf('\u0000') >= 0) { fail('Это не текстовый файл'); return; }
-  text = text.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
-  pendingFile = { name: f.name, text: text };
-  if (edGet().trim() === '') fileApply('replace');
-  else {
-    document.getElementById('fileDlgTitle').textContent = f.name;
-    document.getElementById('fileDlg').classList.add('open');
+  if (m) {
+    m.className = 'hint ok';
+    m.innerHTML = '✓ ' + (mode === 'tab' ? 'Добавлено новой вкладкой' : 'Добавлено в редактор') + ' · <a href="#" class="hint-link" onclick="gcEditorOpenHere();return false">открыть</a>';
   }
 }
-function fileApply(mode) {
-  document.getElementById('fileDlg').classList.remove('open');
-  if (mode === 'cancel' || !pendingFile) { pendingFile = null; return; }
-  var cur = edGet().replace(/\s+$/, '');
-  edPrevSet(cur);
-  if (mode === 'replace') edSet(pendingFile.text.replace(/\s+$/, ''));
-  else edSet(composeAppend(edGet(), pendingFile.text));
-  var name = pendingFile.name;
-  pendingFile = null;
-  loadEditor();
-  var m = document.getElementById('editor_msg');
-  m.className = 'hint ok';
-  m.innerText = '✓ Файл «' + name + '» ' + (mode === 'replace' ? 'загружен' : 'добавлен в конец');
+// открыть редактор 3D Viewer поверх текущего экрана (назад — на него же)
+function gcEditorOpenHere() {
+  var back = curScreen();
+  gcOpenViewer();
+  gc.back = back;
+  if (gc.playing) { gc.playing = false; cancelAnimationFrame(gc.raf); try { gcPlayLabel(); } catch (e) {} }
+  gcCodeExpand();
 }
-
-// ----- найти и заменить (без учёта регистра, по всей программе) -----
-var frPos = -1;
-function frQuery() { return document.getElementById('fr_find').value; }
-function frMatches() {
-  var q = frQuery();
-  if (!q) return [];
-  var t = document.getElementById('editor_ta').value;
-  var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-  var out = [], m;
-  while ((m = re.exec(t)) !== null) { out.push(m.index); if (m.index === re.lastIndex) re.lastIndex++; }
-  return out;
-}
-function frSetCount(t) { document.getElementById('fr_count').textContent = t; }
-function frChanged() {
-  frPos = -1;
-  var q = frQuery();
-  if (!q) { frSetCount('Введите текст для поиска'); return; }
-  var n = frMatches().length;
-  frSetCount(n ? 'Найдено: ' + n : 'Не найдено');
-}
-function frSelect(start, len, k, n) {
-  var ta = document.getElementById('editor_ta'), text = ta.value;
-  ta.readOnly = true;
-  ta.focus({ preventScroll: true });
-  ta.setSelectionRange(start, start + len);
-  var line = text.slice(0, start).split('\n').length - 1;
-  var lh = parseFloat(getComputedStyle(ta).lineHeight) || 23;
-  ta.scrollTop = Math.max(0, line * lh - ta.clientHeight / 2);
-  frSetCount((k + 1) + ' из ' + n + ' · строка ' + (line + 1));
-  function frUnlock() { ta.readOnly = false; ta.removeEventListener('mousedown', frUnlock); ta.removeEventListener('touchstart', frUnlock); }
-  ta.addEventListener('mousedown', frUnlock);
-  ta.addEventListener('touchstart', frUnlock);
-  setTimeout(function () { if (ta.readOnly) { ta.blur(); frUnlock(); } }, 4000);
-}
-function frStep(dir) {
-  var q = frQuery();
-  if (!q) { frSetCount('Введите текст для поиска'); return; }
-  var list = frMatches(), n = list.length;
-  if (!n) { frSetCount('Не найдено'); return; }
-  var k, i;
-  if (dir > 0) { k = list.findIndex(function (p) { return p > frPos; }); if (k < 0) k = 0; }
-  else { k = -1; for (i = list.length - 1; i >= 0; i--) { if (list[i] < frPos) { k = i; break; } } if (k < 0) k = n - 1; }
-  frPos = list[k];
-  frSelect(list[k], q.length, k, n);
-}
-function frReplaceOne() {
-  var q = frQuery();
-  if (!q) { frSetCount('Введите текст для поиска'); return; }
-  var list = frMatches();
-  if (!list.length) { frSetCount('Не найдено'); return; }
-  if (list.indexOf(frPos) < 0) { frStep(1); return; }
-  var ta = document.getElementById('editor_ta'), r = document.getElementById('fr_repl').value;
-  edPrevSet(edGet());
-  var t = ta.value, start = frPos;
-  t = t.slice(0, start) + r + t.slice(start + q.length);
-  ta.value = t; edSet(t); showUndo(); document.getElementById('editor_undo').style.display = 'block'; editorInfo(); editorFit();
-  frPos = start + r.length - 1;
-  if (!frMatches().length) { frPos = -1; frSetCount('Заменено. Совпадений больше нет'); return; }
-  frStep(1);
-}
-function frReplaceAll() {
-  var q = frQuery();
-  if (!q) { frSetCount('Введите текст для поиска'); return; }
-  var n = frMatches().length;
-  if (!n) { frSetCount('Не найдено'); return; }
-  var ta = document.getElementById('editor_ta'), r = document.getElementById('fr_repl').value;
-  edPrevSet(edGet());
-  var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-  var t = ta.value.replace(re, function () { return r; });
-  ta.value = t; edSet(t); showUndo(); document.getElementById('editor_undo').style.display = 'block'; editorInfo(); editorFit();
-  frPos = -1;
-  frSetCount('Заменено: ' + n + ' (можно отменить)');
+// Принять файлы/текст в редактор: пустой редактор заменяется, иначе — новые вкладки (ничего не затирается). Одинаковый текст — просто открывается его вкладка.
+function gcTabsIncoming(nf, actIdx, dedupe) {
+  tabsEnsure();
+  var fl = gc.files, act, i;
+  nf = nf.map(function (f) { return { name: String(f && f.name || ''), text: String(f && f.text || '') }; });
+  if (!fl.some(tabsNonEmpty)) { fl = nf; act = actIdx || 0; }
+  else {
+    var hit = -1;
+    if (dedupe && nf.length === 1) {
+      var t = nf[0].text.trim();
+      for (i = 0; i < fl.length; i++) if (String(fl[i].text || '').trim() === t) { hit = i; break; }
+    }
+    if (hit >= 0) act = hit;
+    else if (nf.length === 1 && !tabsNonEmpty(fl[gc.act])) { fl[gc.act] = nf[0]; act = gc.act; }
+    else { var base = fl.length; fl = fl.concat(nf); act = base + (actIdx || 0); }
+  }
+  if (act < 0 || act >= fl.length) act = 0;
+  gc.files = fl; gc.act = act;
+  gcLoad(String(fl[act].text || ''), fl, act);
 }
 
 // ===== График работы =====
@@ -4832,9 +4760,19 @@ function gcParseCall(line){
   else num=parseInt(p,10);
   return {num:num,rep:Math.max(1,Math.min(rep||1,1000))};
 }
-function gcFileLabel(f,i){return (f&&f.name)?String(f.name):('Файл '+(i+1));}
+function gcTabLabel(f,i){
+  var t=String(f&&f.text||'').slice(0,4000),nm=(f&&f.name)?String(f.name):'';
+  var om=/^[ \t]*(O0*\d+)(?!\d)/im.exec(t),parts=[];
+  if(om)parts.push(om[1].toUpperCase());
+  var ti=gcTitleFromCode(t);if(ti)parts.push(ti.length>28?ti.slice(0,27)+'…':ti);
+  if(parts.length)return parts.join(' · ');
+  if(nm)return nm;
+  return t.trim()?('Файл '+(i+1)):'Новая';
+}
+function gcFileLabel(f,i){return gcTabLabel(f,i);}
 function gcOName(n){return 'O'+('0000'+n).slice(-4);}
-function gcBuildExec(files){
+function gcBuildExec(files,act){
+  var A=(act==null)?null:act;   // v142.15: активная вкладка — только она выполняется, остальные дают подпрограммы
   var lines=files.map(function(f){return String(f&&f.text||'').split(/\r?\n/);});
   var blocks=[];
   files.forEach(function(file,f){
@@ -4851,6 +4789,7 @@ function gcBuildExec(files){
   var warn=function(t){if(!wseen[t]){wseen[t]=1;warns.push(t);}};
   blocks.forEach(function(b){
     if(b.num!==null){if(defs[b.num]&&!dup[b.num]){dup[b.num]=1;warn('Подпрограмма '+gcOName(b.num)+' определена дважды: использован первый блок');}else if(!defs[b.num])defs[b.num]=b;}
+    if(A!==null&&b.f!==A)return;
     var L=lines[b.f],i;
     for(i=b.from;i<b.to;i++){var cl=gcParseCall(L[i]);if(cl&&cl.num!==null)refs[cl.num]=true;}
   });
@@ -4858,7 +4797,8 @@ function gcBuildExec(files){
   var subs=blocks.filter(isSub),mains=blocks.filter(function(b){return !isSub(b);});
   var defsOut={};blocks.forEach(function(b){if(b.num!==null&&defsOut[b.num]===undefined)defsOut[b.num]={f:b.f,n:(b.o!==undefined?b.o:b.from)};});
   if(!(files.length>1||subs.length))return {used:false,defs:defsOut,warns:[]};
-  if(!mains.length&&blocks.length)mains=[blocks[0]];
+  if(A!==null)mains=mains.filter(function(b){return b.f===A;});
+  if(!mains.length&&blocks.length){var fb=blocks.filter(function(b){return A===null||b.f===A;});mains=[fb.length?fb[0]:blocks[0]];}
   var out=[],orig=[],total=0,LIM=400000,over=false;
   var emit=function(t,f,n,sub){out.push(t);orig.push(f==null?null:{f:f,n:n,s:!!sub});total++;};
   var clean=function(t){return String(t||'').replace(/[()]/g,' ').replace(/\s+/g,' ').trim();};
@@ -4936,8 +4876,8 @@ function gcNameConfirm(){
   var name=(inp&&inp.value||'').trim();
   if(!name){if(inp)inp.focus();return;}
   name=name.slice(0,120);
-  var fl0=(gc.files&&gc.files.length)?gc.files:null;
-  var code=String(fl0?fl0[0].text:(gc.src||''));
+  var fl0=(gc.files&&gc.files.length)?gc.files:null,ac0=gc.act||0;
+  var code=String(fl0?fl0[ac0].text:(gc.src||''));
   // убрать старый заголовочный комментарий в начале, если был
   var lines=code.split(/\r?\n/),out=[],i=0;
   while(i<lines.length&&!lines[i].trim())i++;
@@ -4948,19 +4888,20 @@ function gcNameConfirm(){
   out.push('('+name+')');
   for(;i<lines.length;i++)out.push(lines[i]);
   code=out.join('\n');
-  if(fl0){fl0[0].text=code;var exn=gcBuildExec(fl0);gc.src=exn.used?exn.text:code;gc.lineOrig=exn.used?exn.orig:null;gc.execWarn=exn.used?exn.warns:[];gc.execInfo=exn.used?exn:null;gc.execDefs=exn.defs;}
+  if(fl0){fl0[ac0].text=code;var exn=gcBuildExec(fl0,ac0);gc.src=exn.used?exn.text:code;gc.lineOrig=exn.used?exn.orig:null;gc.execWarn=exn.used?exn.warns:[];gc.execInfo=exn.used?exn:null;gc.execDefs=exn.defs;}
   else gc.src=code;
   gc.key=gcHash(String(gc.src));try{if(gc.model){gcModelSaveParams(true);gcModelSaveGeom();}}catch(e){}
-  try{edSet(code);var eta=document.getElementById('editor_ta');if(eta)eta.value=code;editorInfo();}catch(e){}
+  try{tabsSave();gcViewerSubUpdate();}catch(e){}
   if(inp)inp.value='';
   gcApplyTitle(code);
   try{gcReparse();}catch(e){try{gcCodeBuild();}catch(e2){}}
   gcToast('Имя: '+name,5000);
 }
-function gcLoad(code,files){
+function gcLoad(code,files,act){
   var fl=(files&&files.length)?files:[{name:'',text:String(code==null?'':code)}];
-  var ex=gcBuildExec(fl),listing=ex.used?ex.text:String(fl[0].text);
-  gc.files=fl;gc.lineOrig=ex.used?ex.orig:null;gc.execWarn=ex.used?ex.warns:[];gc.execInfo=ex.used?ex:null;gc.execDefs=ex.defs;gc.wcsSel='all';
+  var A=(act==null)?0:act;if(A<0||A>=fl.length)A=0;
+  var ex=gcBuildExec(fl,A),listing=ex.used?ex.text:String(fl[A].text);
+  gc.files=fl;gc.act=A;gc._tabsDirty=false;gc.lineOrig=ex.used?ex.orig:null;gc.execWarn=ex.used?ex.warns:[];gc.execInfo=ex.used?ex:null;gc.execDefs=ex.defs;gc.wcsSel='all';
   var carryM=(gc.model&&gc.modelOnly)?gc.model:null;
   gc.modelOnly=false;{var sc0=document.getElementById('gcodeView');if(sc0)sc0.classList.remove('gc-model-only');}
   gc.src=listing;gc.key=gcHash(String(listing));gcHiddenLoad();gcModelRestore();
@@ -4980,6 +4921,7 @@ function gcLoad(code,files){
   // В системе детали быстрые ходы при повороте рисуются огромными дугами — по умолчанию скрываем (кнопка G0 / «Быстрые ходы» возвращает).
   gc.showRapids=!(gcAxis.on&&gcAxis.frame!=='machine'&&gc.pts.some(function(p){return p.a;}));
   gcSyncRapidBtns();gcRebuildFilter();gcDraw();
+  try{tabsSave();}catch(e){}
   return r;
 }
 function gcSyncRapidBtns(){
@@ -6033,7 +5975,8 @@ function gcOpen(srcId,backId,files){
   var el=document.getElementById(srcId);if(!el)return;
   var text=el.tagName==='TEXTAREA'||el.tagName==='INPUT'?el.value:el.innerText;
   gc.back=backId||'home';
-  if(files&&files.length){text=String(files[0].text||'');gcLoad(text,files);}else gcLoad(text);
+  if(files&&files.length)gcTabsIncoming(files,0,false);else gcTabsIncoming([{name:'',text:text}],0,true);
+  text=String(gc.files[gc.act].text||'');
   gcApplyTitle(text);
   gcAxisUi();
   var sub=document.getElementById('gc_sub');
@@ -6908,7 +6851,7 @@ function gcCodeExpand(){
   var ta=document.getElementById('gcEdTa');
   var src=gc.src!=null?String(gc.src):(gc.lines||[]).join('\n');
   var fl=(gc.files&&gc.files.length)?gc.files:null,ln0=null;
-  gc.edTab=0;gc.edStack=[];gc._edOrig=fl?fl.map(function(f){return String(f.text);}):null;
+  gc.edTab=gc.act||0;gc.edStack=[];gc._edDirty=false;gc._edActOrig=gc.act||0;gc._edOrig=fl?fl.map(function(f){return String(f.text);}):null;
   if(fl){
     var up0=gcCursor(),l0=(gc.pts[up0]||{}).line||0,o0=gc.lineOrig&&gc.lineOrig[l0];
     if(o0){gc.edTab=o0.f;ln0=o0.n;}else ln0=l0;
@@ -6925,6 +6868,7 @@ function gcCodeExpand(){
   var mk=document.getElementById('gcEdMark');if(mk)mk.style.display='none';gc._edMarkLn=null;
   var ov=document.getElementById('gcEdOv');
   ov.classList.add('on');ov.setAttribute('aria-hidden','false');document.body.classList.add('ed-open');
+  var tb=document.getElementById('gcEdTabs');if(tb&&fl&&!tb.querySelector('.gc-tab-ind')){tb._ind=null;gcEdTabsInd(tb);}
   // Клавиатуру не открываем — только прокрутка к активной строке
   // прокрутить к активной строке
   try{
@@ -6936,20 +6880,174 @@ function gcCodeExpand(){
     var lh=21;ta.scrollTop=Math.max(0,ln*lh-80);
   }catch(e){}
 }
+// v142.26: анимации. uiAnim ничего не делает, если в iPhone включено «Уменьшение движения».
+function uiAnim(el,frames,opts){
+  try{if(!el||!el.animate||(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches))return null;return el.animate(frames,opts);}catch(e){return null;}
+}
+// лёгкое сжатие кнопки при нажатии; если палец начал прокрутку — отменяется
+(function(){
+  var cur=null;
+  document.addEventListener('pointerdown',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('button'):null;
+    // у этих кнопок своё сжатие или перетаскивание
+    if(!b||b.disabled||b.matches('.menu-btn,.op-btn,.btn,.mode-choice,.rc-btn,.gc-tab button'))return;
+    var k=b.offsetWidth>200?0.975:0.92;
+    cur=uiAnim(b,[{scale:'1'},{scale:String(k),offset:0.35},{scale:'1'}],{duration:220,easing:'ease-out'});
+  },{capture:true,passive:true});
+  document.addEventListener('pointercancel',function(){if(cur)cur.cancel();cur=null;},true);
+})();
+// смена знака на одиночной кнопке «+/−»
+function uiSignPop(btn){uiAnim(btn,[{transform:'rotateX(90deg)'},{transform:'rotateX(0deg)'}],{duration:180,easing:'ease-out'});}
+// подсветка активной вкладки: стартует с прежнего места и переезжает на новое
+function gcEdTabsInd(box){
+  var sel=box.querySelector('.gc-tab.sel');
+  if(!sel||!sel.offsetWidth){box.classList.remove('has-ind');return;}
+  var to={x:sel.offsetLeft,y:sel.offsetTop,w:sel.offsetWidth,h:sel.offsetHeight},from=box._ind||to;
+  var d=document.createElement('span');d.className='gc-tab-ind';d.setAttribute('aria-hidden','true');
+  function put(p){d.style.transform='translate('+p.x+'px,'+p.y+'px)';d.style.width=p.w+'px';d.style.height=p.h+'px';}
+  put(from);box.appendChild(d);box.classList.add('has-ind');
+  void d.offsetWidth;put(to);box._ind=to;
+}
 function gcEdTabsRender(){
   var box=document.getElementById('gcEdTabs');if(!box)return;
   var fl=gc.files;
-  if(!fl||fl.length<2){box.style.display='none';box.innerHTML='';return;}
+  if(!fl||!fl.length){box.style.display='none';box.innerHTML='';return;}
+  var ta=document.getElementById('gcEdTa'),ov=document.getElementById('gcEdOv');
+  if(ta&&ov&&ov.classList.contains('on')&&fl[gc.edTab||0])fl[gc.edTab||0].text=ta.value;   // подпись живая: берём текст из поля
+  var lone=fl.length===1,multi=fl.length>1;
   box.style.display='flex';
-  box.innerHTML=fl.map(function(f,i){return '<button type="button" class="'+(i===gc.edTab?'sel':'')+'" onclick="gcEdTabShow('+i+')">'+esc(gcFileLabel(f,i))+'</button>';}).join('');
+  var oldInd=box.querySelector('.gc-tab-ind');
+  if(oldInd&&oldInd.offsetWidth){var cs=getComputedStyle(oldInd).transform.match(/matrix\(([^)]+)\)/);
+    if(cs){var a=cs[1].split(',');box._ind={x:+a[4],y:+a[5],w:oldInd.offsetWidth,h:oldInd.offsetHeight};}}
+  box.innerHTML=fl.map(function(f,i){
+    var canX=!(lone&&!tabsNonEmpty(f));
+    return '<span class="gc-tab'+(i===(gc.edTab||0)?' sel':'')+(multi&&i===(gc.act||0)?' act':'')+(canX?'':' nox')+'"><button type="button" class="tb" onclick="gcEdTabShow('+i+')">'+esc(gcTabLabel(f,i))+'</button>'
+      +(canX?'<button type="button" class="tx" aria-label="Закрыть вкладку" onclick="gcEdTabClose('+i+')">✕</button>':'')+'</span>';
+  }).join('')+'<button type="button" class="gc-tabplus" aria-label="Новая вкладка" onclick="gcEdTabAdd()">＋</button>'
+    +'<button type="button" class="gc-tabload" aria-label="Загрузить программу" onclick="gcEdLoadPick()">Загрузить</button>';   // v142.22 (B5)
+  gcEdTabsDragInit(box);
+  gcEdTabsInd(box);
+  var sel=box.querySelector('.sel');
+  if(sel){var l=sel.offsetLeft,r=l+sel.offsetWidth;if(l<box.scrollLeft+8)box.scrollLeft=Math.max(0,l-12);else if(r>box.scrollLeft+box.clientWidth-8)box.scrollLeft=r-box.clientWidth+12;}
 }
-function gcEdTabShow(i){
+// показать вкладку i; keepAct — только перейти (подпрограмма), не менять вкладку траектории
+function gcEdTabShow(i,keepAct){
   var fl=gc.files,ta=document.getElementById('gcEdTa');if(!fl||!fl[i]||!ta)return;
   fl[gc.edTab||0].text=ta.value;
-  gc.edTab=i;ta.value=String(fl[i].text);ta.scrollTop=0;
+  gc.edTab=i;if(!keepAct)gc.act=i;
+  gcEdTabLoad();
+}
+function gcEdTabLoad(){
+  var fl=gc.files,ta=document.getElementById('gcEdTa');if(!fl||!ta)return;
+  ta.value=String(fl[gc.edTab||0].text);ta.scrollTop=0;
   gcEdHist=[];gcEdMatches=[];gcEdFindIdx=-1;gcEdRunBtn(false);gcEdDReset();
   var mk=document.getElementById('gcEdMark');if(mk)mk.style.display='none';gc._edMarkLn=null;
-  gcEdTabsRender();
+  gcEdTabsRender();tabsSave();
+}
+// v142.16: перетаскивание вкладок — удержать (~0.4 с) и передвинуть. Активная вкладка и вкладка на экране остаются теми же, меняется только порядок.
+function gcEdTabMove(from,to){
+  var fl=gc.files,ta=document.getElementById('gcEdTa');if(!fl||!ta||from===to||!fl[from])return;
+  fl[gc.edTab||0].text=ta.value;
+  var actObj=fl[gc.act||0],viewObj=fl[gc.edTab||0];
+  var it=fl.splice(from,1)[0];fl.splice(to,0,it);
+  gc.act=Math.max(0,fl.indexOf(actObj));gc.edTab=Math.max(0,fl.indexOf(viewObj));
+  gc._edDirty=true;gc.edStack=[];gcEdRunBtn(false);
+  gcEdTabsRender();tabsSave();
+}
+function gcEdTabsDragInit(box){
+  if(box._dragBound)return;box._dragBound=true;
+  var S=null,lastTouch=0;
+  function begin(x,y,target){
+    var tab=target&&target.closest?target.closest('.gc-tab'):null;
+    if(!tab||(target.closest&&target.closest('.tx')))return;
+    var els=[].slice.call(box.querySelectorAll('.gc-tab'));
+    if(els.length<2)return;
+    S={el:tab,from:els.indexOf(tab),x0:x,y0:y,on:false};
+    S.timer=setTimeout(function(){if(!S)return;S.on=true;tab.classList.add('dragging');try{if(navigator.vibrate)navigator.vibrate(8);}catch(e){}},380);
+  }
+  function move(x,y,ev){
+    if(!S)return;
+    if(!S.on){if(Math.abs(x-S.x0)>8||Math.abs(y-S.y0)>8){clearTimeout(S.timer);S=null;}return;}
+    if(ev&&ev.cancelable)ev.preventDefault();
+    var br=box.getBoundingClientRect();
+    if(x<br.left+36)box.scrollLeft-=10;else if(x>br.right-36)box.scrollLeft+=10;
+    var others=[].slice.call(box.querySelectorAll('.gc-tab')).filter(function(e){return e!==S.el;});
+    var want=0;
+    others.forEach(function(e){var r=e.getBoundingClientRect();if(r.left+r.width/2<x)want++;});
+    var cur=[].slice.call(box.querySelectorAll('.gc-tab')).indexOf(S.el);
+    if(want!==cur)box.insertBefore(S.el,others[want]||box.querySelector('.gc-tabplus'));
+  }
+  function end(){
+    if(!S)return;
+    clearTimeout(S.timer);
+    if(S.on){
+      var to=[].slice.call(box.querySelectorAll('.gc-tab')).indexOf(S.el),from=S.from;
+      S.el.classList.remove('dragging');
+      gc._tabNoClick=Date.now();
+      S=null;
+      if(to!==from)gcEdTabMove(from,to);else gcEdTabsRender();
+    }else S=null;
+  }
+  box.addEventListener('touchstart',function(e){lastTouch=Date.now();var t=e.touches[0];begin(t.clientX,t.clientY,e.target);},{passive:true});
+  box.addEventListener('touchmove',function(e){var t=e.touches[0];move(t.clientX,t.clientY,e);},{passive:false});
+  box.addEventListener('touchend',end);box.addEventListener('touchcancel',end);
+  box.addEventListener('mousedown',function(e){if(Date.now()-lastTouch<800||e.button)return;begin(e.clientX,e.clientY,e.target);});
+  document.addEventListener('mousemove',function(e){if(S)move(e.clientX,e.clientY,e);});
+  document.addEventListener('mouseup',end);
+  box.addEventListener('click',function(e){if(Date.now()-(gc._tabNoClick||0)<500){e.stopPropagation();e.preventDefault();}},true);
+  box.addEventListener('contextmenu',function(e){if(S&&S.on)e.preventDefault();});
+}
+function gcEdTabAdd(){
+  var fl=gc.files,ta=document.getElementById('gcEdTa');if(!fl||!ta)return;
+  fl[gc.edTab||0].text=ta.value;
+  fl.push({name:'',text:''});
+  gc.edTab=fl.length-1;gc.act=gc.edTab;gc._edDirty=true;gc.edStack=[];
+  gcEdTabLoad();
+  try{ta.focus();}catch(e){}
+}
+function gcEdLoadPick(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var fi=document.getElementById('gcEdLoadFile');if(fi)fi.click();
+}
+// «Загрузить программу»: каждый выбранный файл — в новую вкладку (пустую текущую вкладку занимает первый файл)
+function gcEdLoadPicked(input){
+  var list=input.files;if(!list||!list.length)return;
+  var snap=Array.prototype.slice.call(list);
+  try{input.value='';}catch(e){}
+  gcReadFiles(snap,function(nf){
+    var fl=gc.files,ta=document.getElementById('gcEdTa');
+    if(!nf.length||!fl||!ta){gcToast('Не удалось прочитать файл',8000);return;}
+    var cur=gc.edTab||0;
+    fl[cur].text=ta.value;
+    var last=-1;
+    nf.forEach(function(f){
+      var item={name:String(f.name||''),text:String(f.text||'')};
+      if(last<0&&!String(fl[cur].text||'').trim()){fl[cur]=item;last=cur;}
+      else{fl.push(item);last=fl.length-1;}
+    });
+    gc.edTab=last;gc.act=last;gc._edDirty=true;gc.edStack=[];
+    gcEdTabLoad();
+    var nm=document.getElementById('gcEdFound');if(nm)nm.textContent='Загружено: '+nf.length+' '+(nf.length===1?'файл':'файла(ов)');
+  });
+}
+function gcEdTabClose(i){
+  var fl=gc.files,ta=document.getElementById('gcEdTa');if(!fl||!fl[i]||!ta)return;
+  fl[gc.edTab||0].text=ta.value;
+  var t=String(fl[i].text||'').trim();
+  if(t){   // вопрос, если такой программы нет в сохранённых — правки пропадут
+    var saved=false;try{saved=progLoad().some(function(x){return String(x.code||'').trim()===t;});}catch(e){}
+    if(!saved&&!confirm('Закрыть вкладку «'+gcTabLabel(fl[i],i)+'»? Её текст не сохранён в документах и будет удалён.'))return;
+  }
+  if(fl.length===1){fl[0]={name:'',text:''};gc.edTab=0;gc.act=0;}
+  else{
+    var wasView=(i===gc.edTab);
+    fl.splice(i,1);
+    if(i<gc.edTab)gc.edTab--;
+    if(i<gc.act)gc.act--;else if(i===gc.act)gc.act=Math.min(i,fl.length-1);
+    if(wasView){gc.edTab=Math.min(i,fl.length-1);gc.act=gc.edTab;}
+  }
+  gc._edDirty=true;gc.edStack=[];
+  gcEdTabLoad();
 }
 function gcEdShowLine(n){
   var ta=document.getElementById('gcEdTa');if(!ta)return;
@@ -6966,56 +7064,65 @@ function gcEdGoSub(){
   var call=gcParseCall(line);
   if(!call||call.num===null){document.getElementById('gcEdFound').textContent='Поставьте курсор на строку с M98 P…';return;}
   var cur=fl.map(function(f,i){return {name:f.name,text:i===(gc.edTab||0)?ta.value:f.text};});
-  var d=gcBuildExec(cur).defs[call.num];
+  var d=gcBuildExec(cur,gc.act||0).defs[call.num];
   if(!d){document.getElementById('gcEdFound').textContent='Подпрограмма '+gcOName(call.num)+' не найдена в комплекте';return;}
   gc.edStack=gc.edStack||[];gc.edStack.push({tab:gc.edTab||0,line:li});
-  if(d.f!==(gc.edTab||0))gcEdTabShow(d.f);
+  if(d.f!==(gc.edTab||0))gcEdTabShow(d.f,true);
   gcEdShowLine(d.n);
   document.getElementById('gcEdFound').textContent='→ '+gcOName(call.num)+' · '+gcFileLabel(fl[d.f],d.f);
 }
 function gcEdGoBack(){
   document.getElementById('gcEdMenu').classList.remove('on');
   var st=gc.edStack;if(!st||!st.length){document.getElementById('gcEdFound').textContent='Возвращаться некуда';return;}
-  var b=st.pop();if(b.tab!==(gc.edTab||0))gcEdTabShow(b.tab);gcEdShowLine(b.line);
+  var b=st.pop();if(b.tab!==(gc.edTab||0))gcEdTabShow(b.tab,true);gcEdShowLine(b.line);
 }
 function gcEdClose(){
   gcEdDReset();
+  clearTimeout(_edSaveT);
   var ta=document.getElementById('gcEdTa');
   var neu=ta.value;
-  var fl=(gc.files&&gc.files.length)?gc.files:null,changed;
-  if(fl){fl[gc.edTab||0].text=neu;changed=fl.some(function(f,i){return String(f.text)!==String((gc._edOrig||[])[i]);});}
-  else changed=null;
+  var fl=gc.files;
+  fl[gc.edTab||0].text=neu;
+  var changed=!!gc._edDirty||(gc.act||0)!==gc._edActOrig||fl.some(function(f,i){return String(f.text)!==String((gc._edOrig||[])[i]);});
   var ov=document.getElementById('gcEdOv');
   ov.classList.remove('on');ov.setAttribute('aria-hidden','true');document.body.classList.remove('ed-open');
   document.getElementById('gcEdMenu').classList.remove('on');
-  if(changed===null)changed=(neu!==String(gc.src||''));
+  tabsSave();
   if(changed){
-    // пересчитать траекторию
-    var keepProg=gc.progress,wasPlaying=gc.playing;
+    // пересчитать траекторию по активной вкладке
+    var keepProg=gc.progress;
     gc.playing=false;cancelAnimationFrame(gc.raf);
-    var mainTxt=fl?String(fl[0].text):neu;
-    if(fl)gcLoad(mainTxt,fl.length>1?fl:null);else gcLoad(neu);
-    // также обновить основной редактор
-    try{edSet(mainTxt);var eta=document.getElementById('editor_ta');if(eta)eta.value=mainTxt;editorInfo();}catch(e){}
+    var mainTxt=String(fl[gc.act||0].text||'');
+    gcLoad(mainTxt,fl,gc.act||0);
+    try{gcApplyTitle(mainTxt);}catch(e){}
     gc.progress=Math.min(1,keepProg||0);
     gcCodeBuild();gcDraw();
   }
+  try{gcViewerSubUpdate();}catch(e){}
 }
 function gcEdPush(){
   var ta=document.getElementById('gcEdTa');
   if(gcEdHist.length>40)gcEdHist.shift();
   gcEdHist.push(ta.value);
 }
-function gcEdChanged(){/* hist on explicit ops */}
+var _edSaveT=0;
+function gcEdChanged(){   // ввод с клавиатуры: текст вкладки сохраняется сразу, чтобы не пропасть при закрытии приложения
+  clearTimeout(_edSaveT);_edSaveT=setTimeout(gcEdPersist,700);
+}
+function gcEdPersist(){
+  var ta=document.getElementById('gcEdTa'),ov=document.getElementById('gcEdOv'),fl=gc.files;
+  if(!ta||!ov||!fl||!ov.classList.contains('on')||!fl[gc.edTab||0])return;
+  fl[gc.edTab||0].text=ta.value;tabsSave();gcEdTabsRender();
+}
+document.addEventListener('visibilitychange',function(){if(document.hidden){try{clearTimeout(_edSaveT);gcEdPersist();}catch(e){}}});
+window.addEventListener('pagehide',function(){try{clearTimeout(_edSaveT);gcEdPersist();}catch(e){}});
 function gcEdUndo(){
   if(!gcEdHist.length)return;
   document.getElementById('gcEdTa').value=gcEdHist.pop();
   gcEdFindChanged();
 }
 function gcEdToggleMenu(){
-  // v142.14: «К подпрограмме» / «Назад из подпрограммы» только если в редакторе несколько программ
-  var multi=!!(gc.files&&gc.files.length>1),b1=document.getElementById('gcEdBtnSub'),b2=document.getElementById('gcEdBtnBack');
-  if(b1)b1.style.display=multi?'':'none';if(b2)b2.style.display=multi?'':'none';
+  // v142.22 (B6): пункты «К подпрограмме» / «Назад из подпрограммы» убраны из меню (функции gcEdGoSub / gcEdGoBack остались в коде)
   document.getElementById('gcEdMenu').classList.toggle('on');
 }
 // v142.14: тап мимо меню ⋯ закрывает его
@@ -7043,22 +7150,30 @@ function gcEdFallbackCopy(t){
 }
 function gcEdSendNC(){
   document.getElementById('gcEdMenu').classList.remove('on');
-  // временно кладём в скрытое поле / используем существующий sendNC через editor_ta
-  var prev=edGet();
-  edSet(document.getElementById('gcEdTa').value);
   // v142.14: отправляем текст из окна редактора (раньше уходил текст другого поля — без правок)
   try{sendNCCode(document.getElementById('gcEdTa').value);}catch(e){}
+}
+function gcEdCalcTime(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var ta=document.getElementById('gcEdTa'),f=document.getElementById('gcEdFound');
+  var code=ta.value.trim();
+  if(!code){f.textContent='Пустая программа';return;}
+  var arr=code.split(/\r?\n/).filter(function(ln){return !/^\(Расчетное время обработки:/i.test(ln.trim());});
+  while(arr.length&&!arr[arr.length-1].trim())arr.pop();
+  var body=arr.join('\n'),comment=formatTimeComment(body);
+  gcEdPush();ta.value=body+'\n'+comment;gcEdPersist();
+  f.textContent=comment.slice(1,-1)+' · без смены инструмента, разгона шпинделя и пауз; G83 — приблизительно';
 }
 function gcEdSave(){
   document.getElementById('gcEdMenu').classList.remove('on');
   var code=document.getElementById('gcEdTa').value||'';
   if(!code.trim()){document.getElementById('gcEdFound').textContent='Пустая программа';return;}
   var fls=(gc.files&&gc.files.length>1)?gc.files.map(function(f,i){return {name:f.name,text:i===(gc.edTab||0)?code:f.text};}):null;
-  if(fls)code=fls[0].text;
+  if(fls)code=fls[gc.act||0].text;
   var name=gcTitleFromCode(code)||('Программа '+new Date().toLocaleString());
   name=String(name).slice(0,80);
   var list=progLoad();
-  var rec0={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,code:code,ts:Date.now()};if(fls)rec0.files=fls;
+  var rec0={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,code:code,ts:Date.now()};if(fls){rec0.files=fls;rec0.act=gc.act||0;}
   list.unshift(rec0);
   if(list.length>30)list=list.slice(0,30);
   progSave(list);progRender();
@@ -7167,6 +7282,7 @@ function gcEdDReset(){
   gc._edDIdx=-1;gcEdDVisited={};
   var r=document.getElementById('gcEdDRow');if(r)r.classList.remove('on');
   var l=document.getElementById('gcEdDList');if(l)l.classList.remove('on');
+  var tl=document.getElementById('gcEdTlList');if(tl)tl.classList.remove('on');
 }
 function gcEdDOpen(){
   document.getElementById('gcEdMenu').classList.remove('on');
@@ -7280,7 +7396,16 @@ function gcEdM0Render(keep){
   body.scrollTop=keep||0;
 }
 function gcEdM0Keep(){return document.getElementById('gcEdM0Body').scrollTop;}
-function gcEdM0Exp(gi){var k=gcEdM0Keep(),g=gc._edM.groups[gi];g.open=!g.open;gcEdM0Render(k);}
+function gcEdM0Exp(gi){
+  var S=gc._edM,g=S.groups[gi],body=document.getElementById('gcEdM0Body');
+  function sub(){var el=body.children[gi];return el?el.querySelector('.gc-ed-m0sub'):null;}
+  function frames(h){return [{height:'0px',opacity:0,overflow:'hidden'},{height:h+'px',opacity:1,overflow:'hidden'}];}
+  g.open=!g.open;
+  if(g.open){gcEdM0Render(gcEdM0Keep());var s=sub();if(s)uiAnim(s,frames(s.offsetHeight),{duration:220,easing:'ease-out'});return;}
+  var s2=sub(),a=s2?uiAnim(s2,frames(s2.offsetHeight).reverse(),{duration:180,easing:'ease-in',fill:'forwards'}):null;
+  var done=function(){if(gc._edM===S)gcEdM0Render(gcEdM0Keep());};
+  if(a)a.onfinish=done;else done();
+}
 function gcEdM0TogG(gi){var k=gcEdM0Keep(),g=gc._edM.groups[gi],all=g.items.every(function(x){return x.skip;});g.items.forEach(function(x){x.skip=!all;});gcEdM0Render(k);}
 function gcEdM0TogI(ii){var k=gcEdM0Keep(),it=gc._edM.items[ii];it.skip=!it.skip;gcEdM0Render(k);}
 function gcEdM0All(v){var k=gcEdM0Keep();gc._edM.items.forEach(function(x){x.skip=v;});gcEdM0Render(k);}
@@ -7295,6 +7420,167 @@ function gcEdM0Apply(){
   if(!n){f.textContent='M0: изменений нет';return;}
   gcEdPush();ta.value=lines.join('\n');ta.scrollTop=st;
   f.textContent='M0: изменено строк '+n+' (отмена — кнопка «Отменить»)';
+}
+
+// v142.16: «Сверить инструменты». Эталон — активная вкладка (по ней траектория), цель — другая вкладка. Инструмент = диаметр D + название (комментарий рядом с T).
+// В целевой программе T (и H — H всегда равно T) меняются на номера из эталона. Замена одним проходом по всем строкам (обмен T1↔T2 безопасен).
+function gcEdTlNorm(n){return String(n||'').toUpperCase().replace(/[^A-ZА-ЯЁ0-9]/g,'');}
+function gcEdTlDia(n){var m=/(?:^|[^A-ZА-ЯЁ0-9])(?:D|Ø|DIA|ДИА)[ \t]*(\d+(?:[.,]\d+)?)/i.exec(String(n||''));return m?String(parseFloat(m[1].replace(',','.'))):'';}
+function gcEdTlWord(n){var m=/[A-ZА-ЯЁ]{2,}/i.exec(String(n||''));return m?m[0].toUpperCase():'';}
+function gcEdTlMask(l){return l.replace(/^(\s*\/?\s*)(N\s*\d+)/i,function(m0,a,b){return a+b.replace(/./g,' ');});}
+function gcEdTlComments(l){var out=[],re=/\(([^)]*)\)|;(.*)$/g,m;while((m=re.exec(l))){var c=(m[1]!==undefined?m[1]:m[2]).replace(/\s+/g,' ').trim();if(c&&!/расч[её]тное\s+время/i.test(c))out.push(c);}return out;}
+function gcEdTlCode(l){return gcEdTlMask(l).replace(/\([^)]*\)/g,function(m){return m.replace(/./g,' ');}).replace(/;.*$/,'');}
+// список инструментов программы: номер T → название, диаметр, число смен.
+// Смена инструмента — T с M6 (в том числе слитно: T14M06) в той же или следующей строке. Название — комментарий в строке T; иначе первый комментарий после смены
+// (до следующего T, не дальше 15 строк) или строка-комментарий перед T — что в программе встречается чаще (при равенстве — перед).
+function gcEdScanTools(txt){
+  var lines=String(txt).split('\n'),codes=lines.map(gcEdTlCode),cms=lines.map(gcEdTlComments),n=lines.length,i,j;
+  var reT=/(?:^|[^A-Z0-9_#])T[ \t]*0*(\d+)(?!\d)/i,reM6=/(?:^|[^A-Z_.#])M0*6(?!\d)/i;
+  var tl=codes.map(function(c){if(/G0*65(?!\d)/i.test(c))return null;var m=reT.exec(c);return m?+m[1]:null;});
+  var blank=function(k){return !codes[k].trim()&&!cms[k].length&&!lines[k].trim();};
+  var cOnly=function(k){return !codes[k].trim()&&cms[k].length>0;};
+  var prevC=function(k){for(var q=k-1,c=0;q>=0&&c<3;q--){if(blank(q))continue;c++;if(cOnly(q))return cms[q][cms[q].length-1];return '';}return '';};
+  var nextC=function(k){for(var q=k+1;q<n&&q<=k+15;q++){if(tl[q]!==null)return '';if(cms[q].length)return cms[q][0];}return '';};
+  var chgAt=function(k){return reM6.test(codes[k])||(k+1<n&&tl[k+1]===null&&reM6.test(codes[k+1])&&!codes[k].replace(/T[ \t]*\d+/i,'').trim());};
+  var anyChg=false;for(i=0;i<n;i++)if(tl[i]!==null&&chgAt(i)){anyChg=true;break;}
+  var nb=0,na=0;
+  for(i=0;i<n;i++){if(tl[i]===null||cms[i].length||(anyChg&&!chgAt(i)))continue;if(prevC(i))nb++;if(nextC(i))na++;}
+  var afterFirst=na>nb;
+  var tools={},order=[];
+  for(i=0;i<n;i++){
+    if(tl[i]===null)continue;
+    var t=tl[i],chg=anyChg?chgAt(i):true,name='';
+    if(chg){
+      if(cms[i].length)name=cms[i][0];
+      else name=afterFirst?(nextC(i)||prevC(i)):(prevC(i)||nextC(i));
+    }
+    var o=tools[t];
+    if(!o){o=tools[t]={t:t,name:'',chg:0,pre:0,line:i};order.push(t);}
+    if(chg){o.chg++;if(!o.name&&name)o.name=name;}else o.pre++;
+  }
+  order.sort(function(a,b){return tools[a].line-tools[b].line;});
+  return order.map(function(t){var o=tools[t];o.key=gcEdTlNorm(o.name);o.dia=gcEdTlDia(o.name);o.word=gcEdTlWord(o.name);return o;});
+}
+// подбор пар по ступеням: 1) название совпало («совпало»); 2) тот же диаметр и начало названия совпадает (FR ↔ FREZA) — «проверьте»;
+// 3) тот же диаметр и тот же номер T при разных названиях — «проверьте». В каждой ступени сначала берётся инструмент с тем же номером T.
+function gcEdTlMatch(ref,tgt){
+  var sel={},conf={},used={};
+  function pick(r,test,flag){
+    var best=null,k,q;
+    for(k=0;k<tgt.length;k++){q=tgt[k];if(used[q.t]||!test(r,q))continue;if(q.t===r.t){best=q;break;}if(!best)best=q;}
+    if(best){sel[r.t]=best.t;conf[r.t]=flag;used[best.t]=1;}
+  }
+  function pre(a,b){return a&&b&&(a.indexOf(b)===0||b.indexOf(a)===0);}
+  ref.forEach(function(r){if(r.key)pick(r,function(r,q){return q.key===r.key;},'ok');});
+  ref.forEach(function(r){if(sel[r.t]===undefined&&r.dia)pick(r,function(r,q){return q.dia===r.dia&&pre(r.word,q.word);},'warn');});
+  ref.forEach(function(r){if(sel[r.t]===undefined&&r.dia)pick(r,function(r,q){return q.dia===r.dia&&q.t===r.t;},'warn');});
+  return {sel:sel,conf:conf};
+}
+function gcEdTlName(o){return 'T'+o.t+(o.name?' '+o.name:'');}
+function gcEdTlOpen(){
+  document.getElementById('gcEdMenu').classList.remove('on');
+  var fl=gc.files,ta=document.getElementById('gcEdTa'),f=document.getElementById('gcEdFound');
+  if(!fl||fl.length<2){f.textContent='Нужна вторая вкладка с программой';return;}
+  fl[gc.edTab||0].text=ta.value;
+  var ref=gc.act||0,others=[],i;
+  for(i=0;i<fl.length;i++)if(i!==ref)others.push(i);
+  var tgt=(gc.edTab!==ref&&others.indexOf(gc.edTab)>=0)?gc.edTab:others[0];
+  gc._edTl={ref:ref,tgt:tgt};
+  gcEdTlScan();
+  document.getElementById('gcEdTlList').classList.add('on');
+}
+function gcEdTlClose(){document.getElementById('gcEdTlList').classList.remove('on');}
+function gcEdTlScan(){
+  var S=gc._edTl,fl=gc.files;
+  S.refT=gcEdScanTools(fl[S.ref].text);S.tgtT=gcEdScanTools(fl[S.tgt].text);
+  var m=gcEdTlMatch(S.refT,S.tgtT);S.sel=m.sel;S.conf=m.conf;S.manual={};
+  gcEdTlRender();
+}
+function gcEdTlSetTarget(v){gc._edTl.tgt=+v;gcEdTlScan();}
+function gcEdTlPick(rt,v){
+  var S=gc._edTl;
+  if(v===''){S.sel[rt]=undefined;}
+  else{var tv=+v;for(var k in S.sel){if(S.sel[k]===tv&&+k!==rt)S.sel[k]=undefined;}S.sel[rt]=tv;}
+  S.manual[rt]=true;gcEdTlRender();
+}
+// итог: карта «T целевой → новый T», предупреждения о занятых номерах
+function gcEdTlPlan(){
+  var S=gc._edTl,map={},warn=[],i;
+  S.refT.forEach(function(r){var tv=S.sel[r.t];if(tv!==undefined&&tv!==null)map[tv]=r.t;});
+  var finalOf={};   // итоговый номер → какие инструменты целевой его получат
+  S.tgtT.forEach(function(q){var nn=map[q.t]!==undefined?map[q.t]:q.t;(finalOf[nn]=finalOf[nn]||[]).push(q);});
+  Object.keys(finalOf).forEach(function(k){
+    var arr=finalOf[k];if(arr.length>1)warn.push('После замены T'+k+' будет у двух инструментов целевой: '+arr.map(function(q){return gcEdTlName(q);}).join(' и ')+' (без пары оставлен прежний номер)');
+  });
+  return {map:map,warn:warn};
+}
+function gcEdTlRender(){
+  var S=gc._edTl,fl=gc.files,body=document.getElementById('gcEdTlBody');
+  var opts=[];fl.forEach(function(f,i){if(i!==S.ref)opts.push('<option value="'+i+'"'+(i===S.tgt?' selected':'')+'>'+esc(gcTabLabel(f,i))+'</option>');});
+  document.getElementById('gcEdTlSrc').innerHTML='<div>Эталон (активная вкладка): <b>'+esc(gcTabLabel(fl[S.ref],S.ref))+'</b></div><div>Меняем номера в:</div><select onchange="gcEdTlSetTarget(this.value)">'+opts.join('')+'</select>';
+  var plan=gcEdTlPlan(),h='',changes=0;
+  if(!S.refT.length)h+='<div class="gc-ed-dempty">В эталоне не найдено смен инструмента (T)</div>';
+  S.refT.forEach(function(r){
+    var tv=S.sel[r.t],cls='none',bd='нет пары';
+    if(tv!==undefined&&tv!==null){cls=S.manual[r.t]?'ok':(S.conf[r.t]||'ok');bd=S.manual[r.t]?'вручную':(S.conf[r.t]==='warn'?'проверьте':'совпало');}
+    var so='<option value="">— нет пары —</option>'+S.tgtT.map(function(q){return '<option value="'+q.t+'"'+(q.t===tv?' selected':'')+'>'+esc(gcEdTlName(q))+' · смен: '+(q.chg||q.pre)+'</option>';}).join('');
+    var info='';
+    if(tv!==undefined&&tv!==null){if(tv===r.t)info='Номер уже совпадает — без изменений';else{info='T'+tv+' → T'+r.t+' (H'+tv+' → H'+r.t+')';changes++;}}
+    h+='<div class="gc-ed-tlr '+cls+'"><div class="gc-ed-tlh"><b>T'+r.t+'</b><em>'+esc(r.name||'без названия')+'</em><span class="bd">'+bd+'</span></div>'
+      +'<select onchange="gcEdTlPick('+r.t+',this.value)">'+so+'</select>'+(info?'<div class="gc-ed-tlx">'+info+'</div>':'')+'</div>';
+  });
+  var matched={};Object.keys(S.sel).forEach(function(k){if(S.sel[k]!==undefined&&S.sel[k]!==null)matched[S.sel[k]]=1;});
+  var un=S.tgtT.filter(function(q){return !matched[q.t];});
+  if(un.length){
+    h+='<div class="gc-ed-tlsec">Целевая без пары в эталоне — не меняются</div>';
+    un.forEach(function(q){h+='<div class="gc-ed-tlun"><b>T'+q.t+'</b> '+esc(q.name||'без названия')+' · смен: '+(q.chg||q.pre)+'</div>';});
+  }
+  var warnHtml=plan.warn.map(function(w){return '<div class="gc-ed-tlbad">⚠ '+esc(w)+'</div>';}).join('');
+  body.innerHTML=warnHtml+h;
+  document.getElementById('gcEdTlNote').textContent='Пары подбираются по названию и диаметру D. T и H меняются вместе во всех строках целевой программы.';
+  var ap=document.getElementById('gcEdTlApply');ap.disabled=!changes;ap.style.opacity=changes?'':'.45';
+  ap.textContent=changes?('Применить: заменить '+changes+' '+(changes===1?'номер':'номеров')):'Нечего менять';
+  S.plan=plan;S.changes=changes;
+}
+// замена T и H по карте за один проход; возвращает {text,t,h}
+function gcEdTlReplace(txt,map){
+  var lines=String(txt).split('\n'),cnt={t:0,h:0};
+  var re=/\([^)]*\)|;.*$|(^|[^A-Z0-9_#])T([ \t]*)0*(\d+)(?!\d)|(^|[^A-Z0-9_#])H([ \t]*)0*(\d+)(?!\d)/gi;
+  var out=lines.map(function(line){
+    var L=gcEdTlMask(line);
+    var code=gcEdTlCode(line);
+    if(/G0*65(?!\d)/i.test(code))return line;
+    var hOk=/G0*4[34](?:\.\d+)?(?!\d)/i.test(code)||/(?:^|[^A-Z_.#])M0*6(?!\d)/i.test(code);
+    var res='',last=0,m;
+    re.lastIndex=0;
+    while((m=re.exec(L))){
+      if(m[3]!==undefined){
+        var nt=map[+m[3]];if(nt===undefined)continue;
+        var s0=m.index+m[1].length;
+        res+=line.slice(last,s0)+'T'+m[2]+nt;last=m.index+m[0].length;cnt.t++;
+      }else if(m[6]!==undefined&&hOk){
+        var nh=map[+m[6]];if(nh===undefined)continue;
+        var s1=m.index+m[4].length;
+        res+=line.slice(last,s1)+'H'+m[5]+nh;last=m.index+m[0].length;cnt.h++;
+      }
+    }
+    return res?res+line.slice(last):line;
+  });
+  return {text:out.join('\n'),t:cnt.t,h:cnt.h};
+}
+function gcEdTlApply(){
+  var S=gc._edTl,fl=gc.files,ta=document.getElementById('gcEdTa'),f=document.getElementById('gcEdFound');
+  if(!S||!S.changes)return;
+  var map={};Object.keys(S.plan.map).forEach(function(k){if(+k!==S.plan.map[k])map[k]=S.plan.map[k];});
+  if(S.plan.warn.length&&!confirm('Есть предупреждения о занятых номерах. Применить всё равно?'))return;
+  fl[gc.edTab||0].text=ta.value;
+  var r=gcEdTlReplace(fl[S.tgt].text,map);
+  gcEdTlClose();
+  if(!r.t&&!r.h){f.textContent='Инструменты: изменений нет';return;}
+  if(gc.edTab!==S.tgt)gcEdTabShow(S.tgt,true);
+  var st=ta.scrollTop;
+  gcEdPush();ta.value=r.text;ta.scrollTop=st;gcEdPersist();
+  f.textContent='Инструменты в «'+gcTabLabel(fl[S.tgt],S.tgt)+'»: заменено T — '+r.t+', H — '+r.h+' (отмена — кнопка «Отменить»)';
 }
 function gcEdDGo(i){
   var rows=gcEdScanD(document.getElementById('gcEdTa').value);
@@ -7354,6 +7640,7 @@ function gcEdToolStep(dir){
   if(keep)try{keep.focus();}catch(e){}
   ta.scrollTop=Math.max(0,pick.line*21-60);
   gcEdMarkLine(pick.line);
+  uiAnim(document.getElementById('gcEdMark'),[{boxShadow:'inset 0 0 0 40px rgba(130,200,255,.55)'},{boxShadow:'inset 0 0 0 40px rgba(130,200,255,0)'}],{duration:650,easing:'ease-out'});   // v142.26: вспышка найденной строки
   var n=0;hits.forEach(function(h,k){if(h===pick)n=k+1;});
   gc._edToolPick={tab:gc.edTab||0,ord:n-1,t:pick.t,line:pick.line};gcEdRunBtn(true);
   f.textContent='Смена инструмента T'+pick.t+' · строка '+(pick.line+1)+' · '+n+' / '+hits.length;
@@ -7475,11 +7762,19 @@ function progOpen(id){
   var list=progLoad(),p=null,i;
   for(i=0;i<list.length;i++)if(list[i].id===id){p=list[i];break;}
   if(!p)return;
-  edSet(p.code||'');
-  var ta=document.getElementById('editor_ta');if(ta)ta.value=p.code||'';
-  try{editorInfo();}catch(e){}
-  gcOpen('editor_ta','home',(p.files&&p.files.length>1)?p.files.map(function(f){return {name:f.name,text:f.text};}):null);
-  try{gcApplyTitle(p.code||'');}catch(e){}
+  gcOpenRec(p);
+}
+// открыть сохранённую программу (или комплект) в редакторе 3D и показать viewer
+function gcOpenRec(p){
+  var multi=(p.files&&p.files.length>1);
+  gc.back='home';
+  gcTabsIncoming(multi?p.files.map(function(f){return {name:f.name,text:f.text};}):[{name:'',text:p.code||''}],multi?(p.act||0):0,!multi);
+  var text=String(gc.files[gc.act].text||'');
+  gcApplyTitle(text);gcAxisUi();
+  var sub=document.getElementById('gc_sub');if(sub)sub.textContent=gcSubText();
+  var sp=document.getElementById('gcSpeedFs'),s0=document.getElementById('gcSpeed');if(sp&&s0)sp.value=s0.value;
+  gcSettingsForceClose();go('gcodeView');gcInit();requestAnimationFrame(gcDraw);
+  try{gcViewerSubUpdate();}catch(e){}
 }
 function progDel(id,e){
   if(e)e.stopPropagation();
@@ -7508,7 +7803,7 @@ function gcToolNameOpenEd(){
     var inf=gcToolInfoAt(p.line,p.tool);
     var ln=inf?inf.line:(p.line||0);
     var oo=gc.lineOrig&&gc.lineOrig[ln];
-    if(oo){if(oo.f!==(gc.edTab||0))gcEdTabShow(oo.f);ln=oo.n;}
+    if(oo){if(oo.f!==(gc.edTab||0))gcEdTabShow(oo.f,true);ln=oo.n;}
     src=ta.value;
     var lines=src.split(/\r?\n/),i,found=-1;
     var tre=new RegExp('(?:^|[^A-Za-z])T0*'+String(p.tool)+'(?!\\d)');
@@ -7540,9 +7835,9 @@ function gcActFilePicked(input){
   gcReadFiles(snap,function(fl){
     if(!fl.length){gcToast('Не удалось прочитать файл',8000);return;}
     gcMainTitleFix(fl);
-    var code=fl[0].text;
-    try{edSet(code);var eta=document.getElementById('editor_ta');if(eta)eta.value=code;editorInfo();}catch(e){}
-    gcLoad(code,fl.length>1?fl:null);gcApplyTitle(code);gcCodeBuild();gcDraw();
+    gcTabsIncoming(fl,0,fl.length===1);
+    var code=String(gc.files[gc.act].text||'');
+    gcApplyTitle(code);gcCodeBuild();gcDraw();
     var nw=(gc.warn||[]).filter(function(x){return /подпрограмм/i.test(x);});
     gcToast(fl.length>1?('Комплект: '+fl.length+' файла(ов)'+(nw.length?' · '+nw[0]:'')):('Программа: '+(gcTitleFromCode(code)||fl[0].name)+(nw.length?' · '+nw[0]:'')),8000);
   });
@@ -7566,22 +7861,23 @@ function gcSetRender(){
 }
 function gcSetApply(){
   var fl=gc.files;if(!fl||!fl.length)return;
-  var code=fl[0].text;
-  try{edSet(code);var eta=document.getElementById('editor_ta');if(eta)eta.value=code;editorInfo();}catch(e){}
-  gcLoad(code,fl.length>1?fl:null);gcApplyTitle(code);gcCodeBuild();gcDraw();gcSetRender();
+  if(gc.act==null||gc.act<0||gc.act>=fl.length)gc.act=0;
+  var code=String(fl[gc.act].text||'');
+  gcLoad(code,fl,gc.act);gcApplyTitle(code);gcCodeBuild();gcDraw();gcSetRender();
 }
-function gcSetMove(i,d){var fl=gc.files,j=i+d;if(!fl||j<0||j>=fl.length)return;var t=fl[i];fl[i]=fl[j];fl[j]=t;gcSetApply();}
-function gcSetDel(i){var fl=gc.files;if(!fl||fl.length<2)return;fl.splice(i,1);gcSetApply();}
+function gcSetMove(i,d){var fl=gc.files,j=i+d;if(!fl||j<0||j>=fl.length)return;var t=fl[i];fl[i]=fl[j];fl[j]=t;if(gc.act===i)gc.act=j;else if(gc.act===j)gc.act=i;gcSetApply();}
+function gcSetDel(i){var fl=gc.files;if(!fl||fl.length<2)return;fl.splice(i,1);if(i<gc.act)gc.act--;else if(i===gc.act)gc.act=Math.min(i,fl.length-1);gcSetApply();}
 function gcSetAddPicked(input){
   var list=input.files;if(!list||!list.length)return;
   var snap=Array.prototype.slice.call(list);
   try{input.value='';}catch(e){}
   gcReadFiles(snap,function(add){
     if(!add.length){gcToast('Не удалось прочитать файл',8000);return;}
+    var prevAct=(gc.files||[])[gc.act||0];
     var cur=(gc.files||[]).filter(function(f){return String(f.text||'').trim();});
     var fl=cur.concat(add);
     if(!cur.length)gcMainTitleFix(fl);
-    gc.files=fl;gcSetApply();
+    gc.files=fl;gc.act=Math.max(0,fl.indexOf(prevAct));gcSetApply();
   });
 }
 function gcActLoadModel(){gcFxOpen(document.getElementById('gcModelSrcSheet'));}
@@ -7631,9 +7927,9 @@ function gcFileOpenApp(id){
   var list=progLoad(),p=null,i;
   for(i=0;i<list.length;i++)if(list[i].id===id){p=list[i];break;}
   if(!p)return;
-  var code=p.code||'';
-  try{edSet(code);var eta=document.getElementById('editor_ta');if(eta)eta.value=code;editorInfo();}catch(e){}
-  gcLoad(code,(p.files&&p.files.length>1)?p.files.map(function(f){return {name:f.name,text:f.text};}):null);gcApplyTitle(code);gcCodeBuild();gcDraw();
+  var multi=(p.files&&p.files.length>1);
+  gcTabsIncoming(multi?p.files.map(function(f){return {name:f.name,text:f.text};}):[{name:'',text:p.code||''}],multi?(p.act||0):0,!multi);
+  gcApplyTitle(String(gc.files[gc.act].text||''));gcCodeBuild();gcDraw();
 }
 function gcActZeroMenu(){
   try{gcRenderWcsChips();}catch(e){}
@@ -7650,7 +7946,7 @@ function gcActZeroMenu(){
 /* v138: выравнивание стола по двум точкам (ось B, Haas №1). Только расчёт и схема, модель не поворачивается. */
 var GC_TBL_SIGN=1; /* +1: поправка B+ при положительном значении (проверить на станке; поменять на -1 при необходимости) */
 function gcTblNum(id){var el=document.getElementById(id);if(!el)return NaN;var raw=String(el.value||'').trim().replace(',','.').replace('−','-').replace(/\s+/g,'');var neg=false;if(raw.charAt(0)==='-'){neg=true;raw=raw.slice(1);}var sg=el.previousElementSibling;if(sg&&sg.textContent.trim()==='−')neg=!neg;var v=parseFloat(raw);if(!isFinite(v))return NaN;return neg?-v:v;}
-function gcTblSign(btn){btn.textContent=btn.textContent.trim()==='−'?'+':'−';gcTblCalc();}
+function gcTblSign(btn){btn.textContent=btn.textContent.trim()==='−'?'+':'−';uiSignPop(btn);gcTblCalc();}
 function gcTblDms(d){var a=Math.abs(d),g=Math.floor(a),mf=(a-g)*60,m=Math.floor(mf),s=(mf-m)*60;return g+'° '+m+"' "+s.toFixed(1)+'"';}
 function gcTblOpen(){var s=document.getElementById('gcTblSheet');if(!s)return;if(s.parentNode!==document.body)document.body.appendChild(s);gcTblCalc();gcFxOpen(s);}
 function gcTblClose(){gcFxClose(document.getElementById('gcTblSheet'));}
@@ -7661,10 +7957,12 @@ function gcTblCalc(){
   var dx=x2-x1,dz=z2-z1;
   if(Math.abs(dx)<10){res.innerHTML='<div class="gc-tbl-warn">Точки слишком близко по X (меньше 10 мм). Расставьте щуп дальше.</div>';svg.innerHTML='';return;}
   var ang=Math.atan2(dx<0?-dz:dz,Math.abs(dx))*180/Math.PI,fix=-ang;
-  var head;
-  if(Math.abs(fix)<0.0005){head='<div class="gc-tbl-main">Стол уже параллелен оси X</div>';}
-  else{var dir=(fix*GC_TBL_SIGN>=0)?'B+':'B−';head='<div class="gc-tbl-main">Поверни стол по '+dir+' на <b>'+Math.abs(fix).toFixed(4)+'°</b></div>';}
-  res.innerHTML=head+'<div class="gc-tbl-sub">'+gcTblDms(fix)+' · ΔX '+dx.toFixed(3)+' · ΔZ '+dz.toFixed(3)+' · наклон '+ang.toFixed(4)+'°</div>';
+  var head,absR=Math.round(Math.abs(fix)*1000)/1000;
+  if(absR===0){head='<div class="gc-tbl-main">Стол уже параллелен оси X</div>';}
+  else{var dir=(fix*GC_TBL_SIGN>=0)?'B+':'B−';
+    var full=(dir==='B+')?absR:Math.round((360-absR)*1000)/1000;   // v142.22 (B1): значение B на станке, полный оборот = 360°
+    head='<div class="gc-tbl-main">Поверни стол по '+dir+' на <b>'+absR.toFixed(3)+'°</b> ('+full.toFixed(3)+')</div>';}
+  res.innerHTML=head+'<div class="gc-tbl-sub">'+gcTblDms(fix)+' · ΔX '+dx.toFixed(3)+' · ΔZ '+dz.toFixed(3)+' · наклон '+ang.toFixed(3)+'°</div>';
   /* схема: левая точка — на оси X, правая — с наклоном; по Z масштаб преувеличен, если наклон мал */
   var L=dx>=0?[x1,z1,1]:[x2,z2,2],R=dx>=0?[x2,z2,2]:[x1,z1,1];
   var ddx=Math.abs(dx),ddz=R[1]-L[1],s=ddz/ddx;
@@ -7806,19 +8104,25 @@ function gcToast(msg,ms){
 }
 function gcViewerSubUpdate(){
   var el=document.getElementById('viewerSub');if(!el)return;
-  var name='';
-  try{name=gcTitleFromCode(gc.src||edGet()||'')||'';}catch(e){}
-  if(!name&&gc.src&&String(gc.src).trim())name='Программа загружена';
+  var name='',n=0;
+  try{
+    tabsEnsure();
+    var fl=gc.files,t=String(fl[gc.act||0].text||'');
+    n=fl.filter(tabsNonEmpty).length;
+    name=gcTitleFromCode(t)||'';
+    if(!name&&t.trim())name='Программа загружена';
+  }catch(e){}
+  if(n>1)name=(name?name+' · ':'')+'вкладок: '+n;
   el.textContent=name||'Задач нет';
 }
 function gcOpenViewer(){
   gc.back='home';
-  if(gc.src==null||gc.src===''){
-    if(!gc.pts||!gc.pts.length){
-      try{gcLoad('');}catch(e){gc.src='';gc.pts=[];gc.lines=[];gc.tools=[];gc.toolSeq=[];gc.total=0;}
-    }
+  tabsEnsure();
+  var act=String(gc.files[gc.act].text||'');
+  if(gc._tabsDirty||gc.src==null||gc.src===''){   // редактор менялся с других экранов или viewer ещё пуст — берём вкладки
+    try{gcLoad(act,gc.files,gc.act);gcApplyTitle(act);}catch(e){gc.src='';gc.pts=[];gc.lines=[];gc.tools=[];gc.toolSeq=[];gc.total=0;}
   }else{
-    try{gcApplyTitle(gc.src);gcRebuildFilter();gcRenderToolChips();gcCodeBuild();}catch(e){}
+    try{gcApplyTitle(String(gc.files[gc.act].text||''));gcRebuildFilter();gcRenderToolChips();gcCodeBuild();}catch(e){}
   }
   try{gcAxisUi();}catch(e){}
   gcSettingsForceClose();
@@ -7838,7 +8142,7 @@ function gcMoreToggle(){
 }
 function gcClearClose(){var e=document.getElementById('gcClearSheet');if(e)e.style.display='none';}
 function gcClearState(){
-  var code=(gc.files&&gc.files.length)?String(gc.files[0].text||''):(gc.src!=null?String(gc.src):''),hasProg=!!code.trim(),m=gc.model;
+  var code=(gc.files&&gc.files.length)?String(gc.files[gc.act||0].text||''):(gc.src!=null?String(gc.src):''),hasProg=!!code.trim(),m=gc.model;
   var progSaved=hasProg&&progLoad().some(function(x){return x.code===code&&((x.files&&x.files.length>1)?x.files.length:0)===((gc.files&&gc.files.length>1)?gc.files.length:0);});
   var modelSaved=!!m&&modelLibLoad().some(function(r){return r.name===m.name;});
   return {hasProg:hasProg,hasModel:!!m,progSaved:progSaved,modelSaved:modelSaved,needProg:hasProg&&!progSaved,needModel:!!m&&!modelSaved};
@@ -7867,10 +8171,13 @@ function gcClearDo(save){
 function gcClearWipe(){
   gc.playing=false;cancelAnimationFrame(gc.raf);gc.pick=null;
   gc.model=null;try{gcModelUi();}catch(e){}   // связь модели с программой в памяти не трогаем — только очищаем экран
-  try{edSet('');var eta=document.getElementById('editor_ta');if(eta)eta.value='';editorInfo();}catch(e){}
-  gcLoad('');
-  gc.src='';
-  try{gcApplyTitle('');}catch(e){}
+  // очищается активная вкладка: если вкладок несколько — она закрывается, последняя остаётся пустой
+  tabsEnsure();
+  var fl=gc.files;
+  if(fl.length>1){fl.splice(gc.act||0,1);gc.act=Math.min(gc.act||0,fl.length-1);}
+  else{fl[0]={name:'',text:''};gc.act=0;}
+  gcLoad(String(fl[gc.act].text||''),fl,gc.act);
+  try{gcApplyTitle(String(fl[gc.act].text||''));}catch(e){}
   try{gcCodeBuild();gcViewerSubUpdate();}catch(e){}
   gcDraw();
 }
@@ -7878,13 +8185,13 @@ function gcMoreClose(){var m=document.getElementById('gcMoreMenu');if(m)m.classL
 function gcMoreSaveProg(){
   gcMoreClose();
   var fl=(gc.files&&gc.files.length)?gc.files:null;
-  var code=fl?String(fl[0].text||''):(gc.src!=null?String(gc.src):(document.getElementById('gcEdTa')?document.getElementById('gcEdTa').value:''));
+  var code=fl?String(fl[gc.act||0].text||''):(gc.src!=null?String(gc.src):(document.getElementById('gcEdTa')?document.getElementById('gcEdTa').value:''));
   if(!code||!code.trim()){gcToast('Нет программы для сохранения',5000);return;}
   var name=gcTitleFromCode(code)||('Программа '+new Date().toLocaleString());
   name=String(name).slice(0,120);
   var multi=fl&&fl.length>1?fl.map(function(f){return {name:f.name,text:f.text};}):null;
   var list=progLoad().filter(function(x){return !(x.code===code&&((x.files&&x.files.length>1)?x.files.length:0)===(multi?multi.length:0));});   // та же программа — не дублируем, а обновляем
-  var rec={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,code:code,ts:Date.now()};if(multi)rec.files=multi;
+  var rec={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,code:code,ts:Date.now()};if(multi){rec.files=multi;rec.act=gc.act||0;}
   list.unshift(rec);
   if(list.length>40)list=list.slice(0,40);
   var ok=progSave(list),dropped=0;
@@ -8068,7 +8375,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.14',APP_DATE='22.11.2026';
+var APP_VERSION='v142.29',APP_DATE='26.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
@@ -8079,6 +8386,20 @@ function bugCapture(){
   var a=document.querySelector('.screen.active'),id=a?a.id:'?',name=BUG_SCREENS[id]||id,ed=document.body.classList.contains('ed-open'),fs=document.body.classList.contains('gc-fs-on');
   if(ed)name='Просмотр: полноэкранный редактор';else if(fs)name='Просмотр: полный экран';
   var parts=[];
+  // v142.22 (B7): что открыто поверх экрана в момент нажатия — окно, список или меню (только открытое сейчас)
+  try{
+    var where=[],vis=function(el){return el&&el.offsetParent!==null||(el&&getComputedStyle(el).position==='fixed'&&getComputedStyle(el).display!=='none');};
+    document.querySelectorAll('.gc-zero-sheet').forEach(function(sh){
+      if(sh.id==='bugSheet'||getComputedStyle(sh).display==='none')return;
+      var t=sh.querySelector('.gc-zero-title');if(t&&t.textContent.trim())where.push(t.textContent.trim());
+    });
+    document.querySelectorAll('.gc-ed-dlist.on').forEach(function(dl){var b=dl.querySelector('.gc-ed-dhead b');if(b)where.push(b.textContent.trim());});
+    var rp=document.getElementById('gcEdRepl');if(ed&&rp&&rp.classList.contains('on'))where.push('Найти / Заменить');
+    var mn=document.getElementById('gcEdMenu');if(ed&&mn&&mn.classList.contains('on'))where.push('меню ⋯');
+    var hs=document.getElementById('histSheet');if(hs&&hs.classList.contains('open')){var ht=hs.querySelector('h2,h3,.sheet-title,b');where.push('История'+(ht&&ht.textContent.trim()&&ht.textContent.trim()!=='История'?': '+ht.textContent.trim():''));}
+    if(where.length)name+=' › '+where.join(' › ');
+    if(ed&&gc.files&&gc.files.length){var ti=gc.edTab||0,tf=gc.files[ti];parts.push('вкладка '+(ti+1)+' из '+gc.files.length+(tf?', '+gcTabLabel(tf,ti):''));}
+  }catch(e){}
   try{
     if(id==='gcodeView'||ed||fs){
       var p=(gc.pts&&gc.pts.length&&!gc.modelOnly)?gc.pts[gcCursor()]:null;
