@@ -58,6 +58,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.31 | Claude Sonnet 5.5 | 27.11.2026 | По списку багов B1, B2 (баги CNC helper v142.30). B1 — привязка Haas (ось вокруг Y), шаг «Разворот»: плоскость теперь ставится как грань, которая при A0/B0 смотрит на инструмент (наружная нормаль → +Z), раньше — как плоскость X; «⇄» меняет сторону; подписи «Разворот — плоскость A0». Старые привязки с «разворотом» развернутся на 90° — нужно перекасаться или нажать ⇄/«Добавить поворот вокруг Y». B2 (центр отверстия) — (а) центр окружности считается подгонкой по наименьшим квадратам (gcFitCircleC), раньше — среднее вершин, которое смещается при неравномерной разбивке рёбер (в тесте при разбивке 1:2 сдвиг до 40 мм); (б) для отверстия вдоль оси вращения (XZ) его центр ставится в «Центр оси X Z» станка, а не в 0. Старое отверстие в привязке нужно коснуться заново. B2 (инструменты) — (а) в парсере считается номер вызова (st.call, каждый M06), точки и группы хранят call, список вызовов gc.callLines; повторные подряд вызовы одного T (T51 ×8, T41 ×9 в O04103 с разными A) больше не склеиваются: в долгом нажатии на чип — #1 · A180 · название операции, … по каждому вызову; «операция/вызов» в подсветке текущей операции теперь по вызову; (б) кнопка «Серым» (⚙ и ◐ в полном экране): выкл → всё кроме работающего T серым → всё кроме текущего вызова серым, хранится в cncGcFocus. Проверено в Chromium 428x926 на O04103 (скриншоты, вызовы T, привязка по расчёту на модели ЕР2К…OPORA: нормаль плоскости → +Z, ось отверстия → Y, центр отверстия → центр оси). Не проверено: загрузка самого STEP (в среде нет интернета для модуля STEP) и iPhone.
  v142.30 | Claude Sonnet 5.5 | 26.11.2026 | (1) Модель теперь принадлежит вкладке-программе: не теряется при правке текста, добавлении программы, смене вкладок и перезапуске; у новой вкладки модели нет; закрытие вкладки убирает её модель; перетаскивание вкладки переносит модель вместе с ней. Причина бага: модель хранилась по хэшу текста программы и переносилась только один раз (из «только модель» на первую программу). (2) Вид 3D (только Iso, камера над полом): свет «небо/земля» по оси Z (верх светлый, низ тёмный) + боковой свет; отражение процедурной карты окружения; пол с сеткой (мелкая через 1/5 крупной, затухание к краям) на уровне низа модели; тень детали на пол — проекция по лучу света, мягкий край. Переключатели «Сетка / Окружение / Тени» в ⚙ (по умолчанию включены, cncGcLook). Тени отключаются для моделей больше 150 тыс. треугольников. Не проверено на iPhone; проверено в Chromium (скриншоты, сценарии вкладок). Не сделано: тень детали на саму себя, перспективная камера.
  v142.29 | Claude Sonnet 5.5 | 26.11.2026 | Решение пользователя: только тёмная тема. Удалены 3 блока стилей для светлого режима системы (36 строк); правила для светлого режима не добавлять. Не проверено на iPhone.
  v142.28 | Claude Sonnet 5.5 | 26.11.2026 | Уборка стилей, шаг 1 (3D Viewer и редактор), вид не менялся: убрано перекрытых объявлений 125, объединено повторных правил 7, в один блок в конце <style> перенесено 84. Новые стили 3D и редактора писать в этот блок. Общие с другими разделами правила, !important и светлая тема не трогались. Не проверено на iPhone.
@@ -2447,6 +2448,7 @@ body.gc-fs-on .bug-fab{display:none}
         <button type="button" id="gcVG0Fs" class="active" onclick="gcToggleRapids()">G0</button>
         <button type="button" id="gcVFutureFs" class="active" onclick="gcToggleFuture()" title="Будущие ходы" aria-label="Будущие ходы">💡</button>
         <button type="button" id="gcVAllFs" onclick="gcToggleAll()" title="Вся программа" aria-label="Вся программа">Все</button>
+        <button type="button" id="gcVFocusFs" onclick="gcToggleFocus()" title="Остальные проходы серым" aria-label="Остальные проходы серым">◐</button>
         <button type="button" id="gcVBrFs" onclick="gcModelBrCycle()" title="Яркость модели" aria-label="Яркость модели">☀ 50%</button>
         <button type="button" onclick="bugOpen()" title="Записать баг" aria-label="Записать баг">Баг</button>
       </div>
@@ -2477,6 +2479,7 @@ body.gc-fs-on .bug-fab{display:none}
       <div class="cnc3d-views" style="margin-top:0">
         <button type="button" id="gcVWork" class="active" onclick="gcToggleWork()">Рабочая зона: вкл</button>
         <button type="button" id="gcVAll" onclick="gcToggleAll()" title="Показывать все операции, а не только текущую">Все операции</button>
+        <button type="button" id="gcVFocus" onclick="gcToggleFocus()" title="Остальные проходы серым">Серым: выкл</button>
       </div>
       <div class="cnc3d-views">
         <button type="button" id="gcLk_grid" class="active" onclick="gcLookToggle('grid')">✓ Сетка (пол)</button>
@@ -4325,10 +4328,10 @@ function gcParse(code,opts){
   opts=opts||gcAxis;var axisOn=!!opts.on,rotV=opts.rot>0?opts.rot:3200,AL=opts.letter||'A';
   var rapidV=(typeof TIME_RAPID_MM_MIN!=='undefined'&&TIME_RAPID_MM_MIN>0)?TIME_RAPID_MM_MIN:5000;
   var src=String(code||'').split(/\r?\n/);
-  var st={x:0,y:0,z:0,a:0,known:false,motion:0,rel:false,feed:0,s:0,tool:'',cycle:null,g99:false,spOn:false,spRep:false,lenComp:false,lenRep:false,inCycle:false,wcs:'G54'};
+  var st={x:0,y:0,z:0,a:0,known:false,motion:0,rel:false,feed:0,s:0,tool:'',call:0,cycle:null,g99:false,spOn:false,spRep:false,lenComp:false,lenRep:false,inCycle:false,wcs:'G54'};
   var wcsList=[];
   function wIdx(){var k=st.wcs,i=wcsList.indexOf(k);if(i<0){wcsList.push(k);i=wcsList.length-1;}return i;}
-  var pts=[],t=0,warn={},w={},issues=[],seenI={},toolChanges=[],sawEnd=false;
+  var pts=[],t=0,warn={},w={},issues=[],seenI={},toolChanges=[],callLines=[0],sawEnd=false;
   // Проверку «шпиндель включён» делаем, только если в программе вообще есть M3/M4 (программа щупа идёт без шпинделя).
   var usesSpindle=String(code||'').toUpperCase().replace(/\([^)]*\)/g,'').split(/\r?\n/).some(function(l){return /M\s*0?[34](?![0-9])/.test(l.replace(/;.*$/,''));});
   function addIssue(sev,kind,line,idx,msg){var k=kind+':'+line;if(seenI[k])return;seenI[k]=1;issues.push({sev:sev,kind:kind,line:line,idx:Math.max(0,idx),msg:msg});}
@@ -4341,7 +4344,7 @@ function gcParse(code,opts){
       var ae=-(opts.inv?-1:1)*a*Math.PI/180,q3=gcRotPt(opts.ax,Math.cos(ae),Math.sin(ae),x,y,z,opts.y,opts.z);
       px=q3[0];py=q3[1];pz=q3[2];
     }
-    pts.push({x:px,y:py,z:pz,mx:x,my:y,mz:z,a:a,rapid:!!rapid,line:li,t:tt,tool:st.tool,f:rapid?0:(f||st.feed),s:st.s,cyc:!!st.inCycle,wi:wIdx()});
+    pts.push({x:px,y:py,z:pz,mx:x,my:y,mz:z,a:a,rapid:!!rapid,line:li,t:tt,tool:st.tool,call:st.call,f:rapid?0:(f||st.feed),s:st.s,cyc:!!st.inCycle,wi:wIdx()});
   }
   function push(x,y,z,rapid,li,f,a){
     if(a===undefined)a=st.a;
@@ -4414,7 +4417,7 @@ function gcParse(code,opts){
       if(mc===3||mc===4){st.spOn=true;st.spRep=false;}
       else if(mc===5)st.spOn=false;
       else if(mc===6){
-        toolChanges.push({line:li,z:st.known?st.z:null,idx:Math.max(0,pts.length-1)});
+        toolChanges.push({line:li,z:st.known?st.z:null,idx:Math.max(0,pts.length-1)});st.call++;callLines[st.call]=li;
         if(st.rel)addIssue('error','rel',li,pts.length-1,'Перед сменой инструмента не отменён G91 (нужен G90)');
       }else if(mc===30||mc===2||mc===99){
         sawEnd=true;
@@ -4486,19 +4489,19 @@ function gcParse(code,opts){
   }
   if(pts.length&&!sawEnd)addIssue('info','noend',pts[pts.length-1].line,pts.length-1,'В конце нет M30 или M2 (если это фрагмент — всё в порядке)');
   // Границы, участки одной фазы (быстрый ход / инструмент), первая и последняя точка каждой строки.
-  var bb=null,tools=[],toolSeq=[],groups=[],lineFirst={},lineLast={},lineOrder=[];
+  var bb=null,tools=[],toolSeq=[],lastCall=null,groups=[],lineFirst={},lineLast={},lineOrder=[];
   pts.forEach(function(p,i){
     if(!bb)bb={x0:0,x1:0,y0:0,y1:0,z0:0,z1:0};
     bb.x0=Math.min(bb.x0,p.x);bb.x1=Math.max(bb.x1,p.x);bb.y0=Math.min(bb.y0,p.y);bb.y1=Math.max(bb.y1,p.y);bb.z0=Math.min(bb.z0,p.z);bb.z1=Math.max(bb.z1,p.z);
     if(p.tool){
       if(tools.indexOf(p.tool)<0)tools.push(p.tool);
-      if(!toolSeq.length||toolSeq[toolSeq.length-1]!==p.tool)toolSeq.push(p.tool);
+      if(gcCallKey(p)!==lastCall){lastCall=gcCallKey(p);toolSeq.push(p.tool);}   // v142.31: каждый вызов T (M06) — отдельная запись, даже если T тот же
     }
     if(lineFirst[p.line]===undefined){lineFirst[p.line]=i;lineOrder.push(p.line);}
     lineLast[p.line]=i;
     if(i>0){
-      var key=(p.rapid?'rapid':('t'+p.tool))+'|'+p.wi,g=groups[groups.length-1];
-      if(!g||g.key!==key){g={key:key,rapid:p.rapid,tool:p.tool,wi:p.wi,a:i-1,b:i};groups.push(g);}else g.b=i;
+      var key=(p.rapid?'rapid':('t'+p.tool+'c'+(p.call||0)))+'|'+p.wi,g=groups[groups.length-1];
+      if(!g||g.key!==key){g={key:key,rapid:p.rapid,tool:p.tool,call:p.call||0,wi:p.wi,a:i-1,b:i};groups.push(g);}else g.b=i;
     }
   });
   // Рабочая зона: габариты рабочих ходов вместе с нулём программы и небольшим запасом (без отводов на безопасную высоту).
@@ -4509,17 +4512,18 @@ function gcParse(code,opts){
     var mg=Math.max(2,.08*Math.max(wb.x1-wb.x0,wb.y1-wb.y0,wb.z1-wb.z0));
     wb.x0-=mg;wb.x1+=mg;wb.y0-=mg;wb.y1+=mg;wb.z0-=mg;wb.z1+=mg;
   }
-  return {issues:issues,toolChanges:toolChanges,workBox:wb,pts:pts,groups:groups,lines:src.map(function(s){return s.trim();}),tools:tools,toolSeq:toolSeq,total:t,bbox:bb,warn:Object.keys(warn).map(function(k){return warn[k];}),lineFirst:lineFirst,lineLast:lineLast,lineOrder:lineOrder,wcsList:wcsList};
+  return {issues:issues,toolChanges:toolChanges,workBox:wb,pts:pts,groups:groups,lines:src.map(function(s){return s.trim();}),tools:tools,toolSeq:toolSeq,callLines:callLines,total:t,bbox:bb,warn:Object.keys(warn).map(function(k){return warn[k];}),lineFirst:lineFirst,lineLast:lineLast,lineOrder:lineOrder,wcsList:wcsList};
 }
 // Активная операция — голубая; прошлые операции — тихая серая «тень»; быстрые ходы — тонкие серые.
 function gcGroupMeta(){
   if(gc._gmFor===gc.groups&&gc._gmLen===gc.pts.length)return;
   gc._gmFor=gc.groups;gc._gmLen=gc.pts.length;
   var P=gc.pts,seqAt=new Int32Array(P.length),last=null,idx=-1,i;
-  for(i=0;i<P.length;i++){var t=P[i].tool;if(t!=null&&t!==''&&t!==last){idx++;last=t;}seqAt[i]=Math.max(0,idx);}
+  for(i=0;i<P.length;i++){var t=P[i].tool;if(t!=null&&t!==''&&gcCallKey(P[i])!==last){idx++;last=gcCallKey(P[i]);}seqAt[i]=Math.max(0,idx);}
   gc._seqAt=seqAt;
   gc.groups.forEach(function(g){g.seq=seqAt[Math.min(P.length-1,g.a)]||0;});
 }
+function gcCallKey(p){return p.tool+'#'+(p.call||0);}
 function gcColor(g){if(g.rapid)return 'rgb(148,163,184)';var i=gc.tools.indexOf(g.tool);return GC_COLORS[(i<0?0:i)%GC_COLORS.length];}   // цвет зависит только от номера T: повторы одного T — тот же цвет
 // Выбраны отдельные вызовы инструмента (долгое нажатие) — подсвечиваем только их диапазоны.
 function gcInSeg(a,b){
@@ -4603,24 +4607,31 @@ function gcSetToolFilter(tool){
   if(wasPlaying&&gc.progress<1){gc.playing=true;gc.last=0;gcPlayLabel();gc.raf=requestAnimationFrame(gcLoop);}
 }
 function gcToolOccMap(){
-  // tool -> [{seqIdx, line, name, toolStr}]
-  var map={},seq=gc.toolSeq||[],i;
-  if(!gc.toolEv){try{gc.toolEv=gcToolScan(gc.lines||[]);gc.toolEvSrc=gc.lines;}catch(e){gc.toolEv=[];}}
-  var ev=gc.toolEv||[];
+  // tool -> [{seqIdx, line, name, toolStr, ang}] — по одной записи на КАЖДЫЙ вызов T (M06), v142.31
+  var map={},seq=gc.toolSeq||[],P=gc.pts||[],i,first=[],lastK=null,anyA=false;
+  if(!gc.toolEv||gc.toolEvSrc!==gc.lines){try{gc.toolEv=gcToolScan(gc.lines||[]);gc.toolEvSrc=gc.lines;}catch(e){gc.toolEv=[];}}
+  var ev=gc.toolEv||[],CL=gc.callLines||[],L=gc.lines||[];
+  for(i=0;i<P.length;i++){
+    if(P[i].a)anyA=true;
+    var t0=P[i].tool;if(t0==null||t0==='')continue;
+    var k0=gcCallKey(P[i]);if(k0!==lastK){first.push(i);lastK=k0;}
+  }
   for(i=0;i<seq.length;i++){
-    var t=seq[i],k=String(t);
+    var t=seq[i],k=String(t),p=P[first[i]]||null;
     if(!map[k])map[k]=[];
-    // ближайшее событие смены с этим T и line порядка
-    var best=null,j;
-    for(j=0;j<ev.length;j++){
-      if(+ev[j].tool===+t){
-        if(!best)best=ev[j];
-        // берём j-е появление: index among same tool in ev
+    var cl=p&&CL[p.call]!=null&&p.call>0?CL[p.call]:-1,e=null,j,pw=p;
+    if(p){for(j=first[i];j<P.length&&gcCallKey(P[j])===gcCallKey(p);j++){if(!P[j].rapid){pw=P[j];break;}}}   // угол берём по первому рабочему ходу вызова (при быстром ходе ось ещё поворачивается)
+    if(cl>=0){for(j=0;j<ev.length;j++){if(ev[j].line===cl&&+ev[j].tool===+t){e=ev[j];break;}}}
+    else{var same=ev.filter(function(x){return +x.tool===+t;});e=same[map[k].length]||null;}
+    // название операции — первый комментарий после вызова (до следующей смены инструмента)
+    var op='';
+    if(cl>=0){
+      for(j=cl+1;j<L.length&&j<=cl+10;j++){
+        if(/(^|[^A-Za-z])T0*\d+(?!\d)/.test(String(L[j]).replace(/\([^)]*\)/g,'').replace(/^\s*N\d+\s*/,''))&&/M0*6(?!\d)/.test(L[j]))break;
+        var cm=/\(([^)]+)\)/.exec(L[j]);if(cm){op=cm[1].trim();break;}
       }
     }
-    var same=ev.filter(function(e){return +e.tool===+t;});
-    var occ=same[map[k].length]||same[0]||null;
-    map[k].push({seqIdx:i,tool:t,line:occ?occ.line:0,name:occ&&occ.name?occ.name:'',toolStr:occ&&occ.toolStr?occ.toolStr:(occ&&occ.label?occ.label:'')});
+    map[k].push({seqIdx:i,tool:t,line:cl>=0?cl:(e?e.line:0),name:op||(e&&e.name?e.name:''),toolStr:e&&e.toolStr?e.toolStr:(e&&e.label?e.label:''),ang:(anyA&&pw&&pw.a!==undefined)?pw.a:null});
   }
   return map;
 }
@@ -4682,7 +4693,7 @@ function gcOpenChipSheet(tool,occs){
     var it=document.createElement('button');it.type='button';
     var on=!!gc.toolSegSet[o.seqIdx];
     if(on)it.classList.add('on');
-    it.innerHTML='#'+(ix+1)+(o.name?'<span class="op">'+esc(o.name)+'</span>':(o.toolStr?'<span class="op">'+esc(o.toolStr)+'</span>':''));
+    it.innerHTML='#'+(ix+1)+(o.ang!=null?' · '+(gcAxis.letter||'A')+(Math.round(o.ang*10)/10):'')+(o.name?'<span class="op">'+esc(o.name)+'</span>':(o.toolStr?'<span class="op">'+esc(o.toolStr)+'</span>':''));
     it.onclick=function(){
       if(gc.toolSegSet[o.seqIdx])delete gc.toolSegSet[o.seqIdx];
       else gc.toolSegSet[o.seqIdx]=true;
@@ -4711,9 +4722,9 @@ function gcRebuildSegSetFilter(){
   Object.keys(gc.toolSegSet).forEach(function(k){want[+k]=true;});
   for(i=0;i<P.length;i++){
     var t=P[i].tool;
-    if(t!=null&&t!==''&&t!==last){if(start>=0&&want[idx])ranges.push({a:start,b:i-1});idx++;last=t;start=-1;}
+    if(t!=null&&t!==''&&gcCallKey(P[i])!==last){if(start>=0&&want[idx])ranges.push({a:start,b:i-1});idx++;last=gcCallKey(P[i]);start=-1;}
     if(t!=null&&t!==''){
-      if(last===null){idx=0;last=t;}
+      if(last===null){idx=0;last=gcCallKey(P[i]);}
       if(want[idx]&&start<0)start=i;
     }
   }
@@ -4729,7 +4740,7 @@ function gcCurrentToolSeqIdx(){
   var last=null,idx=-1;
   for(var i=0;i<=upto&&i<P.length;i++){
     var t=P[i].tool;
-    if(t!=null&&t!==''&&t!==last){idx++;last=t;}
+    if(t!=null&&t!==''&&gcCallKey(P[i])!==last){idx++;last=gcCallKey(P[i]);}
   }
   return idx;
 }
@@ -4917,7 +4928,7 @@ function gcLoad(code,files,act){
   gc.modelOnly=false;{var sc0=document.getElementById('gcodeView');if(sc0)sc0.classList.remove('gc-model-only');}
   gc.src=listing;gc.key=gcHash(String(listing));gcHiddenLoad();var memM=gcModelRestore();
   var r=gcParse(listing);
-  gc.parseIssues=r.issues;gc.toolChanges=r.toolChanges;gc.workBox=r.workBox;gc.pts=r.pts;gc.groups=r.groups;gc.lines=r.lines;gc.tools=r.tools;gc.toolSeq=r.toolSeq||r.tools;gc.total=r.total;gc.bbox=r.bbox;gc.warn=r.warn.concat(gc.execWarn||[]);gc.wcsList=r.wcsList||[];
+  gc.parseIssues=r.issues;gc.toolChanges=r.toolChanges;gc.workBox=r.workBox;gc.pts=r.pts;gc.groups=r.groups;gc.lines=r.lines;gc.tools=r.tools;gc.toolSeq=r.toolSeq||r.tools;gc.callLines=r.callLines||[0];gc.total=r.total;gc.bbox=r.bbox;gc.warn=r.warn.concat(gc.execWarn||[]);gc.wcsList=r.wcsList||[];
   gc.lineFirst=r.lineFirst;gc.lineLast=r.lineLast;gc.lineOrder=r.lineOrder;
   if(memM){try{gcModelTx();gcModelUi();gcModelOnlySync();}catch(e){}}
   gc.playing=false;cancelAnimationFrame(gc.raf);gc.progress=0;gc.last=0;gc.stepIdx=-1;gc.panX=0;gc.panY=0;gc.zoom=1;gc.pointers={};gc.pinchDist=0;gc.toolFilter=null;gc.toolSet={};
@@ -5173,7 +5184,7 @@ function gcAlignCompute(m){
 }
 
 // ---------- Привязка модели для Haas (ось вращения вдоль Y): строки по логике обнуления ----------
-// al.h = {y,x,z: плоскость{c,n}; d: отверстие{c,n,r}; dp: оси отверстия 'XZ'|'XY'|'YZ'; r: плоскость разворота (→ X); c: XZ от центра; fy,fx,fz,fd,fr: «другая сторона»}
+// al.h = {y,x,z: плоскость{c,n}; d: отверстие{c,n,r}; dp: оси отверстия 'XZ'|'XY'|'YZ'; r: плоскость разворота (грань к инструменту при A0 → +Z); c: XZ от центра; fy,fx,fz,fd,fr: «другая сторона»}
 function gcBBoxC(m){
   var s=m.seg,i,x0=1e9,x1=-1e9,y0=1e9,y1=-1e9,z0=1e9,z1=-1e9;
   if(!s||!s.length)return [0,0,0];
@@ -5207,7 +5218,7 @@ function gcAlignComputeH(m){
   }
   addPlane(h.z,'Z',h.fz);
   addPlane(h.x,'X',h.fx);
-  addPlane(h.r,'X',h.fr);
+  addPlane(h.r,'Z',!h.fr);   // v142.31 (B1): плоскость разворота — грань, смотрящая на инструмент при A/B = 0 (наружная нормаль → +Z)
   var R=[1,0,0,0,1,0,0,0,1],i;
   if(cons.length){
     var c1=cons[0],sec=null;
@@ -5231,7 +5242,11 @@ function gcAlignComputeH(m){
   if(h.x)tb[0]=-Rp(h.x.c)[0];
   if(h.y)tb[1]=-Rp(h.y.c)[1];
   if(h.z)tb[2]=-Rp(h.z.c)[2];
-  if(h.d&&h.d.c){var qd=Rp(h.d.c),dp=h.dp||'XZ';if(dp.indexOf('X')>=0)tb[0]=-qd[0];if(dp.indexOf('Y')>=0)tb[1]=-qd[1];if(dp.indexOf('Z')>=0)tb[2]=-qd[2];}
+  if(h.d&&h.d.c){
+    // v142.31 (B2): отверстие вдоль оси вращения (XZ) — его центр становится центром оси «X Z» (центр вращения станка), а не просто нулём
+    var qd=Rp(h.d.c),dp=h.dp||'XZ',rcd=(dp==='XZ')?gcRotCenter3():[0,0,0];
+    if(dp.indexOf('X')>=0)tb[0]=rcd[0]-qd[0];if(dp.indexOf('Y')>=0)tb[1]=-qd[1];if(dp.indexOf('Z')>=0)tb[2]=rcd[2]-qd[2];
+  }
   m.Rb=R;m.tb=tb;
 }
 var GC_HKEY={hx:'x',hy:'y',hz:'z',hr:'r',hd:'d'};
@@ -5252,7 +5267,7 @@ function gcZeroHBuild(){
   g.innerHTML=row('hy','y','Y — плоскость (основание)','fy')+row('hx','x','X — плоскость','fx')+row('hz','z','Z — плоскость','fz')
     +row('hd','d','Ø — отверстие ('+dp+')','fd')
     +'<button type="button" class="gc-zero-more" onclick="gcHPair()">Оси отверстия: '+dp+' · сменить</button>'
-    +row('hr','r','Разворот — плоскость X','fr')
+    +row('hr','r','Разворот — плоскость '+(gcAxis.letter||'A')+'0','fr')
     +'<button type="button" class="gc-zero-more'+(h.c?' active':'')+'" onclick="gcHCenter()">'+(h.c?'✓ ':'')+'XZ от центра вращения</button>';
 }
 function gcPickAtH(cx,cy){
@@ -5299,6 +5314,19 @@ function gcAdj(m){
   }
   m.adj=a;return a;
 }
+// Центр окружности по точкам в плоскости с нормалью nn (подгонка по наименьшим квадратам); c0 — запасной (среднее).
+function gcFitCircleC(pts,nn,c0){
+  var n=pts.length,i,ref=Math.abs(nn[0])<0.9?[1,0,0]:[0,1,0],u=v3norm(v3cross(nn,ref)),v=v3cross(nn,u);
+  var X=[],Y=[],mx=0,my=0;
+  for(i=0;i<n;i++){var d=v3sub(pts[i],c0);X.push(v3dot(d,u));Y.push(v3dot(d,v));mx+=X[i];my+=Y[i];}
+  mx/=n;my/=n;
+  var suu=0,suv=0,svv=0,suuu=0,svvv=0,suvv=0,svuu=0;
+  for(i=0;i<n;i++){var a=X[i]-mx,b=Y[i]-my;suu+=a*a;suv+=a*b;svv+=b*b;suuu+=a*a*a;svvv+=b*b*b;suvv+=a*b*b;svuu+=b*a*a;}
+  var det=suu*svv-suv*suv;if(Math.abs(det)<1e-9)return c0;
+  var r1=0.5*(suuu+suvv),r2=0.5*(svvv+svuu),uc=(r1*svv-r2*suv)/det,vc=(suu*r2-suv*r1)/det;
+  var ox=mx+uc,oy=my+vc;
+  return [c0[0]+u[0]*ox+v[0]*oy,c0[1]+u[1]*ox+v[1]*oy,c0[2]+u[2]*ox+v[2]*oy];
+}
 // Ищет замкнутую плоскую окружность, к ребру которой относится сегмент si; возвращает {c,n,r} в координатах модели.
 function gcFindCircle(m,si){
   var s=m.seg,adj=gcAdj(m),q=m.qk;
@@ -5331,6 +5359,7 @@ function gcFindCircle(m,si){
   for(i=0;i<n;i++){var p=pts[i],pn=pts[(i+1)%n];nx+=(p[1]-pn[1])*(p[2]+pn[2]);ny+=(p[2]-pn[2])*(p[0]+pn[0]);nz+=(p[0]-pn[0])*(p[1]+pn[1]);}
   var nl=Math.sqrt(nx*nx+ny*ny+nz*nz);if(nl<1e-12)return null;
   var nn=[nx/nl,ny/nl,nz/nl],rs=0,r2=0;
+  c=gcFitCircleC(pts,nn,c);   // v142.31: центр по наименьшим квадратам
   for(i=0;i<n;i++){var d=v3len(v3sub(pts[i],c));rs+=d;r2+=d*d;}
   var r=rs/n,sd=Math.sqrt(Math.max(0,r2/n-r*r));
   if(r<0.05||sd>0.06*r||n<6)return null;
@@ -5506,8 +5535,8 @@ function gcAlUi(){
   ['gcAlAx','gcAlEnd','gcAlLine'].forEach(function(id){var b=q(id);if(b)b.classList.toggle('active',(id==='gcAlAx'&&gc.pick==='ax')||(id==='gcAlEnd'&&gc.pick==='end')||(id==='gcAlLine'&&(gc.pick==='l1'||gc.pick==='l2')));});
   var inf=q('gcAlInfo');if(!inf)return;
   if(gcAxis.ax==='Y'){
-    var hh=al.h||{},hHint={hy:'Коснитесь плоской грани основания детали (Y0).',hx:'Коснитесь плоской грани (X0).',hz:'Коснитесь плоской грани (Z0).',hr:'Коснитесь плоской грани для разворота (плоскость X).',hd:'Коснитесь ребра отверстия.'}[gc.pick],ht=hHint||'';
-    if(!ht){var hp=[];if(hh.y)hp.push('Y0 по плоскости');if(hh.x)hp.push('X0 по плоскости');if(hh.z)hp.push('Z0 по плоскости');if(hh.d)hp.push('Ø'+(hh.d.r*2).toFixed(2)+' → '+(hh.dp||'XZ'));if(hh.r)hp.push('разворот по плоскости X');if(hh.c)hp.push('XZ от центра вращения');
+    var hh=al.h||{},hHint={hy:'Коснитесь плоской грани основания детали (Y0).',hx:'Коснитесь плоской грани (X0).',hz:'Коснитесь плоской грани (Z0).',hr:'Коснитесь плоской грани, которая при '+(gcAxis.letter||'A')+'0 смотрит на инструмент (разворот).',hd:'Коснитесь ребра отверстия.'}[gc.pick],ht=hHint||'';
+    if(!ht){var hp=[];if(hh.y)hp.push('Y0 по плоскости');if(hh.x)hp.push('X0 по плоскости');if(hh.z)hp.push('Z0 по плоскости');if(hh.d)hp.push('Ø'+(hh.d.r*2).toFixed(2)+' → '+(hh.dp||'XZ'));if(hh.r)hp.push('разворот: плоскость = '+(gcAxis.letter||'A')+'0');if(hh.c)hp.push('XZ от центра вращения');
       ht=hp.length?'Привязано: '+hp.join(' · ')+'. Центр оси: X'+gcAxis.y+' Z'+gcAxis.z+'.':'Haas: ноль по плоскости/отверстию, как при обнулении. Начните с основания (Y).';}
     inf.textContent=(gc.pickMsg?gc.pickMsg+' ':'')+ht;return;
   }
@@ -5559,7 +5588,7 @@ function gcModelMarks(ctx,SP,P){
   if(al.l1&&al.l2){var a1=m.xf(al.l1.c),a2=m.xf(al.l2.c),s1=SP(a1[0],a1[1],a1[2]),s2=SP(a2[0],a2[1],a2[2]);ctx.beginPath();ctx.moveTo(s1[0],s1[1]);ctx.lineTo(s2[0],s2[1]);ctx.strokeStyle='rgba(170,182,198,.7)';ctx.lineWidth=1;ctx.stroke();}
   gcMarksH(ctx,SP,ring);
   if(gc.pick&&!gc.wiz){
-    var msg={ax:'Коснитесь центрального отверстия',end:'Коснитесь плоскости торца',l1:'Коснитесь первого отверстия',l2:'Коснитесь второго отверстия',hy:'Коснитесь плоскости основания (Y0)',hx:'Коснитесь плоскости (X0)',hz:'Коснитесь плоскости (Z0)',hr:'Коснитесь плоскости для разворота',hd:'Коснитесь ребра отверстия'}[gc.pick];
+    var msg={ax:'Коснитесь центрального отверстия',end:'Коснитесь плоскости торца',l1:'Коснитесь первого отверстия',l2:'Коснитесь второго отверстия',hy:'Коснитесь плоскости основания (Y0)',hx:'Коснитесь плоскости (X0)',hz:'Коснитесь плоскости (Z0)',hr:'Коснитесь плоскости «'+(gcAxis.letter||'A')+'0» (смотрит на инструмент)',hd:'Коснитесь ребра отверстия'}[gc.pick];
     ctx.font='600 13px -apple-system,system-ui,sans-serif';var w=ctx.measureText(msg).width+22;
     ctx.fillStyle='rgba(20,30,48,.92)';ctx.strokeStyle='#60a5fa';ctx.lineWidth=1;
     var x=(P.W-w)/2,y=P.H-46;ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,28,14):ctx.rect(x,y,w,28);ctx.fill();ctx.stroke();
@@ -6116,7 +6145,7 @@ function gcReparse(){
   if(gc.src===undefined||gc.src===null)return;
   var r=gcParse(gc.src),keep=gc.progress,wasPlaying=gc.playing;
   gc.playing=false;cancelAnimationFrame(gc.raf);
-  gc.parseIssues=r.issues;gc.toolChanges=r.toolChanges;gc.workBox=r.workBox;gc.pts=r.pts;gc.groups=r.groups;gc.lines=r.lines;gc.tools=r.tools;gc.toolSeq=r.toolSeq||r.tools;gc.total=r.total;gc.bbox=r.bbox;gc.warn=r.warn.concat(gc.execWarn||[]);gc.wcsList=r.wcsList||[];
+  gc.parseIssues=r.issues;gc.toolChanges=r.toolChanges;gc.workBox=r.workBox;gc.pts=r.pts;gc.groups=r.groups;gc.lines=r.lines;gc.tools=r.tools;gc.toolSeq=r.toolSeq||r.tools;gc.callLines=r.callLines||[0];gc.total=r.total;gc.bbox=r.bbox;gc.warn=r.warn.concat(gc.execWarn||[]);gc.wcsList=r.wcsList||[];
   gc.lineFirst=r.lineFirst;gc.lineLast=r.lineLast;gc.lineOrder=r.lineOrder;
   gc.stepIdx=-1;gc.last=0;gc.progress=Math.max(0,Math.min(1,keep));
   gcRebuildFilter();gcRunChecks();gcRenderToolChips();gcCodeBuild();gcPlayLabel();
@@ -6666,6 +6695,21 @@ function gcToggleRapids(){
   gcRebuildFilter();
   gcDraw();
 }
+// v142.31: «Серым» — 0 выкл; 1 всё, кроме работающего инструмента (по номеру T); 2 всё, кроме текущего вызова T.
+function gcFocusMode(){
+  if(gc.focus==null){gc.focus=0;try{var v=+localStorage.getItem('cncGcFocus');if(v>=0&&v<=2)gc.focus=v;}catch(e){}}
+  return gc.focus;
+}
+function gcFocusUi(){
+  var m=gcFocusMode(),txt=['Серым: выкл','Серым: всё кроме этого T','Серым: всё кроме этого вызова'][m],sh=['◐','◐ T','◐ №'][m];
+  var a=document.getElementById('gcVFocus');if(a){a.textContent=txt;a.classList.toggle('active',m>0);}
+  var b=document.getElementById('gcVFocusFs');if(b){b.textContent=sh;b.classList.toggle('active',m>0);}
+}
+function gcToggleFocus(){
+  gc.focus=(gcFocusMode()+1)%3;
+  try{localStorage.setItem('cncGcFocus',String(gc.focus));}catch(e){}
+  gcFocusUi();gcDraw();
+}
 function gcToggleAll(){
   gc.showAll=!gc.showAll;
   ['gcVAllFs','gcVAll'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.toggle('active',!!gc.showAll);});
@@ -6865,7 +6909,8 @@ function gcDraw(){
   gcModelDraw(ctx,SP,VP);
   // Путь: весь — приглушённо, пройденная часть — ярко.
   gcGroupMeta();
-  var curSeq=gc._seqAt&&gc._seqAt.length?gc._seqAt[Math.min(upto,gc._seqAt.length-1)]:0,fadeOn=(gc.toolFilter==null);
+  var curSeq=gc._seqAt&&gc._seqAt.length?gc._seqAt[Math.min(upto,gc._seqAt.length-1)]:0,fadeOn=(gc.toolFilter==null),fcm=gc.modelOnly?0:gcFocusMode(),fcTool=String((p0&&p0.tool)||'');
+  try{gcFocusUi();}catch(e){}
   var pass=function(alpha,traveled){
     // Порядок: быстрые ходы (внизу) → рабочие линии. Прошлые операции — тень, активная — голубая.
     [1,0].forEach(function(ph){
@@ -6879,6 +6924,8 @@ function gcDraw(){
       if(g.rapid){
         if(traveled&&fadeOn&&!curOp)return;              // быстрые ходы прошлых операций не показываем — нет наслоений
         a0*=0.3;col='rgb(148,163,184)';lw=0.6;
+      }else if(fcm&&fadeOn&&(fcm===1?String(g.tool)!==fcTool:g.seq!==curSeq)){
+        col='rgb(128,138,153)';a0*=(traveled?0.5:1);lw=1;       // v142.31: «Серым» — остальные проходы одним серым цветом
       }else if(traveled&&fadeOn&&!curOp){
         col=gcColor(g);
         if(gc.showAll){a0*=0.6;lw=1.1;}                  // «Вся программа»
@@ -8146,7 +8193,7 @@ function gcActZeroClose(){
 var GC_WIZ=['ax','end','l1','l2'];
 var GC_WIZH=['hy','hd','hr'];
 function gcWizSeq(){return gcAxis.ax==='Y'?GC_WIZH:GC_WIZ;}
-var GC_WIZ_TXT={ax:'Коснитесь ребра центрального отверстия',end:'Коснитесь плоской грани торца',l1:'Коснитесь первого отверстия',l2:'Коснитесь второго отверстия',hy:'Коснитесь плоской грани основания (Y0)',hx:'Коснитесь плоской грани (X0)',hz:'Коснитесь плоской грани (Z0)',hd:'Коснитесь ребра отверстия',hr:'Коснитесь плоской грани для разворота (плоскость X)'};
+var GC_WIZ_TXT={ax:'Коснитесь ребра центрального отверстия',end:'Коснитесь плоской грани торца',l1:'Коснитесь первого отверстия',l2:'Коснитесь второго отверстия',hy:'Коснитесь плоской грани основания (Y0)',hx:'Коснитесь плоской грани (X0)',hz:'Коснитесь плоской грани (Z0)',hd:'Коснитесь ребра отверстия',hr:'Коснитесь плоской грани, которая при повороте 0° смотрит на инструмент (разворот A0/B0)'};
 function gcWizBarUpdate(){
   var bar=document.getElementById('gcWizBar');if(!bar)return;
   if(!gc.wiz||!gc.pick){bar.style.display='none';return;}
@@ -8534,7 +8581,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.30',APP_DATE='26.11.2026';
+var APP_VERSION='v142.31',APP_DATE='27.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
