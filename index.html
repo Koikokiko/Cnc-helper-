@@ -58,7 +58,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
- v142.31 | Claude Sonnet 5.5 | 27.11.2026 | (серые проходы: прозрачность 0.25, толщина 0.6) По списку багов B1, B2 (баги CNC helper v142.30). B1 — привязка Haas (ось вокруг Y), шаг «Разворот»: плоскость теперь ставится как грань, которая при A0/B0 смотрит на инструмент (наружная нормаль → +Z), раньше — как плоскость X; «⇄» меняет сторону; подписи «Разворот — плоскость A0». Старые привязки с «разворотом» развернутся на 90° — нужно перекасаться или нажать ⇄/«Добавить поворот вокруг Y». B2 (центр отверстия) — (а) центр окружности считается подгонкой по наименьшим квадратам (gcFitCircleC), раньше — среднее вершин, которое смещается при неравномерной разбивке рёбер (в тесте при разбивке 1:2 сдвиг до 40 мм); (б) для отверстия вдоль оси вращения (XZ) его центр ставится в «Центр оси X Z» станка, а не в 0. Старое отверстие в привязке нужно коснуться заново. B2 (инструменты) — (а) в парсере считается номер вызова (st.call, каждый M06), точки и группы хранят call, список вызовов gc.callLines; повторные подряд вызовы одного T (T51 ×8, T41 ×9 в O04103 с разными A) больше не склеиваются: в долгом нажатии на чип — #1 · A180 · название операции, … по каждому вызову; «операция/вызов» в подсветке текущей операции теперь по вызову; (б) кнопка «Серым» (⚙ и ◐ в полном экране): выкл → всё кроме работающего T серым → всё кроме текущего вызова серым, хранится в cncGcFocus. Проверено в Chromium 428x926 на O04103 (скриншоты, вызовы T, привязка по расчёту на модели ЕР2К…OPORA: нормаль плоскости → +Z, ось отверстия → Y, центр отверстия → центр оси). Не проверено: загрузка самого STEP (в среде нет интернета для модуля STEP) и iPhone.
+ v142.31 | Claude Sonnet 5.5 | 27.11.2026 | (чипсы T — в порядке программы: T14 T51 T14, подряд одинаковые T — один чип; тап по повторяющемуся T выбирает только свой участок; долгое нажатие — вызовы этого чипа) (серые проходы: прозрачность 0.25, толщина 0.6) По списку багов B1, B2 (баги CNC helper v142.30). B1 — привязка Haas (ось вокруг Y), шаг «Разворот»: плоскость теперь ставится как грань, которая при A0/B0 смотрит на инструмент (наружная нормаль → +Z), раньше — как плоскость X; «⇄» меняет сторону; подписи «Разворот — плоскость A0». Старые привязки с «разворотом» развернутся на 90° — нужно перекасаться или нажать ⇄/«Добавить поворот вокруг Y». B2 (центр отверстия) — (а) центр окружности считается подгонкой по наименьшим квадратам (gcFitCircleC), раньше — среднее вершин, которое смещается при неравномерной разбивке рёбер (в тесте при разбивке 1:2 сдвиг до 40 мм); (б) для отверстия вдоль оси вращения (XZ) его центр ставится в «Центр оси X Z» станка, а не в 0. Старое отверстие в привязке нужно коснуться заново. B2 (инструменты) — (а) в парсере считается номер вызова (st.call, каждый M06), точки и группы хранят call, список вызовов gc.callLines; повторные подряд вызовы одного T (T51 ×8, T41 ×9 в O04103 с разными A) больше не склеиваются: в долгом нажатии на чип — #1 · A180 · название операции, … по каждому вызову; «операция/вызов» в подсветке текущей операции теперь по вызову; (б) кнопка «Серым» (⚙ и ◐ в полном экране): выкл → всё кроме работающего T серым → всё кроме текущего вызова серым, хранится в cncGcFocus. Проверено в Chromium 428x926 на O04103 (скриншоты, вызовы T, привязка по расчёту на модели ЕР2К…OPORA: нормаль плоскости → +Z, ось отверстия → Y, центр отверстия → центр оси). Не проверено: загрузка самого STEP (в среде нет интернета для модуля STEP) и iPhone.
  v142.30 | Claude Sonnet 5.5 | 26.11.2026 | (1) Модель теперь принадлежит вкладке-программе: не теряется при правке текста, добавлении программы, смене вкладок и перезапуске; у новой вкладки модели нет; закрытие вкладки убирает её модель; перетаскивание вкладки переносит модель вместе с ней. Причина бага: модель хранилась по хэшу текста программы и переносилась только один раз (из «только модель» на первую программу). (2) Вид 3D (только Iso, камера над полом): свет «небо/земля» по оси Z (верх светлый, низ тёмный) + боковой свет; отражение процедурной карты окружения; пол с сеткой (мелкая через 1/5 крупной, затухание к краям) на уровне низа модели; тень детали на пол — проекция по лучу света, мягкий край. Переключатели «Сетка / Окружение / Тени» в ⚙ (по умолчанию включены, cncGcLook). Тени отключаются для моделей больше 150 тыс. треугольников. Не проверено на iPhone; проверено в Chromium (скриншоты, сценарии вкладок). Не сделано: тень детали на саму себя, перспективная камера.
  v142.29 | Claude Sonnet 5.5 | 26.11.2026 | Решение пользователя: только тёмная тема. Удалены 3 блока стилей для светлого режима системы (36 строк); правила для светлого режима не добавлять. Не проверено на iPhone.
  v142.28 | Claude Sonnet 5.5 | 26.11.2026 | Уборка стилей, шаг 1 (3D Viewer и редактор), вид не менялся: убрано перекрытых объявлений 125, объединено повторных правил 7, в один блок в конце <style> перенесено 84. Новые стили 3D и редактора писать в этот блок. Общие с другими разделами правила, !important и светлая тема не трогались. Не проверено на iPhone.
@@ -4647,14 +4647,21 @@ function gcRenderToolChips(){
     box.appendChild(all);
     var seq=gc.toolSeq&&gc.toolSeq.length?gc.toolSeq:(gc.tools||[]);
     var occMap=gcToolOccMap();
-    var seen={},order=[];
-    seq.forEach(function(t){var k=String(t);if(!seen[k]){seen[k]=1;order.push(t);}});
-    order.forEach(function(t){
-      var k=String(t),occs=occMap[k]||[{seqIdx:0,tool:t,name:'',toolStr:''}];
-      var b=document.createElement('button');b.type='button';b.dataset.tool=k;
+    // v142.31: порядок чипсов — как в программе (T14 T51 T14 …); подряд идущие одинаковые T — один чип
+    var runs=[],runCnt={};
+    seq.forEach(function(t,si){
+      var k=String(t),r=runs[runs.length-1];
+      if(r&&r.k===k){r.idxs.push(si);}else{runs.push({t:t,k:k,idxs:[si]});runCnt[k]=(runCnt[k]||0)+1;}
+    });
+    runs.forEach(function(run){
+      var t=run.t,k=run.k,multi=runCnt[k]>1,allOccs=occMap[k]||[];
+      var occs=allOccs.filter(function(o){return run.idxs.indexOf(o.seqIdx)>=0;});
+      if(!occs.length)occs=[{seqIdx:run.idxs[0],tool:t,name:'',toolStr:''}];
+      var b=document.createElement('button');b.type='button';b.dataset.tool=k;b.dataset.seqs=','+run.idxs.join(',')+',';
       var nSel=gc.toolSegSet?occs.filter(function(o){return gc.toolSegSet[o.seqIdx];}).length:0;
       b.innerHTML='T'+t+(nSel>0&&nSel<occs.length?' · '+nSel+'/'+occs.length:(occs.length>1?'<span class="dot"></span>':''));
-      var selected=(gc.toolSet&&gc.toolSet[k])||(gc.toolSeg&&String(gc.toolSeg.tool)===k)||(gc.toolSegSet&&occs.some(function(o){return gc.toolSegSet[o.seqIdx];}));
+      var segOn=!!(gc.toolSegSet&&occs.some(function(o){return gc.toolSegSet[o.seqIdx];}));
+      var selected=multi?segOn:((gc.toolSet&&gc.toolSet[k])||(gc.toolSeg&&String(gc.toolSeg.tool)===k)||segOn);
       if(selected)b.classList.add('sel');
       // тап — весь инструмент; long-press — меню операций; скролл чипсов не считается тапом
       var tmr=null,long=false,sx=0,sy=0,moved=false;
@@ -4671,6 +4678,7 @@ function gcRenderToolChips(){
         clearT();
         if(long||moved)return;
         gcChipDropClose();gcChipSheetClose();
+        if(multi){gcToggleRunSeg(t,occs);return;}   // инструмент встречается в программе несколько раз — чип выбирает только свой участок
         gc.toolSeg=null;gc.toolSegRange=null;gc.toolSegSet=null;
         gcSetToolFilter(t);
       });
@@ -4698,22 +4706,32 @@ function gcOpenChipSheet(tool,occs){
       if(gc.toolSegSet[o.seqIdx])delete gc.toolSegSet[o.seqIdx];
       else gc.toolSegSet[o.seqIdx]=true;
       it.classList.toggle('on',!!gc.toolSegSet[o.seqIdx]);
-      // фильтр: выбранные сегменты (+ tool number для совместимости)
-      gc.toolSeg=null;gc.toolSegRange=null;
-      var keys=Object.keys(gc.toolSegSet);
-      if(!keys.length){
-        gc.toolSet={};gc.toolFilter=null;
-      }else{
-        gc.toolSet={};gc.toolSet[String(tool)]=true;gc.toolFilter='sel';
-      }
-      gcRebuildSegSetFilter();
-      gcRebuildFilter();
-      gc.progress=0;gc.playing=false;cancelAnimationFrame(gc.raf);
-      gcRenderToolChips();gcPlayLabel();gcDraw();
+      gcApplySegSet(tool);
     };
     list.appendChild(it);
   });
   sheet.style.display='flex';
+}
+function gcApplySegSet(tool){
+  // фильтр: выбранные вызовы (+ номер T для совместимости)
+  gc.toolSeg=null;gc.toolSegRange=null;
+  var keys=Object.keys(gc.toolSegSet||{});
+  if(!keys.length){
+    gc.toolSet={};gc.toolFilter=null;
+  }else{
+    gc.toolSet={};gc.toolSet[String(tool)]=true;gc.toolFilter='sel';
+  }
+  gcRebuildSegSetFilter();
+  gcRebuildFilter();
+  gc.progress=0;gc.playing=false;cancelAnimationFrame(gc.raf);
+  gcRenderToolChips();gcPlayLabel();gcDraw();
+}
+// Тап по чипу, когда такой T встречается в программе в нескольких местах: включить/выключить вызовы именно этого чипа.
+function gcToggleRunSeg(tool,occs){
+  if(!gc.toolSegSet)gc.toolSegSet={};
+  var allOn=occs.every(function(o){return gc.toolSegSet[o.seqIdx];});
+  occs.forEach(function(o){if(allOn)delete gc.toolSegSet[o.seqIdx];else gc.toolSegSet[o.seqIdx]=true;});
+  gcApplySegSet(tool);
 }
 function gcRebuildSegSetFilter(){
   if(!gc.toolSegSet||!Object.keys(gc.toolSegSet).length){gc.toolSegRanges=null;return;}
@@ -4754,7 +4772,7 @@ function gcUpdateToolChips(tool){
     var cur=null;
     [].forEach.call(box.children,function(b,i){
       if(i===0||b.dataset.tool===''){b.classList.remove('cur');return;}
-      var on=curTool!==''&&b.dataset.tool===curTool;
+      var on=curTool!==''&&b.dataset.tool===curTool&&(!b.dataset.seqs||seqIdx<0||b.dataset.seqs.indexOf(','+seqIdx+',')>=0);
       b.classList.toggle('cur',on);if(on)cur=b;
     });
     if(changed&&cur&&box.clientWidth>0){
