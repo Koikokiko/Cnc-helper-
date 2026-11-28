@@ -58,7 +58,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
- v142.34 | GPT-6 | 28.11.2026 | Файлы CNC Helper Cloud открываются в существующем 3D Viewer: программы ЧПУ загружаются во вкладку и строят траекторию; модели STL/OBJ/STEP/DXF загружаются в сцену и сохраняются за активной вкладкой программы. Добавлена выдача содержимого файла из Cloud.
+ v142.35 | GPT-6 | 28.11.2026 | Исправлен адрес Apps Script API: вместо ID веб-развёртывания используется ID проекта Apps Script для вызовов listFiles, uploadFile и getFileContent.
  v142.33 | GPT-6 | 28.11.2026 | В «Документы» добавлен встроенный каталог CNC Helper Cloud: вход через Google OAuth, список файлов, поиск, фильтр категорий, открытие, скачивание и загрузка в Cloud до 10 МБ. Локальное хранение оставлено без изменений.
  v142.32 | GPT-6 | 28.11.2026 | В разделе «Документы» добавлена ссылка «Облачное хранилище», открывающая существующий CNC Helper Cloud в новой вкладке. Локальное хранение и работу с файлами не меняет.
  v142.31 | Claude Sonnet 5.5 | 27.11.2026 | (чипсы T — в порядке программы: T14 T51 T14, подряд одинаковые T — один чип; тап по повторяющемуся T выбирает только свой участок; долгое нажатие — вызовы этого чипа) (серые проходы: прозрачность 0.25, толщина 0.6) По списку багов B1, B2 (баги CNC helper v142.30). B1 — привязка Haas (ось вокруг Y), шаг «Разворот»: плоскость теперь ставится как грань, которая при A0/B0 смотрит на инструмент (наружная нормаль → +Z), раньше — как плоскость X; «⇄» меняет сторону; подписи «Разворот — плоскость A0». Старые привязки с «разворотом» развернутся на 90° — нужно перекасаться или нажать ⇄/«Добавить поворот вокруг Y». B2 (центр отверстия) — (а) центр окружности считается подгонкой по наименьшим квадратам (gcFitCircleC), раньше — среднее вершин, которое смещается при неравномерной разбивке рёбер (в тесте при разбивке 1:2 сдвиг до 40 мм); (б) для отверстия вдоль оси вращения (XZ) его центр ставится в «Центр оси X Z» станка, а не в 0. Старое отверстие в привязке нужно коснуться заново. B2 (инструменты) — (а) в парсере считается номер вызова (st.call, каждый M06), точки и группы хранят call, список вызовов gc.callLines; повторные подряд вызовы одного T (T51 ×8, T41 ×9 в O04103 с разными A) больше не склеиваются: в долгом нажатии на чип — #1 · A180 · название операции, … по каждому вызову; «операция/вызов» в подсветке текущей операции теперь по вызову; (б) кнопка «Серым» (⚙ и ◐ в полном экране): выкл → всё кроме работающего T серым → всё кроме текущего вызова серым, хранится в cncGcFocus. Проверено в Chromium 428x926 на O04103 (скриншоты, вызовы T, привязка по расчёту на модели ЕР2К…OPORA: нормаль плоскости → +Z, ось отверстия → Y, центр отверстия → центр оси). Не проверено: загрузка самого STEP (в среде нет интернета для модуля STEP) и iPhone.
@@ -3191,7 +3191,7 @@ async function addDrawings() {
 }
 
 /* CNC Helper Cloud API integration */
-var CNC_CLOUD_DEPLOYMENT_ID='AKfycbw1s5O2sxQNZDeUJ7KYZWwKsO27pQGZPcdFwAx0b1CmWS0dLPdw7O0hPyceLks2hAJN';
+var CNC_CLOUD_SCRIPT_ID='1quwi-X5JPoVuHzDvdL-nwYAzWS0faXG33WbYBnxvq6_V2ZmZB9amsU8l';
 var CNC_CLOUD_OAUTH_CLIENT_ID='765949306440-l6fvp5hh5gmudqae2hiddtel94htftt0.apps.googleusercontent.com';
 var cncCloudToken='',cncCloudTokenExpires=0,cncCloudTokenClient=null,cncCloudGisPromise=null,cncCloudFiles=[];
 function cloudStatus(message,isError){
@@ -3247,7 +3247,7 @@ async function cloudApiRun(functionName,parameters){
   if(!cncCloudToken||Date.now()>cncCloudTokenExpires-60000){
     throw new Error('Сеанс Google истёк. Нажми «Подключить Google» ещё раз.');
   }
-  var response=await fetch('https://script.googleapis.com/v1/scripts/'+encodeURIComponent(CNC_CLOUD_DEPLOYMENT_ID)+':run',{
+  var response=await fetch('https://script.googleapis.com/v1/scripts/'+encodeURIComponent(CNC_CLOUD_SCRIPT_ID)+':run',{
     method:'POST',
     headers:{'Authorization':'Bearer '+cncCloudToken,'Content-Type':'application/json'},
     body:JSON.stringify({function:functionName,parameters:parameters||[]})
@@ -8854,7 +8854,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.34',APP_DATE='28.11.2026';
+var APP_VERSION='v142.35',APP_DATE='28.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
