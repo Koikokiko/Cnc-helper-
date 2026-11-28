@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Проверка CNC Helper API</title>
+<style>
+  body{margin:0;padding:20px 16px;background:#14181d;color:#e8ecf0;font:16px/1.45 -apple-system,sans-serif}
+  main{max-width:520px;margin:auto}
+  label{display:block;margin:14px 0 6px}
+  input,button{box-sizing:border-box;width:100%;padding:13px;border-radius:10px;border:1px solid #3a444f;font-size:16px}
+  input{background:#1e242b;color:inherit}
+  button{margin-top:18px;background:#2f6fb0;color:#fff;border:0}
+  #out{margin-top:18px;white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main>
+  <h1>Проверка API</h1>
+  <label for="url">Адрес веб-приложения (заканчивается на /exec)</label>
+  <input id="url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <label for="key">Ключ APP_KEY</label>
+  <input id="key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <button id="go" type="button">Проверить</button>
+  <div id="out" aria-live="polite"></div>
+</main>
+<script>
+// Ключ нигде не сохраняется: только отправляется на ваш адрес Apps Script.
+document.getElementById('go').onclick = async function () {
+  var out = document.getElementById('out');
+  var url = document.getElementById('url').value.trim();
+  var key = document.getElementById('key').value.trim();
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)) {
+    out.textContent = 'Проверьте адрес: он начинается с https://script.google.com/macros/s/ и заканчивается на /exec';
+    return;
+  }
+  if (!key) { out.textContent = 'Введите ключ.'; return; }
+  out.textContent = 'Проверяю…';
+  try {
+    // text/plain — чтобы браузер не делал предварительный запрос, который Apps Script не принимает
+    var res = await fetch(url, {
+      method: 'POST', credentials: 'omit',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ key: key, action: 'listFiles', category: 'Все файлы' })
+    });
+    var data = await res.json();
+    if (!data.ok) { out.textContent = 'Сервер ответил: ' + data.error; return; }
+    out.textContent = 'УСПЕХ. Вход Google не понадобился.\nФайлов в облаке: ' + data.result.files.length +
+      '\n' + data.result.files.slice(0, 5).map(function (f) { return '• ' + f.name; }).join('\n');
+  } catch (e) {
+    out.textContent = 'Нет ответа от API. Проверьте, что при публикации выбран доступ «Все», и интернет.\n' + e.message;
+  }
+};
+</script>
+</body>
+</html>
