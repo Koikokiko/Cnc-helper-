@@ -58,6 +58,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
  - Устаревший Claude Doc про старый визуализатор — не решено, что делать.
 
 ЖУРНАЛ (новые записи — сверху)
+ v142.36 | Claude Sonnet 5.5 | 28.11.2026 | Облако без повторного входа: вместо Google OAuth и scripts.run — отдельный проект Apps Script «CNC Helper API» (доступ «Все», проверка по ключу APP_KEY). Адрес /exec и ключ вводятся один раз («Настроить облако»), localStorage cncCloudApi; НИКОГДА не вписывать их в файл или репозиторий. Список загружается при открытии «Документы»; «Скачать» идёт через API.
  v142.35 | GPT-6 | 28.11.2026 | Исправлен адрес Apps Script API: вместо ID веб-развёртывания используется ID проекта Apps Script для вызовов listFiles, uploadFile и getFileContent.
  v142.33 | GPT-6 | 28.11.2026 | В «Документы» добавлен встроенный каталог CNC Helper Cloud: вход через Google OAuth, список файлов, поиск, фильтр категорий, открытие, скачивание и загрузка в Cloud до 10 МБ. Локальное хранение оставлено без изменений.
  v142.32 | GPT-6 | 28.11.2026 | В разделе «Документы» добавлена ссылка «Облачное хранилище», открывающая существующий CNC Helper Cloud в новой вкладке. Локальное хранение и работу с файлами не меняет.
@@ -72,12 +73,7 @@ NOTES — ПРОЧТИ ЭТО ПЕРВЫМ (для любой нейросети
 v142.20 | Claude Sonnet 5.5 | 23.11.2026 | Фрезерование отверстий: (1) у «Глубина Z (минус)» добавлен переключатель «+ / −» (на iPhone минус с цифровой клавиатуры не набрать — глубину вводили положительной и получали «Проверьте диаметры, высоты, глубину…»). (2) Сообщения об ошибках шапки теперь называют конкретное поле: пустое поле, диаметр фрезы, Подход Z, Безопасная Z ≤ Подход Z, глубина без минуса, шаг, подача, обороты. Расчёт программы не менялся. Не проверено на iPhone.
  v142.19 | Claude Sonnet 5.5 | 23.11.2026 | Фрезерование отверстий (расфрезеровка): у «Центр X» и «Центр Y» каждого отверстия добавлен переключатель «+ / −» — минус ставится кнопкой, без ввода с цифровой клавиатуры iPhone. Знак хранится в тексте поля (−25), кнопка показывает текущий знак и при ручном вводе минуса переключается сама; при пустом поле выбор «−» ставит «-» и открывает ввод. Расчёт программы не менялся. Не проверено на iPhone.
  v142.18 | Claude Sonnet 5.5 | 23.11.2026 | «Сверить инструменты»: подбор пар по ступеням. Раньше пара находилась только при точном совпадении названия, а FR D50 SPEED и FREZA D50 SPEED (O00152 и O00125) считались разными. Теперь: 1) название совпало — «совпало»; 2) тот же диаметр D и начало названия совпадает (FR ↔ FREZA) — «проверьте»; 3) тот же диаметр и тот же номер T при разных названиях — «проверьте». В каждой ступени сначала берётся инструмент с тем же номером T. Инструменты с разным диаметром (SVERLO D12 и SVERLO D13) по-прежнему разные. Не проверено на iPhone.
- v142.17 | Claude Sonnet 5.5 | 23.11.2026 | «Сверить инструменты» исправлено под реальные программы (O0194 / O0195): смена инструмента распознаётся и слитно (T14M06, T5M06), и через пробел (T14 M6); название берётся как первый комментарий после смены инструмента (до следующего T, до 15 строк — в O0195 он через 5 строк после T), а если в программе комментарии стоят перед T — как раньше; повторная T подряд (T14M6 во втором блоке) — тот же инструмент. При замене H находится и после точки (G43Z200.H14), H08 заменяется как H8. Не проверено на iPhone.
- v142.16 | Claude Sonnet 5.5 | 23.11.2026 | (1) Меню ⋯ редактора 3D → «Сверить инструменты»: эталон — активная вкладка, целевая — другая (при двух вкладках сама, иначе выбор из списка); меняется только целевая. Инструмент опознаётся по названию и диаметру D: название — комментарий в строке T, иначе строка-комментарий рядом до или после T (что в программе встречается чаще); диаметр — из названия (D12, Ø12). Совпало название — «совпало»; тот же диаметр и первое слово — «проверьте»; иначе «нет пары». Пару можно выбрать вручную в списке под каждым инструментом эталона. T и H меняются вместе (H = T): все T вне комментариев и строк G65, H в строках с G43/G44/M6; замена одним проходом, обмен T1↔T2 безопасен; N-номера и комментарии не трогаются. Инструменты целевой без пары не меняются и показаны отдельным списком; если после замены один номер окажется у двух инструментов — предупреждение и вопрос при «Применить». Одна правка, откат кнопкой ↺. (2) Вкладки редактора 3D перетаскиваются: удержать ~0,4 с и передвинуть; порядок сохраняется, активная вкладка и вкладка на экране остаются теми же, траектория пересчитывается при закрытии редактора. Не проверено на iPhone.
- v142.15 | Claude Sonnet 5.5 | 23.11.2026 | (1) «Редактор программы» убран с главного экрана полностью (экран, кнопка, диалог открытия файла, поиск/замена старого редактора). Единственный редактор — в 3D Viewer. (2) Редактор 3D с вкладками: вкладка = отдельная программа; «＋» новая вкладка, ✕ закрыть (если текст не сохранён в документах — вопрос); название — номер O и комментарий, иначе имя файла, иначе «Новая»; точка ● у вкладки, по которой строится траектория. Тап по вкладке делает её активной: траектория по активной, M98 ищет подпрограммы в остальных вкладках (переход «К подпрограмме» вкладку траектории не меняет). (3) Вкладки сохраняются при перезапуске (localStorage cncTabs_v1), текст — сразу при вводе. Старый текст редактора главного экрана один раз переносится первой вкладкой. (4) Кнопки «Добавить в редактор» (сверление, торцевание, фрезерование, отверстия, история) кладут блок в редактор 3D: пусто — в активную вкладку; не пусто — окно «Добавить в конец / Заменить текущую программу / Новая вкладка»; ссылка «открыть» открывает редактор 3D. (5) «Показать траекторию», «С телефона», «Из приложения», документы: в пустой редактор — заменяют, иначе открываются новой вкладкой (одинаковый текст — просто его вкладка), ничего не затирается. Комплект из нескольких файлов теперь = несколько вкладок; выполняется только активная, остальные — подпрограммы. (6) «Очистить» в меню 3D чистит активную вкладку (закрывает её, если вкладок несколько). (7) В меню ⋯ редактора добавлено «Посчитать время обработки» (перенесено со старого экрана; комментарий со временем в конец, откат ↺). Не проверено на iPhone.
- v142.14 | Claude Sonnet 5.5 | 22.11.2026 | (1) «Отправить в NC» (везде): уходит только файл .nc, без текста-подписи; имя — номер программы из первой строки O… как в программе плюс счётчик: O00125(1).nc, O00125(2).nc (счётчик по имени в localStorage cncNcCnt_v1, растёт после успешной отправки, сброса нет); нет номера — окно ввода названия. Из окна редактора теперь уходит текст редактора (раньше уходил текст другого поля, без правок, в т.ч. без /M0). Если системное «Поделиться» файлы не принимает — файл скачивается. (2) Меню ⋯: «К подпрограмме (M98)» и «Назад из подпрограммы» скрыты, если в редакторе одна программа. (3) Тап мимо меню ⋯ закрывает его; «Расставить M0»: ✕ при изменённых галочках спрашивает «Закрыть без применения?». Окна «Все D» и «Расставить M0» полноэкранные, закрываются кнопкой ✕. Не проверено на iPhone.
- v142.13 | Claude Sonnet 5.5 | 22.11.2026 | (1) «Просмотр всех D»: D после числа с точкой без пробела (Y-100.D28) больше не пропускается — перед D запрещены только буква, «_» и «#»; для T проверка прежняя, строгая. На O00125.NC было 12 строк, стало 14 (T1 FREZA D50 SPEED — D28, T29 FREZA D12D 250 — D33). (2) Меню ⋯ → «Расставить M0»: окно со списком T; M0/M00 перед сменой инструмента относится к следующему T; галочка = перед ним /M0 (остановки нет, инструмент меняется сам), стоит сама, если /M0 уже есть; тап по галочке T меняет все его смены, тап по названию раскрывает отдельные смены со строками; «Отметить все» / «Снять все»; «Применить» — одна правка с общей отменой. Номер N перед M0 убирается: «N12 M00» → «/M00». Меняются только строки, где M0 — единственный код (плюс N и комментарий); M0 среди других кодов и M0 после последнего T не трогаются, о них сказано в окне. Не проверено на iPhone.
- v142.10 | GPT-6 | 21.11.2026 | Подготовка PWA для GitHub Pages: обновлены метаданные установки, добавлены комплект иконок и манифест, настроен service worker для установки на iPhone и обновления приложения. Функциональность CNC не менялась.
+ v142.10–v142.17 (21–23.11, сжато): PWA для GitHub Pages; «Просмотр всех D», «Расставить M0», «Отправить в NC»; вкладки редактора 3D; «Сверить инструменты» и перетаскивание вкладок.
  v142.11–v142.12 (22.11): правки по багам B1–B6; редактор: подсветка T, нумерация N, пуск с выбранной стрелкой T, «Просмотр всех D».
  v127–v142.9 | Claude Sonnet / Haiku / Grok | 14–17.11.2026 | (сжато) v127: просмотрщик не теряет модель, поворот 360, подсветка T в редакторе; v128: блок NOTES, версия на главном, раздел «Баги и заметки»; v129: B1–B7, мастер обнуления, фикс чипсов; v130: PWA (manifest, service worker); v131–v132.1: станки Solex №6 / Haas №4 / Haas №1, привязка модели по плоскости и отверстию; v133: подпрограммы M98/M99, комплекты файлов, системы G54–G59/G154, вкладки редактора; v134: луч на кнопке «Пуск»; v135: счётчик Rolling counter; v136–v137: листы без анимации; v138–v142: «Выравнивание стола» (позже без оси B и названия станка, в «Обнуление»). v142.1–v142.9 (21.11.2026): многоцелевое обнуление — «Движение по точке» (Z подхода, опускание G1 со знаком, F, безопасная Z; пусто = из шапки), поле H убрано (H = T), комментарий OBNULENIE авто; Haas G65 P9995 третьим станком (A10/A11/A14–A17/A20, W = 53 + G5x; нужна проверка на станке); щуп кнопками T20/T28/T30/T50; проверки точек и напоминание при 2+ точках; у наружного диаметра/выступа нет G1 вниз над деталью (v142.3); выравнивание стола — первая точка справа даёт тот же угол (v142.7); Haas G154 P1–P99; мастер привязки модели — «Пропустить всё», «Привязать заново», привязка из «Папки моделей» больше не теряется (v142.8); чистка мёртвого кода и CSS (v142.9).
  v126–v119 | Claude + пользователь | 12–14.11.2026 | Дизайн, просмотрщик, документы, обнуление.
@@ -1639,6 +1635,8 @@ body.gc-fs-on .bug-fab{display:none}
 .cloud-file-actions{display:flex;gap:10px;flex-shrink:0}
 .cloud-file-actions a{font-size:.8rem;color:var(--accent);text-decoration:none;white-space:nowrap}
 .cloud-status-error{color:#e28b83}
+.cloud-setup[hidden],.cloud-setup .btn[hidden]{display:none}
+.cloud-file-actions button{font:inherit;font-size:.8rem;color:var(--accent);background:none;border:0;padding:4px 0;white-space:nowrap}
 @media(max-width:390px){.cloud-controls{grid-template-columns:1fr}.cloud-file-row{align-items:flex-start}.cloud-file-actions{gap:8px}}
 
 </style>
@@ -1740,9 +1738,15 @@ body.gc-fs-on .bug-fab{display:none}
   <div class="card cloud-panel" id="cloudPanel">
     <div class="section-title">Файлы CNC Helper Cloud</div>
     <div class="cloud-actions">
-      <button class="btn btn-secondary" type="button" id="cloudConnectBtn" onclick="cloudConnect()">Подключить Google</button>
+      <button class="btn btn-secondary" type="button" id="cloudSetupBtn" onclick="cloudSetupToggle()">Настроить облако</button>
       <button class="btn btn-secondary" type="button" onclick="cloudRefresh()">Обновить</button>
       <button class="btn btn-secondary" type="button" onclick="cloudChooseUpload()">Загрузить в Cloud</button>
+    </div>
+    <div class="cloud-controls cloud-setup" id="cloudSetup" hidden>
+      <input id="cloudApiUrl" type="url" placeholder="Адрес API (…/exec)" aria-label="Адрес API" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <input id="cloudApiKey" type="password" placeholder="Ключ APP_KEY" aria-label="Ключ APP_KEY" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="btn btn-secondary" type="button" id="cloudSaveBtn" onclick="cloudSetupSave()">Проверить и сохранить</button>
+      <button class="btn btn-secondary" type="button" id="cloudForgetBtn" onclick="cloudSetupForget()">Забыть ключ</button>
     </div>
     <div class="cloud-controls">
       <input id="cloudSearch" type="search" placeholder="Поиск по имени файла" oninput="cloudRenderList()">
@@ -1756,7 +1760,7 @@ body.gc-fs-on .bug-fab{display:none}
       </select>
     </div>
     <input id="cloudUploadInput" type="file" multiple hidden onchange="cloudUploadSelected()">
-    <p class="subtle-note" id="cloudStatus">Подключи Google, чтобы увидеть облачные файлы. Доступ предоставляется твоему Google-аккаунту.</p>
+    <p class="subtle-note" id="cloudStatus">Нажми «Настроить облако» и один раз введи адрес API и ключ.</p>
     <div id="cloudFileList"><p class="subtle-note">Облачный каталог пока не загружен.</p></div>
   </div>
   <input id="drawingFiles" type="file" accept=".pdf,image/png,image/jpeg,application/pdf,.nc,.cnc,.txt,.mpf,.h,.min,.stl,.obj,.step,.stp,.dxf,*/*" multiple hidden onchange="addDrawings()">
@@ -3191,88 +3195,99 @@ async function addDrawings() {
 }
 
 /* CNC Helper Cloud API integration */
-var CNC_CLOUD_SCRIPT_ID='1quwi-X5JPoVuHzDvdL-nwYAzWS0faXG33WbYBnxvq6_V2ZmZB9amsU8l';
-var CNC_CLOUD_OAUTH_CLIENT_ID='765949306440-l6fvp5hh5gmudqae2hiddtel94htftt0.apps.googleusercontent.com';
-var cncCloudToken='',cncCloudTokenExpires=0,cncCloudTokenClient=null,cncCloudGisPromise=null,cncCloudFiles=[];
+// v142.36: вход Google не нужен. Адрес API и ключ вводятся один раз и хранятся только в этом браузере.
+var CNC_CLOUD_CFG_KEY='cncCloudApi';
+var cncCloudFiles=[],cncCloudSeq=0;
 function cloudStatus(message,isError){
   var el=document.getElementById('cloudStatus');
   if(!el)return;
   el.textContent=message;
   el.classList.toggle('cloud-status-error',!!isError);
 }
-function cloudLoadGoogleIdentity(){
-  if(window.google&&google.accounts&&google.accounts.oauth2)return Promise.resolve();
-  if(cncCloudGisPromise)return cncCloudGisPromise;
-  cncCloudGisPromise=new Promise(function(resolve,reject){
-    var script=document.createElement('script');
-    script.src='https://accounts.google.com/gsi/client';
-    script.async=true;
-    script.onload=function(){
-      if(window.google&&google.accounts&&google.accounts.oauth2)resolve();
-      else reject(new Error('Google Identity Services не загрузился.'));
-    };
-    script.onerror=function(){reject(new Error('Не удалось загрузить модуль авторизации Google.'));};
-    document.head.appendChild(script);
-  });
-  return cncCloudGisPromise;
+function cloudUrlOk(url){return /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url);}
+function cloudConfig(){
+  try{
+    var c=JSON.parse(localStorage.getItem(CNC_CLOUD_CFG_KEY)||'null');
+    if(c&&cloudUrlOk(c.url)&&c.key)return c;
+  }catch(e){}
+  return null;
 }
-function cloudConnect(){
-  cloudStatus('Открываю авторизацию Google…');
-  cloudLoadGoogleIdentity().then(function(){
-    if(!cncCloudTokenClient){
-      cncCloudTokenClient=google.accounts.oauth2.initTokenClient({
-        client_id:CNC_CLOUD_OAUTH_CLIENT_ID,
-        scope:'https://www.googleapis.com/auth/drive',
-        callback:function(response){
-          if(response&&response.access_token){
-            cncCloudToken=response.access_token;
-            cncCloudTokenExpires=Date.now()+(Number(response.expires_in)||3600)*1000;
-            var btn=document.getElementById('cloudConnectBtn');
-            if(btn)btn.textContent='Google подключён';
-            cloudStatus('Google подключён. Загружаю каталог…');
-            cloudRefresh();
-          }else{
-            cloudStatus((response&&response.error_description)||'Google не выдал токен доступа.',true);
-          }
-        },
-        error_callback:function(error){
-          cloudStatus((error&&error.message)||'Не удалось выполнить вход в Google.',true);
-        }
-      });
-    }
-    cncCloudTokenClient.requestAccessToken();
-  }).catch(function(error){cloudStatus(error.message||'Ошибка подключения Google.',true);});
+function cloudReady(){
+  if(cloudConfig())return true;
+  cloudStatus('Сначала нажми «Настроить облако».',true);
+  return false;
 }
-async function cloudApiRun(functionName,parameters){
-  if(!cncCloudToken||Date.now()>cncCloudTokenExpires-60000){
-    throw new Error('Сеанс Google истёк. Нажми «Подключить Google» ещё раз.');
-  }
-  var response=await fetch('https://script.googleapis.com/v1/scripts/'+encodeURIComponent(CNC_CLOUD_SCRIPT_ID)+':run',{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+cncCloudToken,'Content-Type':'application/json'},
-    body:JSON.stringify({function:functionName,parameters:parameters||[]})
-  });
-  var payload={};
-  try{payload=await response.json();}catch(e){}
-  if(!response.ok)throw new Error((payload.error&&payload.error.message)||('Ошибка Apps Script API: HTTP '+response.status));
-  if(payload.error)throw new Error(payload.error.message||'Ошибка выполнения Apps Script.');
-  if(payload.done===false)throw new Error('Google ещё выполняет запрос. Нажми «Обновить» через несколько секунд.');
-  if(payload.response&&Object.prototype.hasOwnProperty.call(payload.response,'result'))return payload.response.result;
-  if(payload.response)return payload.response;
-  throw new Error('Google вернул пустой ответ.');
+function cloudSetupToggle(){
+  var box=document.getElementById('cloudSetup');
+  box.hidden=!box.hidden;
+  if(box.hidden)return;
+  var c=cloudConfig();
+  document.getElementById('cloudApiUrl').value=c?c.url:'';
+  var key=document.getElementById('cloudApiKey');
+  key.value='';
+  key.placeholder=c?'Ключ сохранён (пусто — не менять)':'Ключ APP_KEY';
+  document.getElementById('cloudForgetBtn').hidden=!c;
 }
+async function cloudSetupSave(){
+  var old=cloudConfig();
+  var url=document.getElementById('cloudApiUrl').value.trim();
+  var key=document.getElementById('cloudApiKey').value.trim()||(old?old.key:'');
+  if(!cloudUrlOk(url)){cloudStatus('Адрес должен начинаться с https://script.google.com/macros/s/ и заканчиваться на /exec',true);return;}
+  if(!key){cloudStatus('Введи ключ APP_KEY.',true);return;}
+  var btn=document.getElementById('cloudSaveBtn');
+  btn.disabled=true;cloudStatus('Проверяю адрес и ключ…');
+  try{
+    var cfg={url:url,key:key};
+    await cloudApiRun('listFiles',['Все файлы'],cfg);   // сохраняем только проверенные
+    try{localStorage.setItem(CNC_CLOUD_CFG_KEY,JSON.stringify(cfg));}
+    catch(e){throw new Error('Браузер не дал сохранить настройки.');}
+    document.getElementById('cloudApiKey').value='';
+    document.getElementById('cloudSetup').hidden=true;
+    await cloudRefresh();
+  }catch(error){cloudStatus(error.message,true);}
+  btn.disabled=false;
+}
+function cloudSetupForget(){
+  if(!confirm('Удалить адрес и ключ облака с этого устройства?'))return;
+  try{localStorage.removeItem(CNC_CLOUD_CFG_KEY);}catch(e){}
+  cncCloudSeq++;cncCloudFiles=[];
+  document.getElementById('cloudSetup').hidden=true;
+  document.getElementById('cloudFileList').innerHTML='<p class="subtle-note">Облачный каталог пока не загружен.</p>';
+  cloudStatus('Ключ удалён с этого устройства.');
+}
+async function cloudApiRun(functionName,parameters,config){
+  var c=config||cloudConfig();
+  if(!c)throw new Error('Сначала нажми «Настроить облако».');
+  var p=parameters||[],body={key:c.key,action:functionName};
+  if(functionName==='listFiles')body.category=p[0];
+  else if(functionName==='getFileContent')body.fileId=p[0];
+  else if(functionName==='uploadFile'){body.fileName=p[0];body.mimeType=p[1];body.base64=p[2];}
+  var response,payload;
+  try{
+    // text/plain: без предварительного запроса браузера, который Apps Script не принимает
+    response=await fetch(c.url,{method:'POST',credentials:'omit',referrerPolicy:'no-referrer',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+  }catch(e){throw new Error('Нет связи с облаком. Проверь интернет.');}
+  try{payload=await response.json();}catch(e){throw new Error('Облако ответило непонятно (HTTP '+response.status+'). Проверь публикацию API.');}
+  if(!payload||!payload.ok)throw new Error((payload&&payload.error)||'Ошибка облака.');
+  return payload.result;
+}
+function cloudOnShow(){if(cloudConfig())cloudRefresh();}
 async function cloudRefresh(){
-  if(!cncCloudToken){cloudStatus('Сначала нажми «Подключить Google».',true);return;}
+  if(!cloudReady())return;
+  var seq=++cncCloudSeq;   // ответ на старый запрос не перетирает новый
   var list=document.getElementById('cloudFileList');
   if(list)list.innerHTML='<p class="subtle-note">Загружаю файлы…</p>';
   cloudStatus('Обновляю список файлов…');
   try{
     var category=document.getElementById('cloudCategory').value||'Все файлы';
     var data=await cloudApiRun('listFiles',[category]);
+    if(seq!==cncCloudSeq)return;
     cncCloudFiles=(data&&Array.isArray(data.files))?data.files:[];
     cloudRenderList();
     cloudStatus('Файлов в выбранной категории: '+cncCloudFiles.length+(data&&data.truncated?' · показаны первые 500':''));
   }catch(error){
+    if(seq!==cncCloudSeq)return;
     cloudStatus(error.message||'Не удалось загрузить облачные файлы.',true);
     if(list)list.innerHTML='<p class="subtle-note">Не удалось получить список файлов.</p>';
   }
@@ -3309,22 +3324,55 @@ function cloudRenderList(){
     }else if(file.url){
       var openLink=document.createElement('a');openLink.href=file.url;openLink.target='_blank';openLink.rel='noopener noreferrer';openLink.textContent='Открыть';actions.appendChild(openLink);
     }
-    if(file.downloadUrl){
-      var download=document.createElement('a');download.href=file.downloadUrl;download.target='_blank';download.rel='noopener noreferrer';download.textContent='Скачать';actions.appendChild(download);
-    }
+    var download=document.createElement('button');download.type='button';download.textContent='Скачать';
+    download.onclick=function(){cloudDownload(file,download);};
+    actions.appendChild(download);
     row.appendChild(meta);row.appendChild(actions);box.appendChild(row);
   });
 }
 
+function cloudBytes(base64){
+  var raw=atob(base64),bytes=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  return bytes;
+}
+// Два нажатия: первое получает файл, второе сохраняет (iPhone открывает «Поделиться» только сразу после нажатия)
+async function cloudDownload(file,btn){
+  if(!cloudReady())return;
+  btn.disabled=true;btn.textContent='Получаю…';
+  try{
+    var data=await cloudApiRun('getFileContent',[file.id]);
+    if(!data||typeof data.base64!=='string')throw new Error('Облако не вернуло содержимое файла.');
+    var out=new File([cloudBytes(data.base64)],data.name||file.name||'file',{type:data.mimeType||'application/octet-stream'});
+    btn.textContent='Сохранить';
+    btn.onclick=function(){cloudSaveFile(out);};
+    cloudStatus('Файл получен: '+out.name+'. Нажми «Сохранить».');
+  }catch(error){
+    btn.textContent='Скачать';
+    cloudStatus(error.message||'Не удалось скачать файл.',true);
+  }
+  btn.disabled=false;
+}
+function cloudSaveFile(f){
+  function link(){
+    var a=document.createElement('a'),u=URL.createObjectURL(f);
+    a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u);},60000);
+  }
+  var can=false;
+  try{can=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}));}catch(e){}
+  if(can)navigator.share({files:[f]}).catch(function(e){if(!e||e.name!=='AbortError')link();});
+  else link();
+}
+
 async function cloudOpenInViewer(file,kind){
   if(!file||!file.id){cloudStatus('У файла отсутствует идентификатор.',true);return;}
-  if(!cncCloudToken){cloudStatus('Сначала подключи Google.',true);return;}
+  if(!cloudReady())return;
   try{
     cloudStatus('Скачиваю из Cloud: '+(file.name||'файл')+'…');
     var data=await cloudApiRun('getFileContent',[file.id]);
     if(!data||!data.base64)throw new Error('Cloud не вернул содержимое файла.');
-    var raw=atob(data.base64),bytes=new Uint8Array(raw.length);
-    for(var i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+    var bytes=cloudBytes(data.base64);
     if(kind==='program'){
       var code=new TextDecoder('utf-8').decode(bytes).replace(/^\uFEFF/,'');
       if(!code.trim())throw new Error('Программа пустая.');
@@ -3361,7 +3409,7 @@ async function cloudOpenInViewer(file,kind){
 }
 
 function cloudChooseUpload(){
-  if(!cncCloudToken){cloudStatus('Сначала подключи Google.',true);return;}
+  if(!cloudReady())return;
   document.getElementById('cloudUploadInput').click();
 }
 function cloudReadBase64(file){
@@ -3381,7 +3429,7 @@ async function cloudUploadSelected(){
   var input=document.getElementById('cloudUploadInput');
   var files=Array.from(input.files||[]);
   if(!files.length)return;
-  if(!cncCloudToken){cloudStatus('Сначала подключи Google.',true);input.value='';return;}
+  if(!cloudReady()){input.value='';return;}
   var uploaded=0,failed=[];
   for(var i=0;i<files.length;i++){
     var file=files[i];
@@ -3557,6 +3605,7 @@ function go(id, fromPop) {
   if(id==='home'){renderHistory();try{gcViewerSubUpdate();}catch(e){}}
   if(id==='progPoints'&&typeof renderPoints==='function')renderPoints();
   if(id==='schedule')shInit();
+  if(id==='drawings')cloudOnShow();
   if(!fromPop){
     try{
       if(history.state&&history.state.s===id)history.replaceState({s:id},'');
@@ -8854,7 +8903,7 @@ function sendNC(id) {
   </div>
 </div>
 <script>
-var APP_VERSION='v142.35',APP_DATE='28.11.2026';
+var APP_VERSION='v142.36',APP_DATE='28.11.2026';
 var BUG_KEY='cncBugs_v1',BUG_N='cncBugN',bugOpenCtx=null,bugCurType='баг';
 var BUG_SCREENS={home:'Главный экран',probeSelect:'Обнуление',renCycleAxis:'Обнуление: цикл Renishaw',probeParams:'Обнуление: параметры',probeResult:'Обнуление: результат',progHeader:'Шапка программы',progPoints:'Точки обнуления',millHeader:'Фрезеровка отверстий',millPoints:'Отверстия',millResult:'Программа фрезеровки',progResult:'Готовый код',millMenu:'Фрезерование',faceScreen:'Торцевание',faceResult:'Торцевание: результат',drillScreen:'Сверление',drillProgResult:'Сверление: результат',editor:'Редактор программы',schedule:'График работы',gcodeView:'Просмотр (3D Viewer)',histView:'История',drawings:'Документы',reference:'Справочник'};
 function bugLoad(){try{var a=JSON.parse(localStorage.getItem(BUG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
